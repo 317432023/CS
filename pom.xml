@@ -1,0 +1,531 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>CS</groupId>
+    <artifactId>CS</artifactId>
+    <version>1.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>cs-admin</module>
+    </modules>
+
+    <properties>
+        <!-- ruoyi 版本自带 -->
+        <ruoyi.version>3.8.6</ruoyi.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
+        <druid.version>1.2.16</druid.version>
+        <bitwalker.version>1.21</bitwalker.version>
+        <swagger.version>3.0.0</swagger.version>
+        <kaptcha.version>2.3.3</kaptcha.version>
+        <pagehelper.boot.version>1.4.6</pagehelper.boot.version>
+        <fastjson.version>2.0.39</fastjson.version>
+        <oshi.version>6.4.4</oshi.version>
+        <commons.io.version>2.13.0</commons.io.version>
+        <commons.collections.version>3.2.2</commons.collections.version>
+        <poi.version>4.1.2</poi.version>
+        <velocity.version>2.3</velocity.version>
+        <jwt.version>0.9.1</jwt.version>
+
+        <!-- 覆盖ruoyi定义的版本 -->
+        <poi.version>5.0.0</poi.version>
+
+        <!-- Maven编译 编码 -->
+        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <maven.test.skip>true</maven.test.skip>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+
+        <!-- 文件拷贝 编码 -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.resource.sourceEncoding>UTF-8</project.resource.sourceEncoding>
+
+        <!-- 插件 版本 -->
+        <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
+        <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
+        <maven-war-plugin.version>3.2.3</maven-war-plugin.version>
+        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+        <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
+        <maven-javadoc-plugin.version>2.10.4</maven-javadoc-plugin.version>
+        <maven-source-plugin.version>3.1.0</maven-source-plugin.version>
+
+        <mybatis-generator-core.version>1.3.7</mybatis-generator-core.version><!-- tip: 1.3.7 需要 JDK8以上 -->
+        <mybatis-generator-maven-plugin.version>1.3.7</mybatis-generator-maven-plugin.version>
+
+        <!-- Lombok 版本 -->
+        <lombok.version>1.18.26</lombok.version><!--1.16.18 for JDK7, 1.18.6+ for JDK8+-->
+        <!-- 日志 版本  -->
+        <slf4j.version>1.7.36</slf4j.version><!-- slf4j日志代理 -->
+        <jboss-logging.version>3.4.1.Final</jboss-logging.version><!-- jboss日志代理 -->
+        <log4j2.version>2.17.2</log4j2.version><!-- log4j2日志实现 -->
+        <log4j-over-slf4j.version>1.7.25</log4j-over-slf4j.version>
+
+        <!-- 糊涂工具包 -->
+        <hutool.version>5.8.18</hutool.version>
+        <!-- SpringBoot 版本-->
+        <spring-boot.version>2.5.15</spring-boot.version><!-- 2.2.5.RELEASE , 2.5.15-->
+        <!-- Spring 版本-->
+        <spring.version>5.3.27</spring.version><!-- 5.2.4.RELEASE , 5.3.27-->
+        <junit.version>4.13.2</junit.version>
+        <!-- 加密解密 --><!-- encryption & decryption Support by Boundary Castle, eg.AES256 & more ... -->
+        <bcprov-jdk15on.version>1.59</bcprov-jdk15on.version>
+        <!-- Swagger+Knife4j API文档 -->
+        <guava.version>28.1-jre</guava.version>
+        <io.springfox.version>2.9.2</io.springfox.version>
+        <swagger-annotations.version>1.5.22</swagger-annotations.version>
+        <knife4j.version>2.0.1</knife4j.version>
+
+        <!-- 常用库[数据库&中间件驱动+连接池+SQL性能分析器] -->
+        <mysql-connector-java.version>5.1.47</mysql-connector-java.version><!--6.0.6 com.mysql.cj.jdbc.Driver，并且在url之后要指定时区-->
+        <jakarta-persistence.version>2.2.3</jakarta-persistence.version>
+        <!--<druid.version>1.2.16</druid.version>--><!-- 1.1.10 , 1.2.16-->
+        <p6spy.version>3.8.7</p6spy.version>
+        <h2.version>1.4.200</h2.version>
+        <jedis.version>3.2.0</jedis.version><!-- using 2.8+ for spring-data-redis required `redis.clients.jedis.GeoUnit`;using 3+ for springboot2.2.5 -->
+        <redisson.version>3.16.2</redisson.version><!-- Redis 分布式锁 (单例使用Lua) -->
+
+        <!-- 常用库[持久层依赖] -->
+        <mybatis.spring.version>2.0.5</mybatis.spring.version>
+        <mybatis.version>3.5.7</mybatis.version>
+        <tk.mybatis.version>4.1.5</tk.mybatis.version>
+        <pagehelper.version>5.3.2</pagehelper.version><!-- <pagehelper.boot.version>1.4.6</pagehelper.boot.version> -->
+        <mybatis-plus.version>3.4.2</mybatis-plus.version>
+
+        <springboot.mybatis.version>2.1.4</springboot.mybatis.version>
+        <springboot.mapper.version>2.1.5</springboot.mapper.version>
+        <!--<springboot.pagehelper.version>1.3.0</springboot.pagehelper.version>--><!-- <pagehelper.boot.version>1.4.6</pagehelper.boot.version> -->
+        <springboot.mybatis-plus.version>3.4.2</springboot.mybatis-plus.version><!-- 3.5.1 -->
+        <springboot.redis.version>1.4.6.RELEASE</springboot.redis.version>
+
+        <!-- 常用库[校验框架] -->
+        <validation-api.version>2.0.1.Final</validation-api.version>
+        <hibernate-validator.version>6.1.2.Final</hibernate-validator.version>
+
+        <!-- 常用库[Apache Commons] -->
+        <commons.lang3.version>3.11</commons.lang3.version>
+        <commons.lang.version>2.6</commons.lang.version>
+        <!--<commons.io.version>2.6</commons.io.version>-->
+        <commons.net.version>3.3</commons.net.version>
+        <commons.logging.version>1.2</commons.logging.version>
+        <commons.fileupload.version>1.4</commons.fileupload.version>
+        <commons.beanutils.version>1.9.4</commons.beanutils.version>
+        <commons.dbcp.version>1.4</commons.dbcp.version>
+        <commons.pool.version>1.6</commons.pool.version>
+        <commons.pool2.version>2.7.0</commons.pool2.version>
+        <commons.codec.version>1.15</commons.codec.version>
+        <commons.collections4.version>4.1</commons.collections4.version>
+
+        <!-- 常用库[JSON,XML解析] -->
+        <jackson.version>2.10.3</jackson.version><!-- 2.4.2 用于spring 4.1.3 及以下版本 2.12.3用于springboot2.3以上高版本-->
+        <jackson-mapper-asl.version>1.9.13</jackson-mapper-asl.version>
+        <gson.version>2.8.7</gson.version>
+        <json.version>20160810</json.version>
+        <fastjson.version>1.2.78</fastjson.version>
+        <xstream.version>1.4.17</xstream.version><!-- 1.4.10-java7 -->
+        <dom4j.version>1.6.1</dom4j.version>
+
+        <!-- 常用库[二维码] -->
+        <zxing.version>3.4.1</zxing.version>
+        <QRCode_swetake.version>3.0.0</QRCode_swetake.version>
+        <qrcode.version>0.9</qrcode.version>
+
+        <!-- 常用库[图片压缩转换] -->
+        <thumbnailator.version>0.4.8</thumbnailator.version>
+        <imageio-jpeg.version>3.3.2</imageio-jpeg.version>
+        <imageio-tiff.version>3.3.2</imageio-tiff.version>
+
+        <!-- 常用库[Office] -->
+        <poi-ooxml.version>5.0.0</poi-ooxml.version><!-- poi for excel -->
+
+        <!-- 常用库[网络与消息] -->
+        <httpclient.version>4.5.13</httpclient.version>
+        <retrofit.version>2.7.0</retrofit.version>
+        <okhttp.version>4.2.2</okhttp.version>
+        <netty.version>4.1.43.Final</netty.version>
+        <dubbo.version>2.7.4.1</dubbo.version>
+        <zookeeper.version>3.4.14</zookeeper.version>
+        <curator.version>2.13.0</curator.version>
+        <kafka.version>2.3.1</kafka.version>
+
+        <!-- 常用库[权限控制器] -->
+        <shiro.version>1.5.1</shiro.version>
+        <shiro-redis.version>2.4.2.1-RELEASE</shiro-redis.version>
+
+        <!-- 常用库[视图模板] -->
+        <javax.servlet-api.version>3.1.0</javax.servlet-api.version><!-- 2.4,2.5,3.0.1,3.1.0,4.0.1 -->
+        <javax.servlet.jsp-api.version>2.3.1</javax.servlet.jsp-api.version><!-- 2.0,2.1,2.2.1,2.3.1 -->
+        <freemarker.version>2.3.29</freemarker.version>
+        <beetl.version>3.0.2.RELEASE</beetl.version>
+
+        <!-- 常用库[jsp视图标签] -->
+        <jstl.version>1.2</jstl.version>
+        <pager-taglib.version>2.0</pager-taglib.version><!-- jstl pagination -->
+
+        <!-- MQ -->
+        <rocketmq-spring-boot.version>2.2.2</rocketmq-spring-boot.version>
+
+    </properties>
+
+    <!-- 子模块继承之后，提供作用：锁定版本+子module不用写groupId和version  -->
+    <dependencyManagement>
+        <dependencies>
+            <!-- 数据库驱动 -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql-connector-java.version}</version>
+            </dependency>
+
+            <!-- SpringBoot的依赖配置-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!--阿里数据库连接池 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+
+            <!-- 解析客户端操作系统、浏览器等 -->
+            <dependency>
+                <groupId>eu.bitwalker</groupId>
+                <artifactId>UserAgentUtils</artifactId>
+                <version>${bitwalker.version}</version>
+            </dependency>
+
+            <!-- mybatisplus -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${springboot.mybatis-plus.version}</version>
+            </dependency>
+
+            <!-- pagehelper 分页插件 -->
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${pagehelper.boot.version}</version><!-- pagehelper.boot.version -->
+            </dependency>
+
+            <!-- 获取系统信息 -->
+            <dependency>
+                <groupId>com.github.oshi</groupId>
+                <artifactId>oshi-core</artifactId>
+                <version>${oshi.version}</version>
+            </dependency>
+
+            <!--io常用工具类 -->
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons.io.version}</version>
+            </dependency>
+
+            <!--文件上传工具类 -->
+            <dependency>
+                <groupId>commons-fileupload</groupId>
+                <artifactId>commons-fileupload</artifactId>
+                <version>${commons.fileupload.version}</version>
+            </dependency>
+
+            <!-- excel工具 -->
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+
+            <!--velocity代码生成使用模板 -->
+            <dependency>
+                <groupId>org.apache.velocity</groupId>
+                <artifactId>velocity</artifactId>
+                <version>${velocity.version}</version>
+            </dependency>
+
+            <!-- 阿里JSON解析器 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+
+            <!--Token生成与解析-->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jwt.version}</version>
+            </dependency>
+
+            <!--验证码 -->
+            <dependency>
+                <groupId>com.github.penggle</groupId>
+                <artifactId>kaptcha</artifactId>
+                <version>${kaptcha.version}</version>
+            </dependency>
+
+            <!-- ruoyi 框架相关模块 -->
+            <!-- 核心模块-->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>ruoyi-framework</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+
+            <!-- 定时任务-->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>ruoyi-quartz</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+
+            <!-- 代码生成-->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>ruoyi-generator</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+
+            <!-- Swagger3依赖 -->
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-boot-starter</artifactId>
+                <version>${swagger.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>io.swagger</groupId>
+                        <artifactId>swagger-models</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- Lombok -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+
+            <!-- 工具库 -->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!-- 构建 -->
+    <build>
+        <plugins>
+            <!-- 定义资源拷贝插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>${maven-resources-plugin.version}</version>
+                <configuration>
+                    <encoding>${project.resource.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            <!-- 定义编译插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <compilerArgs>
+                        <!-- 过期的方法的警告-->
+                        <arg>-Xlint:deprecation</arg>
+                    </compilerArgs>
+                    <compilerArguments>
+                        <!-- 是否输出所有的编译信息（包括类的加载等）-->
+                        <!--<verbose />-->
+                        <!-- 解决maven命令编译报错，因为rt.jar 和jce.jar在jre的lib下面，不在jdk的lib下面，
+            导致maven找不到（java7以后会出现这个问题），将这2个jar包拷贝到jdk的lib下面估计也好使。用 ${delimiter}或${path.separator}替代:(linux)和;(windows) -->
+                        <bootclasspath>
+                            ${java.home}/lib/rt.jar${path.separator}${java.home}/lib/jce.jar${path.separator}${java.home}/lib/jsse.jar
+                        </bootclasspath>
+                    </compilerArguments>
+                </configuration>
+            </plugin>
+            <!-- 定义打War包插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+                <version>${maven-war-plugin.version}</version>
+            </plugin>
+            <!-- 定义生成JavaDoc插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+                <configuration>
+                    <skip>${maven.javadoc.skip}</skip>
+                    <!-- IDEA控制台输出中文乱码这是因为Maven的默认平台编码是GBK，解决办法：
+          在IDEA中，打开File | Settings | Build, Execution, Deployment | Build Tools | Maven | Runner在VM Options中添加-Dfile.encoding=GBK
+                     -->
+                    <encoding>UTF-8</encoding>
+                    <aggregate>true</aggregate>
+                    <charset>UTF-8</charset>
+                    <docencoding>UTF-8</docencoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- 定义生成源码包插件 -->
+            <!--<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>${maven-source-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+             -->
+            <!-- 定义测试插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <!-- 禁止自动测试，还可以用mvn install -DskipTests 或 mvn install -Dmaven.test.skip=true  -->
+                    <skipTests>${maven.test.skip}</skipTests>
+                    <!--<includes>
+                      <include>**/*Test.java</include>
+                      <include>**/*Spec.java</include>
+                    </includes>-->
+                </configuration>
+            </plugin>
+            <!-- 使用旧版本exec-maven-plugin使idea2021在测试目录执行main方法可用-->
+            <!-- 另一个方法是使用idea2018或更早版本
+                 还有个办法是到 IDEA菜单: 构建运行部署-构建工具 -Maven-运行程序 下 将 IDE 构建/运行操作委托给 Maven 取消勾选
+                 使用这两个办法就再不需要配置 exec-maven-plugin 旧版本了
+             -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <classpathScope>test</classpathScope>
+                </configuration>
+            </plugin>
+
+            <!-- 生成命令行可执行包*-cli.jar -->
+            <!-- 如何使用：JAR 包中的 /META-INF/MANIFEST.MF 元数据文件必须包含 Main-Class 信息。 最终插件会将依赖 JAR 文件全部解压后，再将得到的.class 文件连同当前项目的.class 文件一起合并到最终的 CLI 包中 -->
+            <!--
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.2</version>
+                <executions>
+                    <execution>
+                        <id>shade-my-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                  <mainClass>starter.xx.MainClass</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>-->
+        </plugins>
+
+    </build>
+
+    <!-- 可用仓库 -->
+    <repositories>
+
+        <repository>
+            <id>aliyunmaven</id>
+            <name>阿里云公共仓库，是central仓和jcenter仓的聚合，源地址 https://repo1.maven.org/maven2/ 和 http://jcenter.bintray.com/</name>
+            <url>https://maven.aliyun.com/repository/public</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+        </repository>
+
+        <repository>
+            <id>spring</id>
+            <name>Spring 仓库，源地址 http://repo.spring.io/libs-milestone/</name>
+            <url>https://maven.aliyun.com/repository/spring</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+        </repository>
+
+    </repositories>
+
+    <!-- 插件仓库 -->
+    <pluginRepositories>
+
+        <pluginRepository>
+            <id>alimaven</id>
+            <name>local private nexus</name>
+            <url>https://maven.aliyun.com/repository/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+
+    </pluginRepositories>
+</project>

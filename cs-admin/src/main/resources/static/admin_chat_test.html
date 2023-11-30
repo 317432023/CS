@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh_CN">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui@2.15.14/lib/index.js"></script>
+    <style>
+    @import url("https://unpkg.com/element-ui@2.15.14/lib/theme-chalk/index.css");
+    </style>
+    <style type="text/css">
+        #chatDialog {width:700px; border: 1px solid skyblue; border-radius:5px; position: absolute; top:50%; left: 50%; transform:translate(-50%,-50%);  /*向左和向上移动自身宽度一半*/}
+        .title {display:block;}
+        #userList {overflow-y:auto; border-right: 1px solid skyblue;}
+		#input-cont0 {height:200px !important;}
+		#input-cont {width:500px; height:200px;}
+		#chat-input{overflow-y: hidden; padding-left:0; padding-right:40px;}
+		#input {margin:0;height:100px;}
+		#btn-send-div {height:60px; line-height:60px;}
+
+		#chat-cnt {overflow-y:auto;  border-top: 1px solid skyblue; border-bottom: 1px solid skyblue;}
+    </style>
+</head>
+<body>
+<div id="app">
+
+	  <el-row :gutter="20"  id="chatDialog">
+		<el-col :span="6" v-bind:style="{ height: scrollHeight + 'px'}" id="userList">
+		  <div :style="{textAlign: 'center'}" v-for="(user,index) in users" :key="user.id" :ref="'user'+index" @click="chatUserSelected(index)">
+			  <br>
+			  <el-badge is-dot v-if="user.id%2==0">
+				<el-avatar shape="square" :size="64" fit="fit" :src="url"></el-avatar>
+			  </el-badge>
+			  <el-avatar shape="square" :size="64" fit="fit" :src="url" v-else></el-avatar>
+			  <span class="title">{{ user.nickName }}</span>
+		  </div>
+		  <br>
+		</el-col>
+		<el-col :span="18" id="chatMain">
+		  <el-container v-bind:style="{ height: scrollHeight + 'px' }">
+			<el-header style="text-align: center; font-size: 12px; line-height: 60px;">
+			  <span class="title">与 {{ nickName}} 聊天</span>
+			</el-header>
+			<el-main id="chat-cnt">
+				<el-row>
+				  <el-col :span="4"><el-avatar shape="square" :size="48" fit="fit" :src="url"></el-avatar></el-col>
+				  <el-col :span="16">
+					  <div>
+						<span style="font-weight: bold;color: lightsteelblue;">{{ nickName }}</span><br>
+						<span>
+							你好！准备测试聊天内容
+						</span>
+					  </div>
+				  </el-col>
+				  <el-col :span="4">&nbsp;</el-col>
+				</el-row>
+				<br>
+				<el-row >
+				  <el-col :span="4">&nbsp;</el-col>
+				  <el-col :span="16">
+					  <div style="text-align:right">
+						<span style="font-weight: bold;color: lightsteelblue;">{{ nickName }}</span><br>
+						<span>
+							<el-image :src="src">
+							  <div slot="placeholder" class="image-slot">
+								加载中<span class="dot">...</span>
+							  </div>
+							</el-image>
+						</span>
+					  </div>
+				  </el-col>
+				  <el-col :span="4"><el-avatar shape="square" :size="48" fit="fit" :src="url" style="float:right"></el-avatar></el-col>
+				</el-row>
+			</el-main>
+			<el-footer id="input-cont0">
+				<el-container id="input-cont">
+				  <el-main id="chat-input">
+					<el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea" id="input">
+					</el-input>
+				  </el-main>
+				  <el-footer id="btn-send-div">
+					<el-button class="share-button" icon="el-icon-picture" type="primary"></el-button>
+					<el-button type="primary">发送</el-button>
+				  </el-footer>
+				</el-container>
+			</el-footer>
+		  </el-container>
+		</el-col>
+	  </el-row>
+</div>
+
+<script type="text/javascript">
+    var vm = new Vue({
+        el : "#app",
+        data : {
+            textarea : 'msg',
+            nickName : '用户昵称',
+            url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
+            users:[
+              {"id":1,"nickName":"张三"}, {"id":111,"nickName":"李四"},
+              {"id":2,"nickName":"张三"}, {"id":112,"nickName":"李四"},
+              {"id":3,"nickName":"张三"}, {"id":113,"nickName":"李四"},
+              {"id":4,"nickName":"张三"}, {"id":114,"nickName":"李四"},
+              //{"id":114,"nickName":"李四"},
+            ],
+            scrollHeight: '100px',
+			src: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg'
+        },
+        mounted() {
+            this.scrollHeight = document.documentElement.clientHeight - 20;
+            window.onresize = ()=> {
+                if ( this.scrollHeight ) {
+                   this.scrollHeight = document.documentElement.clientHeight - 20;
+                }
+            }
+        },
+		methods: {
+			chatUserSelected(index) {
+				let that = this
+				let obj = that.$refs['user'+index][0];
+				obj.style.cssText='text-align:center;background:skyblue';
+
+				this.users.forEach((user,ix,ary)=>{
+					if(ix != index) {
+						obj = that.$refs['user'+ix][0];
+						obj.style.cssText='text-align:center;';
+					}
+				});
+			},
+		}
+    });
+
+</script>
+</body>
+</html>

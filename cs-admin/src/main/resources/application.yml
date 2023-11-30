@@ -1,0 +1,146 @@
+server:
+  port: 8080
+
+application:
+  group: laolang
+
+spring:
+  main:
+    lazy-initialization: false
+    banner-mode: off
+  application:
+    name: customer-service
+  profiles:
+    active: debug
+  output:
+    ansi:
+      enabled: always
+
+  transaction:
+    rollback-on-commit-failure: true
+
+  mvc:
+    throw-exception-if-no-handler-found: true
+    view:
+      suffix: .html
+
+    # 自定义属性 见 com.cmpt.sys.web.config.WebConfig.java
+    cors-filter: true # 是否实例化(开启)跨域过滤器
+
+  web:
+    resources:
+      add-mappings: false
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+  jpa:
+    show-sql: false
+    open-in-view: false
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: none
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600s
+
+  session:
+    store-type: none # redis
+    timeout: 3600s
+    redis:
+      cleanup-cron: 0 */30 * * * ?
+
+  redis: # 依赖 spring-boot-starter-data-redis
+    host: localhost
+    port: 6379
+    #password: 15bc104021ea44258202381e32be4cca
+    # 密码(如无密码请放空)
+    password:
+    database: 0 # Redis默认情况下有16个分片，这里配置具体使用的分片，默认是0
+
+    timeout: 10000 #连接超时时间（毫秒）
+
+    # 如果使用的 jedis 则将lettuce 改成 jedis 即可
+    lettuce:
+      pool:
+        max-active: 8 # 最大连接数（使用负值表示没有限制） 默认 8
+        max-wait: -1 # 最大阻塞等待时间（使用负值表示没有限制） 默认 -1
+        max-idle: 8 # 最大空闲连接 默认 8
+        min-idle: 0 # 最小空闲连接 默认 0
+    redisson:
+      config: |
+        singleServerConfig:
+          idleConnectionTimeout: 10000
+          connectTimeout: 10000
+          timeout: 3000
+          retryAttempts: 3
+          retryInterval: 1500
+          address: redis://${spring.redis.host}:${spring.redis.port}
+          password: ${spring.redis.password}
+          clientName: null
+          keepAlive: false
+          tcpNoDelay: false
+          # 单个连接最大订阅数量
+          subscriptionsPerConnection: 5
+          # 发布和订阅连接的最小空闲连接数
+          subscriptionConnectionMinimumIdleSize: 1
+          # 发布和订阅连接池大小
+          subscriptionConnectionPoolSize: 50
+          # 最小空闲连接数
+          connectionMinimumIdleSize: 32
+          # 连接池大小
+          connectionPoolSize: 64
+          # 数据库编号
+          database: ${spring.redis.database}
+          # DNS监测时间间隔，单位：毫秒
+          dnsMonitoringInterval: 5000
+        threads: 8
+        nettyThreads: 8
+        codec: !<org.redisson.client.codec.StringCodec> {}
+        transportMode: "NIO"
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    # (开发测试)开启或关闭(生产)控制台sql打印；如果已经使用p6spy就没必要配置它打印SQL了(关闭它)，因为p6spy更好用
+    # 关闭方法：将log-impl设置为空或删除配置即可；开启方法：将log-impl值设置为org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: #org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    enable-sql-runner: true # 允许使用 SqlRunner 直接操作sql语句
+    banner: false
+    db-config:
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+  # 自定义属性 见 com.frm.mybatisplus.MyBatisPlusConfig.java
+  pagination: true # 是否使用mybatis-plus分页
+  optimistic: true # 是否使用mybatis-plus乐观锁
+
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  params: count=countSql
+  support-methods-arguments: true
+
+logging:
+  config: classpath:log4j2-spring.xml
+
+# 自定义属性文件
+# 见 com.cmpt.sys.security.config.SettingProperties
+# 见 com.cmpt.captcha.config.CaptchaProperties
+# 见 com.cmpt.oss.upload.config.OssProperties
+# 见 com.cmpt.ws.props.WebSocketProperties
+config:
+  setting: ./cs-admin/src/main/resources/setting.properties # 这种格式仅在Idea下运行时才能找到正确目录
+  #setting: ./src/main/resources/setting.properties # 这种格式仅在Idea下运行测试案例时才能找到正确目录
+  captcha: ./cs-admin/src/main/resources/captcha.properties # 这种格式仅在Idea下运行时才能找到正确目录
+  oss: ./cs-admin/src/main/resources/oss.properties # 这种格式仅在Idea下运行时才能找到正确目录
+  ws: ./cs-admin/src/main/resources/ws.properties
+  sys: ./cs-admin/src/main/resources/sys.properties
