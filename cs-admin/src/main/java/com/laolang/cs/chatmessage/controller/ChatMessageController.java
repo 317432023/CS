@@ -65,7 +65,7 @@ public class ChatMessageController {
     @GetMapping("chat_users")
     public R<List<Map<String, Object>>> onlineChatUsers(@RequestHeader String clientId) {
         ChatUser senderChatUser = subsysTool.getChatUser(clientId); // 消息發送者
-        List<ChatUser> rcptList = chatUserService.queryRcptList(senderChatUser.getId());
+        List<ChatUser> rcptList = chatUserService.queryRcptIdList(senderChatUser.getId());
         Date date = DateUtil.parse("1970", "yyyy");
         rcptList.forEach(e-> {if(e.getLastMessageTime()==null)e.setLastMessageTime(date);});
         //rcptList.stream().sorted(Comparator.comparing(ChatUser::getLastMessageTime).reversed().thenComparing(ChatUser::getId));
@@ -107,7 +107,7 @@ public class ChatMessageController {
     /**
      * 取最近聊天历史
      * @param clientId socket连接令牌
-     * @param customerChatUserId 聊天用戶ID
+     * @param customerChatUserId 聊天用戶ID 客服可以使用该参数；会员忽略此参数
      * @param headMsgId 已取得的最早消息ID
      * @param limit 条数，默认15条
      * @return
@@ -119,7 +119,7 @@ public class ChatMessageController {
     })
     @ApiImplicitParams({
       @ApiImplicitParam(paramType="header", name = "clientId", value = "客戶端ID", dataType = "string"),
-      @ApiImplicitParam(paramType="query", name = "customerChatUserId", value = "聊天用戶ID", dataType = "int"),
+      @ApiImplicitParam(paramType="query", name = "customerChatUserId", value = "聊天用戶ID(客服可以使用该参数；会员忽略此参数)", dataType = "int"),
       @ApiImplicitParam(paramType="query", name = "headMsgId", value = "已取得的最早消息ID", dataType = "bigint"),
       @ApiImplicitParam(paramType="query", name = "limit", value = "最多返回記錄數", dataType = "int"),
     })
@@ -140,7 +140,7 @@ public class ChatMessageController {
             "create_time",
             "(select nick_name from tb_chat_user cu where cu.id=sender) senderNickName",
             userType==1?"(select nick_name from tb_chat_user cu where cu.id=receiver) receiverNickName":"NULL receiverNickName",
-            //"if(sender="+chatUser.getId()+",true,ifnull((select `read` from tb_chat_message_read cmr where cmr.msg_id=tb_chat_message.id and cmr.rcpt_id="+chatUser.getId()+"),false) ) as `read`",
+            "(case sender when "+chatUser.getId()+" then 1 else (select (case `read` when is null then false else `read` end) from tb_chat_message_read cmr where cmr.msg_id=tb_chat_message.id and cmr.rcpt_id="+chatUser.getId()+") end) as `read`"
         };
         qw.select(selectColumns);
         if(userType == 0) { // 客人

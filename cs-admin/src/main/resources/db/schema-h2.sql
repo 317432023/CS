@@ -29,7 +29,6 @@ create table tb_chat_message_read(
   `id` bigint unsigned not null auto_increment,
   `msg_id` bigint unsigned not null comment '消息记录ID',
   `rcpt_id` int unsigned not null comment '接收者ID',
-  `create_time` datetime,
   `read` tinyint unsigned not null default 0 comment '是否已读',
   `update_time` datetime,
   primary key(id)

@@ -40,7 +40,7 @@ public class StompReadConsumer extends StompAbsConsumer implements Consumer<Msg>
         chatMessageReadService.update(
             new UpdateWrapper<ChatMessageRead>()
                 .eq("rcpt_id", recvMsg.getSender())
-                .le("id", lastReadMsgId)
+                .le("msg_id", lastReadMsgId)
                 .set("`read`", true)
                 .set("update_time", new Date())
         );

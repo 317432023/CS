@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * ChatUserService
@@ -28,11 +29,11 @@ public class ChatUserService extends ServiceImpl<ChatUserMapper, ChatUser> imple
     private SysOrgMapper sysOrgMapper;
 
     /**
-     * 取得消息接收者列表
+     * 取得聊天对手列表
      * @param senderId 聊天用戶發送者ID
      * @return
      */
-    public List<ChatUser> queryRcptList(Integer senderId) {
+    public List<ChatUser> queryRcptIdList(Integer senderId) {
         ChatUser senderChatUser = getById(senderId); // 消息發送者
         QueryWrapper<ChatUser> qw = new QueryWrapper<ChatUser>()
             .select("id","create_time","tenant_id","nick_name","user_type","avatar","rel_id",
@@ -42,6 +43,28 @@ public class ChatUserService extends ServiceImpl<ChatUserMapper, ChatUser> imple
             .eq("user_type", senderChatUser.getUserType() == 0?1:0); // 若消息發送者是客人則取客服列表否則取客人列表
 
         return super.list(qw);
+    }
+
+    /**
+     * 取得消息接收者ID列表
+     * @param senderId 聊天发送者ID
+     * @param roomId 聊天室ID
+     * @return
+     */
+    public List<Integer> queryRcptIdList(Integer senderId, Integer roomId) {
+        ChatUser senderChatUser = getById(senderId); // 消息發送者
+        QueryWrapper<ChatUser> qw = new QueryWrapper<ChatUser>()
+            .select("id")
+            .eq("tenant_id", senderChatUser.getTenantId())
+        ;
+        if(senderChatUser.getUserType() == 0) {
+            qw.eq("user_type", 1);
+        } else {
+            qw.eq("user_type", 0);
+            qw.eq("id", roomId);
+        }
+
+        return this.listMaps(qw).stream().map(e->Integer.parseInt(e.get("id").toString())).collect(Collectors.toList());
     }
 
     /**

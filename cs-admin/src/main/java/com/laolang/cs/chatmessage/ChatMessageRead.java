@@ -19,8 +19,6 @@ import java.util.Date;
 public class ChatMessageRead implements Serializable {
     @TableId(type = IdType.AUTO)
     private Long id;
-    @TableField(updateStrategy = FieldStrategy.NEVER)
-    private Date createTime;
 
     @TableField(updateStrategy = FieldStrategy.NEVER)
     private Long msgId;

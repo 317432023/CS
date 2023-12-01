@@ -47,14 +47,14 @@ public class StompChatConsumer extends StompAbsConsumer implements Consumer<Msg>
             .setReceiver(recvMsg.getRoomId()); // 接收者是一个 群ID = 客人ID
         boolean ret = chatMessageService.save(chatMessage.setCreateTime(now));
 
-        // 取得接收者列表，设置未读消息
-        List<ChatUser> rcptList = chatUserService.queryRcptList(recvMsg.getSender());
-        if(rcptList.size() > 0) {
+        // 取得接收者ID列表，设置未读消息
+        List<Integer> rcptIdList = chatUserService.queryRcptIdList(recvMsg.getSender(), recvMsg.getRoomId());
+        if(rcptIdList.size() > 0) {
             chatMessageReadService.saveBatch(
-                rcptList.stream().map(rcptChatUser -> new ChatMessageRead()
+                rcptIdList.stream().map(rcptId -> new ChatMessageRead()
                     .setRead(false)
                     .setMsgId(chatMessage.getId())
-                    .setRcptId(rcptChatUser.getId())).collect(Collectors.toList())
+                    .setRcptId(rcptId)).collect(Collectors.toList())
             );
         }
 

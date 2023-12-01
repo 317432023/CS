@@ -175,9 +175,16 @@ export default {
             this.msgList = []
             // 查询 this.chatUser.rcptId 的消息历史 然后填进 this.msgList 数组
             request.getRecentMessages(this.clientId, {customerChatUserId:this.chatToUser.rcptId}).then((res)=>{
+                //console.log("取得聊天历史：" + JSON.stringify(this.msgList))
                 this.msgList = res.data
                 this.scrollToBottom() // 聊天内容滚动到底部
-                //console.log("取得聊天历史： " + JSON.stringify(this.msgList))
+                if(res.data.length > 0) {
+                    let obj = res.data[res.data.length - 1]
+                    if(!obj.read) {
+                        // console.log("发送已读：" + obj.id)
+                        this.$sendRead(obj.id)
+                    }
+                }
             })
 
             // 订阅群消息
