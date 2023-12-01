@@ -91,21 +91,27 @@ public class Msg {
      * @return
      */
     public static Msg tip(String message) {
-        return msg(message, MsgType.tip, true, null);
+        return msg(message, MsgType.tip, null);
+    }
+
+    /**
+     * 提醒消息
+     * @return
+     */
+    public static Msg tip(String message, String msgId) {
+        return msg(message, MsgType.tip, msgId);
     }
 
     /**
      * 任意消息
      * @return
      */
-    public static Msg msg(String message, MsgType msgType, boolean autoMsgId, String msgId) {
+    public static Msg msg(String message, MsgType msgType, String msgId) {
         Msg msg = new Msg();
-        if(autoMsgId) {
-            msg.setMsgId(UUID.fastUUID().toString());
+        if(StringUtils.isNotBlank(msgId)) {
+            msg.setMsgId(msgId);
         } else {
-            if(StringUtils.isNotBlank(msgId)) {
-                msg.setMsgId(msgId);
-            }
+            msg.setMsgId(UUID.fastUUID().toString());
         }
         msg.setMsgType(msgType);
         msg.setMsgBody(Dict.create().set("type","text").set("value",message));

@@ -7,7 +7,6 @@ import com.laolang.cs.chatmessage.ChatMessage;
 import com.laolang.cs.chatmessage.ChatMessageRead;
 import com.laolang.cs.chatmessage.ChatMessageReadService;
 import com.laolang.cs.chatmessage.ChatMessageService;
-import com.laolang.cs.chatuser.ChatUser;
 import com.laolang.cs.chatuser.ChatUserService;
 import com.laolang.cs.server.protocol.Msg;
 import lombok.AllArgsConstructor;
@@ -59,8 +58,8 @@ public class StompChatConsumer extends StompAbsConsumer implements Consumer<Msg>
         }
 
         if(!ret) {
-            //  TIP 客户端
-            response(recvMsg, Msg.tip("消息发送失败").setMsgId(recvMsg.getMsgId()));
+            // TIP 客户端
+            response(recvMsg, Msg.tip("消息发送失败", recvMsg.getMsgId()));
             return;
         }
 
@@ -79,7 +78,7 @@ public class StompChatConsumer extends StompAbsConsumer implements Consumer<Msg>
                 recvMsg.getMsgBody().put("value", imgUrl);
             }
         }
-        broadcast(recvMsg.setCreateTime(now));
+        broadcast(recvMsg.setMsgId(chatMessage.getId().toString()).setCreateTime(now));
     }
 
 }

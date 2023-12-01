@@ -154,15 +154,14 @@ export default {
             return new Promise((resolve,reject)=>{
                 let that = this
                 this.$store.dispatch('websocket/WEBSOCKET_CONNECT', {url:wsUrl,okCallBack:function () {
-                    // 订阅单人消息
-                    console.log("订阅单人消息")
+                    // 订阅一对一消息 ack tip
                     that.$store.dispatch('websocket/WEBSOCKET_SUBSCRIBE',{address:"/user/alone/cs/getResponse", callBack:data=>that.showMsg(data)})
                     if(that.chatToUser) {
                         that.refreshChatRoom()
                     } else {
                         // 取得聊天用户列表更新到 users 中
                         request.getChatUsers(that.clientId).then(res=>{
-                            console.log("取得聊天对手 => " + JSON.stringify(res.data))
+                            // console.log("取得聊天对手 => " + JSON.stringify(res.data))
                             that.users = res.data
                         })
                     }
@@ -187,7 +186,7 @@ export default {
                 }
             })
 
-            // 订阅群消息
+            // 订阅群消息 chat
             if(this.$store.getters.connected) {
                 this.$store.dispatch('websocket/WEBSOCKET_SUBSCRIBE', {address:"/mass/cs/getResponse/" + this.chatToUser.rcptId, callBack:data=>this.showMsg(data)})
             }
@@ -234,21 +233,23 @@ export default {
                             senderNickName:msg.senderNickName,
                             //receiverNickName:null,
                         }
-                        console.log("showMsg调用显示消息=>" + JSON.stringify(obj));
+                        // console.log("showMsg调用显示chat消息=>" + JSON.stringify(obj));
                         if(this.chatToUser.rcptId === msg.roomId)
                         {
                             this.chatToUser.lastMessageTime = obj.createTime // 更新最后一次消息时间
                             this.msgList.push(obj) // （在末尾）向数组添加新元素
                             this.scrollToBottom() // 聊天内容滚动到底部
-                            // 发送成功并接收到自己发送的消息则清空文本框
-                            if(obj.senderNickName === this.curUser && obj.message.type === 'text' && this.textarea === obj.message.value)
+
+                            if(obj.senderNickName === this.curUser)
                             {
-                                this.textarea = ''
+                                if(obj.message.type === 'text' && this.textarea === obj.message.value)
+                                {
+                                    this.textarea = '' // 发送成功并接收到自己发送的文本消息则清空文本框
+                                }
                             }
                             else
                             {
-                                // 收到聊天对手的消息 发送已读指令
-                                console.log("收到聊天对手的消息，准备发送已读指令")
+                                console.log(`发送消息已读 ${obj.id}`)
                                 this.$sendRead(obj.id)
                             }
                         }
@@ -258,10 +259,11 @@ export default {
                         }
                         break;
                     case 'ack':
+                        console.log(`消息 ${msg.msgId} 发送成功`)
+                        //ignore
                         break;
                     case 'tip':
-                        break;
-                    case 'read':
+                        this.$message.error(msg.msgBody.value)
                         break;
                 }
             } else {

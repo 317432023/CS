@@ -261,7 +261,7 @@ const actions = {
 	    return new Promise(async (resolve, reject) => {
 
 	        await Promise.all([
-                dispatch('WEBSOCKET_UNSUBSCRIBE')
+                dispatch('WEBSOCKET_UNSUBSCRIBE', address)
             ]).then(res => resolve(res)).catch(e => reject(e))
 
             // 生成 sub-id
