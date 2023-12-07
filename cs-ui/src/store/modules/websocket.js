@@ -59,7 +59,7 @@ const state = {
 }
 
 const mutations = {
-	$INIT_CONNECT(state) {
+    $INIT_CONNECT(state) {
         const websocket = new SockJS(state.url, null, {timeout: 15000})
         state.websocket = websocket
         const stompClient = Stomp.over(websocket); // 覆盖sockjs使用stomp客户端
@@ -67,7 +67,7 @@ const mutations = {
         stompClient.heartbeat.incoming = 10000;    // 接收心跳的间隔(默认10000ms) 设置为0则客户端不从服务端接收心跳包
         stompClient.debug = null                   // 关闭控制台打印
         state.stompClient = stompClient
-	},
+    },
     $RESET(state) {
         state.tokenInvalid = false
         state.reConnectCount = 0
@@ -77,78 +77,78 @@ const mutations = {
 }
 
 const actions = {
-	CONNECT({ commit, state, dispatch }, params) {
-		commit('$INIT_CONNECT')
+    CONNECT({ commit, state, dispatch }, params) {
+        commit('$INIT_CONNECT')
 
-		let headers = {
-			'token' : getQueryString('token', state.url),
-			'userType' : getQueryString('userType', state.url),
-			'tenantId' : getQueryString('tenantId', state.url)
-		}
+        let headers = {
+            'token' : getQueryString('token', state.url),
+            'userType' : getQueryString('userType', state.url),
+            'tenantId' : getQueryString('tenantId', state.url)
+        }
 
-	    let {okCallBack, failCallBack} = params
-		return new Promise((resolve, reject) => {
-			state.stompClient.connect(headers, (frame)=>{
-				// 成功回调
-				console.log('连接成功！frame = > \n' + JSON.stringify(frame))
-				Message({ message: '连接成功', type: 'success', duration: 1 * 1500 })
-				commit('$RESET') // 一旦连上可以重置状态
+        let {okCallBack, failCallBack} = params
+        return new Promise((resolve, reject) => {
+            state.stompClient.connect(headers, (frame)=>{
+                // 成功回调
+                console.log('连接成功！frame = > \n' + JSON.stringify(frame))
+                Message({ message: '连接成功', type: 'success', duration: 1 * 1500 })
+                commit('$RESET') // 一旦连上可以重置状态
                 if(okCallBack) {
                     console.log('okCallBack 调用')
                     okCallBack()
                 }
-				resolve(1)
-			}, (error)=>{
-				// 失败回调（第一次连接失败和连接后断开连接都会调用这个函数）
+                resolve(1)
+            }, (error)=>{
+                // 失败回调（第一次连接失败和连接后断开连接都会调用这个函数）
 
-				if((typeof error) === 'object') {
-					let errDetails = JSON.stringify(error)
+                if((typeof error) === 'object') {
+                    let errDetails = JSON.stringify(error)
                     if(failCallBack) {
                         failCallBack()
                     }
-					if(errDetails.includes("令牌无效") || errDetails.includes("连接未认证")) {
-						console.error("连接失败，令牌无效：" + state.url)
-						state.tokenInvalid = true
-					} else {
-						console.error('连接发生异常: error => \n' + error)
-						Message({ message: '连接发生异常', type: 'error', duration: 1 * 1500 })
-					}
-				} else {
-					console.error('发生异常: error => \n' + error)
-				}
-				if(state.tokenInvalid) {
-					MessageBox.confirm('会话无效或已过期，请重新登录', '确认退出', {
-					  confirmButtonText: '重新登录',
-					  cancelButtonText: '取消',
-					  type: 'warning'
-					}).then(() => {
+                    if(errDetails.includes("令牌无效") || errDetails.includes("连接未认证")) {
+                        console.error("连接失败，令牌无效：" + state.url)
+                        state.tokenInvalid = true
+                    } else {
+                        console.error('连接发生异常: error => \n' + error)
+                        Message({ message: '连接发生异常', type: 'error', duration: 1 * 1500 })
+                    }
+                } else {
+                    console.error('发生异常: error => \n' + error)
+                }
+                if(state.tokenInvalid) {
+                    MessageBox.confirm('会话无效或已过期，请重新登录', '确认退出', {
+                      confirmButtonText: '重新登录',
+                      cancelButtonText: '取消',
+                      type: 'warning'
+                    }).then(() => {
                       dispatch('security/resetToken', {}, { root: true }).then(() => {
                         location.reload()
                       })
-					})
-					reject(4)
+                    })
+                    reject(4)
                     return
-				}
-				console.log("连接失败：" + state.url)
-				Message({ message: '连接失败', type: 'error', duration: 1 * 1500 })
+                }
+                console.log("连接失败：" + state.url)
+                Message({ message: '连接失败', type: 'error', duration: 1 * 1500 })
 
-				if (state.reConnectCount >= 5) {
-					console.log(state.reConnectCount)
-					let tipMsg = "温馨提示：您的连接已断开，请退出后重新进入。"
-					MessageBox.confirm(tipMsg, '确认退出', {
-					  confirmButtonText: '重新登录',
-					  cancelButtonText: '取消',
-					  type: 'warning'
-					}).then(() => {
+                if (state.reConnectCount >= 5) {
+                    console.log(state.reConnectCount)
+                    let tipMsg = "温馨提示：您的连接已断开，请退出后重新进入。"
+                    MessageBox.confirm(tipMsg, '确认退出', {
+                      confirmButtonText: '重新登录',
+                      cancelButtonText: '取消',
+                      type: 'warning'
+                    }).then(() => {
                       dispatch('security/resetToken', {}, { root: true }).then(() => {
                         location.reload()
                       })
-					})
-				} else {
-					if(state.wsReconnect) {
-						clearTimeout(state.wsReconnect)
-					}
-					state.wsReconnect = setTimeout(async function () {
+                    })
+                } else {
+                    if(state.wsReconnect) {
+                        clearTimeout(state.wsReconnect)
+                    }
+                    state.wsReconnect = setTimeout(async function () {
                         state.reConnectCount++
                         console.log("开始重连..." + state.reConnectCount);
                         Message({message: `第${state.reConnectCount}次重新连接`, type: 'warning', duration: 1 * 1500})
@@ -158,16 +158,16 @@ const actions = {
                         ]).then(res => resolve(res)).catch(e => reject(e))
 
                     }, 2000);
-				}
-				reject()
+                }
+                reject()
                 return
-			})
-		})
-	},
+            })
+        })
+    },
 
     WEBSOCKET_CONNECT({ commit, state, dispatch }, params) {
-	    let {url} = params
-		return new Promise(async (resolve, reject) => {
+        let {url} = params
+        return new Promise(async (resolve, reject) => {
             if (state.stompClient != null && state.stompClient.connected) {
                 console.log('连接已建立成功，不再执行')
                 resolve(-1)
@@ -203,31 +203,31 @@ const actions = {
 
     WEBSOCKET_DISCONNECT({ commit, state, dispatch }) { // 彻底断开连接
         return new Promise(async (resolve, reject) => {
-			if(state.stompClient != null && ( state.stompClient.connected || state.websocket.readyState !== SockJS.CLOSED)) {
-			    // 先取消订阅
+            if(state.stompClient != null && ( state.stompClient.connected || state.websocket.readyState !== SockJS.CLOSED)) {
+                // 先取消订阅
                 await Promise.all([
                     dispatch('WEBSOCKET_UNSUBSCRIBE')
                 ]).then(res => resolve(res)).catch(e => reject(e))
 
-				// 断开连接
-				state.stompClient.disconnect(function(){
-					// 有效断开的回调
-					console.log("已断开连接")
-					resolve()
-				});
-			}
-		})
+                // 断开连接
+                state.stompClient.disconnect(function(){
+                    // 有效断开的回调
+                    console.log("已断开连接")
+                    resolve()
+                });
+            }
+        })
     },
 
     WEBSOCKET_UNSUBSCRIBE({ commit, state }, address) {
-	    return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
 
-	        if (!state.stompClient || !state.stompClient.connected) {
+            if (!state.stompClient || !state.stompClient.connected) {
                 reject("没有连接,无法操作(取消)订阅 -> " + address);
                 return
             }
 
-	        if(address) {
+            if(address) {
                 let id = ""
                 for (let item in state.stompClient.subscriptions) {
                     if (item.endsWith(address)) {
@@ -245,7 +245,7 @@ const actions = {
                 return
             }
 
-	        // 取消所有订阅
+            // 取消所有订阅
             for (let id in state.stompClient.subscriptions) {
                 state.stompClient.unsubscribe(id);
                 console.log("取消订阅成功 -> id:" + id)
@@ -255,12 +255,12 @@ const actions = {
     },
 
     WEBSOCKET_SUBSCRIBE({ commit, state, dispatch }, params) {
-	    let {address, callBack} = params;
-	    console.log("address=" + address)
-	    console.log("callBack=" + callBack)
-	    return new Promise(async (resolve, reject) => {
+        let {address, callBack} = params;
+        console.log("address=" + address)
+        console.log("callBack=" + callBack)
+        return new Promise(async (resolve, reject) => {
 
-	        await Promise.all([
+            await Promise.all([
                 dispatch('WEBSOCKET_UNSUBSCRIBE', address)
             ]).then(res => resolve(res)).catch(e => reject(e))
 

@@ -98,6 +98,15 @@ public class ChatMessageController {
             }
             onlineChatUserMap.put("online", online); // 是否在线
             onlineChatUserMap.put("lastMessageTime", rcpt.getLastMessageTime()); // 最后一次发送或接收消息的时间
+
+            // 未读消息数目
+            QueryWrapper<ChatMessageRead> qw = new QueryWrapper<>();
+            qw.eq("`read`", false);
+            qw.eq("rcpt_id", senderChatUser.getId());
+            qw.exists("select 1 from tb_chat_message where id=msg_id and sender="+rcpt.getId());
+            int count = readService.count(qw);
+            onlineChatUserMap.put("unreadMessageNum", count);
+
             rcptMapList.add(onlineChatUserMap);
         }
 

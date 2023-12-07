@@ -5,10 +5,10 @@
               <div :style="{textAlign: 'center'}" v-for="(user,index) in userList" :key="user.rcptId" :ref="'user'+index" @click="chatUserSelected(index)">
                   <br>
 
-                  <el-badge is-dot v-if="user.rcptId%2==0">
-                    <el-avatar shape="square" :size="64" fit="fit" :src="user.avatar"></el-avatar>
+                  <el-badge is-dot v-if="user.unreadMessageNum > 0">
+                    <el-avatar shape="square" :size="64" fit="fit" :src="user.avatar" :class="{gray: !user.online}"></el-avatar>
                   </el-badge>
-                  <el-avatar shape="square" :size="64" fit="fit" :src="user.avatar" v-else></el-avatar>
+                  <el-avatar shape="square" :size="64" fit="fit" :src="user.avatar" :class="{gray: !user.online}" v-else></el-avatar>
 
                   <span class="title">{{ user.nickName }}</span>
                   <span style="font: italic normal 12px/30px arial, sans-serif; color: grey;">{{user.lastMessageTime != '1970-01-01 00:00:00'?user.lastMessageTime.substring(5):''}}</span>
@@ -416,6 +416,13 @@ export default {
 
         #chat-cnt {overflow-y:auto;  border-top: 1px solid skyblue; border-bottom: 1px solid skyblue;}
         #chat-cnt .el-row{padding: 2px 0;}
+        .gray {
+		  -webkit-filter: grayscale(100%);
+		  -webkit-filter: grayscale(1);/* Webkit */
+		  filter: grayscale(100%);
+		  filter: url("data:image/svg+xml;utf8,<svg%20xmlns='http://www.w3.org/2000/svg'><filter%20id='grayscale'><feColorMatrix%20type='matrix'%20values='0.3333%200.3333%200.3333%200%200%200.3333%200.3333%200.3333%200%200%200.3333%200.3333%200.3333%200%200%200%200%200%201%200'/></filter></svg>#grayscale");
+		  filter: gray;/* IE6-9 */
+		}
     }
 
 </style>
