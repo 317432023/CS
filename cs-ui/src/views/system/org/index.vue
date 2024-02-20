@@ -1,8 +1,13 @@
 <template>
     <div class="app-container">
 
-        <el-dialog :title="isAdd?'新增':'编辑'" @closed="reset($refs.dialogForm)" :visible.sync="showDialog" :close-on-click-modal="false" width="600px"
-                   v-el-drag-dialog>
+        <el-dialog
+          :title="isAdd?'新增':'编辑'"
+          @closed="reset($refs.dialogForm)"
+          :visible.sync="showDialog"
+          :close-on-click-modal="false"
+          width="600px"
+          v-el-drag-dialog>
             <el-form status-icon  :model="dialogForm" :inline="true" ref="dialogForm" :rules="rule" style="font-weight: bold;" size="small" label-position="right" label-width="80px" >
 
                 <el-form-item prop="name" label="机构KEY">
@@ -103,7 +108,7 @@
           :page-size="params.size"
           @current-change="queryPage"
           layout="total,sizes,prev, pager, next, jumper"
-          :page-sizes="[2, 6, 10, 20, 30, 50]" @size-change="params.size=$event;queryPage(1)"
+          :page-sizes="pagesizes" @size-change="params.size=$event;queryPage(1)"
           :total="total" background><!-- layout="total, prev, pager, next" small  -->
         </el-pagination>
 
@@ -119,11 +124,11 @@ export default {
   name: 'Org',
   mixins: [common],
   directives: { elDragDialog },
-  data () {
+  data() {
     return {
       request: request,
       rule: {
-        /*id: [{ required: true, message: '必须填写', trigger: 'blur' }],*/
+        /* id: [{ required: true, message: '必须填写', trigger: 'blur' }],*/
         orgKey: [{ required: true, message: '机构KEY填写', trigger: 'blur' }],
         name: [{ required: true, message: '机构名称必须填写', trigger: 'blur' }],
         domain: [{ required: true, message: '机构域名必须填写', trigger: 'blur' }],
@@ -134,7 +139,7 @@ export default {
     }
   },
   methods: {},
-  created () {
+  created() {
   }
 }
 </script>

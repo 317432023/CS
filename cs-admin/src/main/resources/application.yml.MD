@@ -50,10 +50,13 @@ spring:
 
   # 会话存储策略 整合 SpringSession
   session: # 依赖spring-session-core；由 @EnableRedisHttpSession 开启
-    store-type: redis # redis 或 jdbc
+    store-type: redis # redis 或 jdbc 或 none
     timeout: 3600s
     redis: # 依赖spring-session-data-redis 与 spring-boot-starter-data-redis
       cleanup-cron: 0 */30 * * * ? # 半小时清理session,cron表达式可以自行百度
+      namespace: spring:session
+      flush-mode: on_save
+
   #  jdbc: # 依赖spring-session-data-jdbc
   #    cleanup-cron: 0 */30 * * * ?  # 半小时清理session,cron表达式可以自行百度
   #    table-name: SPRING_SESSION

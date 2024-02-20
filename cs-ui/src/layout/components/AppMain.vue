@@ -14,10 +14,10 @@ export default {
   name: 'AppMain',
   computed: {
     // 标签页支持 需要缓存的页面 固钉
-    cachedViews () {
+    cachedViews() {
       return this.$store.state.tagsView.cachedViews
     },
-    key () {
+    key() {
       return this.$route.fullPath // 标签页支持 path 改为 fullPath
     }
   }

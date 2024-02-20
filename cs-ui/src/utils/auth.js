@@ -32,6 +32,6 @@ const tokenOperation = {
   }
 }
 
-export function getToken () { return tokenOperation[securityStrategy || 'cookieStore'].getToken() }
-export function setToken (token) { return tokenOperation[securityStrategy || 'cookieStore'].setToken(token) }
-export function removeToken () { return tokenOperation[securityStrategy || 'cookieStore'].removeToken() }
+export function getToken() { return tokenOperation[securityStrategy || 'cookieStore'].getToken() }
+export function setToken(token) { return tokenOperation[securityStrategy || 'cookieStore'].setToken(token) }
+export function removeToken() { return tokenOperation[securityStrategy || 'cookieStore'].removeToken() }

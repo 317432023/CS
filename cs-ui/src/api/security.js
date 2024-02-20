@@ -20,7 +20,7 @@ export findUserList = (current,size,userVO) => {
  * 验证码
  * @param params
  */
-export function captcha (params, date) {
+export function captcha(params, date) {
   return request({
     url: 'captcha?' + (date || Date.now()),
     method: 'get',
@@ -33,7 +33,7 @@ export function captcha (params, date) {
  * @param {Object} params
  * @param {Object} body
  */
-export function login (params, body) {
+export function login(params, body) {
   return request({
     url: 'login',
     method: 'post',
@@ -45,7 +45,7 @@ export function login (params, body) {
 /**
  * 拉取用户信息（角色|权限）
  */
-export function getInfo () {
+export function getInfo() {
   return request({
     url: 'getInfo',
     method: 'get'
@@ -55,7 +55,7 @@ export function getInfo () {
 /**
  * 退出
  */
-export function logout () {
+export function logout() {
   return request({
     url: 'logout',
     method: 'get'
@@ -66,7 +66,7 @@ export function logout () {
  * 加载远程路由
  * @param roleIds 角色ID数组（可选，当不传角色时后台自动使用登录者的ID去加载路由）
  */
-export function loadRoutes (roleIds) {
+export function loadRoutes(roleIds) {
   return request({
     url: 'loadRoutes',
     method: 'post',
@@ -78,7 +78,7 @@ export function loadRoutes (roleIds) {
  * 加载远程菜单
  * @param roleIds 角色ID数组
  */
-export function loadMenus (roleIds) {
+export function loadMenus(roleIds) {
   return request({
     url: 'loadMenus',
     method: 'post',

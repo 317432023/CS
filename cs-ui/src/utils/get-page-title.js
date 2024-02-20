@@ -8,7 +8,7 @@ const title = defaultSettings.title || 'Vue Element Admin'
  * @param key
  * @returns {string}
  */
-export default function getPageTitle (key) {
+export default function getPageTitle(key) {
   const hasKey = i18n.te(`route.${key}`)
   const pageName = hasKey ? i18n.t(`route.${key}`) : key
   return `${pageName} - ${title}`

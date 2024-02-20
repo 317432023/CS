@@ -79,9 +79,9 @@
         <bcprov-jdk15on.version>1.59</bcprov-jdk15on.version>
         <!-- Swagger+Knife4j API文档 -->
         <guava.version>28.1-jre</guava.version>
-        <io.springfox.version>2.9.2</io.springfox.version>
+        <io.springfox.version>2.9.2</io.springfox.version><!-- 2.9.2 or 2.10.5-->
         <swagger-annotations.version>1.5.22</swagger-annotations.version>
-        <knife4j.version>2.0.1</knife4j.version>
+        <knife4j.version>2.0.9</knife4j.version><!-- 2.0.1 or  2.0.9-->
 
         <!-- 常用库[数据库&中间件驱动+连接池+SQL性能分析器] -->
         <mysql-connector-java.version>5.1.47</mysql-connector-java.version><!--6.0.6 com.mysql.cj.jdbc.Driver，并且在url之后要指定时区-->
@@ -97,12 +97,12 @@
         <mybatis.version>3.5.7</mybatis.version>
         <tk.mybatis.version>4.1.5</tk.mybatis.version>
         <pagehelper.version>5.3.2</pagehelper.version><!-- <pagehelper.boot.version>1.4.6</pagehelper.boot.version> -->
-        <mybatis-plus.version>3.4.2</mybatis-plus.version>
+        <mybatis-plus.version>3.5.1</mybatis-plus.version><!-- 3.4.2 -->
 
         <springboot.mybatis.version>2.1.4</springboot.mybatis.version>
         <springboot.mapper.version>2.1.5</springboot.mapper.version>
         <!--<springboot.pagehelper.version>1.3.0</springboot.pagehelper.version>--><!-- <pagehelper.boot.version>1.4.6</pagehelper.boot.version> -->
-        <springboot.mybatis-plus.version>3.4.2</springboot.mybatis-plus.version><!-- 3.5.1 -->
+        <springboot.mybatis-plus.version>3.5.1</springboot.mybatis-plus.version><!-- 3.4.2 -->
         <springboot.redis.version>1.4.6.RELEASE</springboot.redis.version>
 
         <!-- 常用库[校验框架] -->
@@ -124,7 +124,7 @@
         <commons.collections4.version>4.1</commons.collections4.version>
 
         <!-- 常用库[JSON,XML解析] -->
-        <jackson.version>2.10.3</jackson.version><!-- 2.4.2 用于spring 4.1.3 及以下版本 2.12.3用于springboot2.3以上高版本-->
+        <jackson.version>2.12.7</jackson.version><!-- 2.4.2 用于spring 4.1.3 及以下版本 2.12.3用于springboot2.3以上高版本 2.12.7 用于springboot2.5-->
         <jackson-mapper-asl.version>1.9.13</jackson-mapper-asl.version>
         <gson.version>2.8.7</gson.version>
         <json.version>20160810</json.version>

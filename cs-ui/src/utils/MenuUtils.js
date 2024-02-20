@@ -114,6 +114,6 @@ const MenuUtils = {
 
 }
 
-export default function (menus, filterLeaf = true, source = MenuUtils.SOURCE_LIST_SCHEMA, target = MenuUtils.TARGET_TREE_SCHEMA) {
+export default function(menus, filterLeaf = true, source = MenuUtils.SOURCE_LIST_SCHEMA, target = MenuUtils.TARGET_TREE_SCHEMA) {
   return MenuUtils.conv2Tree(menus, filterLeaf, source, target)
 }

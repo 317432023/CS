@@ -38,7 +38,6 @@ Vue.use(ElementUI, {
 })
 Vue.use(VueParticles) // 原子背景
 
-
 Vue.config.productionTip = false
 
 new Vue({

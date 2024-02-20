@@ -10,7 +10,7 @@ const state = {
   username: '', // 用户名
   nickname: '', // 昵称
   avatar: '', // 头像
-  roles: [],roleIds: [], // 角色数组
+  roles: [], roleIds: [], // 角色数组
   orgId: -1 // 机构ID
 }
 const getters = {
@@ -86,7 +86,7 @@ const actions = {
   },
 
   // 拉取用户信息 动作
-  getInfo ({ commit, state }) {
+  getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       getInfo().then(response => {
         const { data } = response
@@ -98,9 +98,9 @@ const actions = {
         const { orgId, roleIds, roles, username, nickname, avatar } = data
 
         // roles must be a non-empty array
-        //if (!roles || roles.length === 0) {
-        //  reject(new Error('getInfo: roles must be a non-null array!'))
-        //}
+        // if (!roles || roles.length === 0) {
+        //   reject(new Error('getInfo: roles must be a non-null array!'))
+        // }
 
         commit('SET_ROLES', roles)
         commit('SET_ROLE_IDS', roleIds)
@@ -119,7 +119,7 @@ const actions = {
   },
 
   // 拉取菜单 动作
-  loadMenus ({ commit, state }, defaultOpens) {
+  loadMenus({ commit, state }, defaultOpens) {
     return new Promise((resolve, reject) => {
       const roleIds = state.roleIds
       // roles must be a non-empty array
@@ -154,7 +154,7 @@ const actions = {
   },
 
   // 退出 动作
-  logout ({ commit, state, dispatch }) {
+  logout({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
       logout().then(() => {
         if (process.env.VUE_APP_SEC_STRATEGY !== 'cookieStore') {
@@ -176,7 +176,7 @@ const actions = {
   },
 
   // remove token
-  resetToken ({ commit }) {
+  resetToken({ commit }) {
     return new Promise(resolve => {
       if (process.env.VUE_APP_SEC_STRATEGY !== 'cookieStore') {
         commit('SET_TOKEN', '')
@@ -188,7 +188,7 @@ const actions = {
   },
 
   // dynamically modify permissions
-  changeRoles ({ commit, dispatch }, role) {
+  changeRoles({ commit, dispatch }, role) {
     return new Promise(async resolve => {
       const token = role + '-token'
 

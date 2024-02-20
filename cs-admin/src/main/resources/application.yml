@@ -51,10 +51,13 @@ spring:
       time-to-live: 3600s
 
   session:
-    store-type: none # redis
     timeout: 3600s
-    redis:
-      cleanup-cron: 0 */30 * * * ?
+    store-type: none
+    #store-type: redis
+    #redis:
+    #  cleanup-cron: 0 */30 * * * ?
+    #  namespace: spring:session
+    #  flush-mode: on_save
 
   redis: # 依赖 spring-boot-starter-data-redis
     host: localhost
@@ -140,7 +143,13 @@ logging:
 config:
   setting: ./cs-admin/src/main/resources/setting.properties # 这种格式仅在Idea下运行时才能找到正确目录
   #setting: ./src/main/resources/setting.properties # 这种格式仅在Idea下运行测试案例时才能找到正确目录
+  security: ./cs-admin/src/main/resources/security.properties
   captcha: ./cs-admin/src/main/resources/captcha.properties # 这种格式仅在Idea下运行时才能找到正确目录
   oss: ./cs-admin/src/main/resources/oss.properties # 这种格式仅在Idea下运行时才能找到正确目录
   ws: ./cs-admin/src/main/resources/ws.properties
   sys: ./cs-admin/src/main/resources/sys.properties
+
+page:
+  plain: false
+  rowsAlias: records
+  totalAlias: total

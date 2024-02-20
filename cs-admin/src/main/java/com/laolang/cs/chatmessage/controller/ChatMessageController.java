@@ -45,12 +45,12 @@ public class ChatMessageController {
         @ApiImplicitParam(paramType = "header", name = "clientId", value = "客戶端ID", dataType = "string"),
     })
     @GetMapping("unread_message_num")
-    public R<Integer> unreadMessageNum(@RequestHeader String clientId) {
+    public R<Long> unreadMessageNum(@RequestHeader String clientId) {
         ChatUser chatUser = subsysTool.getChatUser(clientId);
         QueryWrapper<ChatMessageRead> qw = new QueryWrapper<>();
         qw.eq("`read`", false);
         qw.eq("rcpt_id", chatUser.getId());
-        int count = readService.count(qw);
+        long count = readService.count(qw);
         return R.success(count);
     }
 
@@ -104,7 +104,7 @@ public class ChatMessageController {
             qw.eq("`read`", false);
             qw.eq("rcpt_id", senderChatUser.getId());
             qw.exists("select 1 from tb_chat_message where id=msg_id and sender="+rcpt.getId());
-            int count = readService.count(qw);
+            long count = readService.count(qw);
             onlineChatUserMap.put("unreadMessageNum", count);
 
             rcptMapList.add(onlineChatUserMap);

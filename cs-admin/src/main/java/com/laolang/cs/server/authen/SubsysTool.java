@@ -4,6 +4,7 @@ import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.cmpt.org.entity.SysOrg;
 import com.cmpt.org.service.SysOrgService;
 import com.cmpt.sys.security.domain.AdminUserDetails;
@@ -139,7 +140,7 @@ public final class SubsysTool {
         // 根据 tenantId 提取 远程接口地址，格式如：http://127.0.0.1:9090/api/mbr/getInfo
         SysOrgService sysOrgService = SpringUtil.getBean(SysOrgService.class);
         Assert.isTrue(sysOrgService != null, "500-系统内部异常，请联系管理");
-        SysOrg sysOrg = sysOrgService.getOne(tenantId);
+        SysOrg sysOrg = sysOrgService.getOne(new QueryWrapper<SysOrg>().eq("org_key", tenantId));
         Assert.isTrue(sysOrg != null, ()->String.format("404-找不到机构%s，请联系管理", tenantId));
         String getInfoUrl = sysOrg.getDomain();
         if(StringUtils.isBlank(getInfoUrl) && sysOrg.getPid() != null && sysOrg.getPid() > 0) {

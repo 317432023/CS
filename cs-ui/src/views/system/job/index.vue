@@ -86,7 +86,7 @@
         <el-pagination style="padding-top: 10px"
            :current-page="params.current" :page-size="params.size"
            @size-change="params.size=$event;queryPage()" @current-change="queryPage"
-           :page-sizes="[2, 6, 10, 20, 30, 50]"
+           :page-sizes="pagesizes"
            layout="total, sizes, prev, pager, next, jumper"
            :total="total" background/>
     </div>

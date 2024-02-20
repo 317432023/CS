@@ -1,6 +1,6 @@
 import i18n from '@/lang'
 
-export function generateTitle (title) {
+export function generateTitle(title) {
   // console.log(title)
 
   // const hasKey = this.$te('route.' + title)

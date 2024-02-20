@@ -1,9 +1,9 @@
 
 export default {
-  data () {
+  data() {
     return {
       // page sizes 下拉框
-      pagesizes: [2, 5, 10, 20, 30, 50],
+      pagesizes: [2, 5, 15, 20, 30, 50],
 
       // 表格数据
       records: [],
@@ -12,7 +12,7 @@ export default {
       // 表格查询参数
       params: {
         current: 1,
-        size: 10,
+        size: 15,
         // 模糊查询的文本
         text: '',
         // 根据什么排序
@@ -25,7 +25,7 @@ export default {
       // 是否为添加的弹窗
       isAdd: true,
       request: {
-        /*edit: () => {
+        /* edit: () => {
         },
         add: () => {
         },
@@ -56,11 +56,11 @@ export default {
   },
   methods: {
 
-    havePermission (perm) {
+    havePermission(perm) {
       return this.perm.indexOf(perm) !== -1
     },
 
-    haveAnyPermission (perm) {
+    haveAnyPermission(perm) {
       for (let i = 0, len = perm.length; i < len; i++) {
         if (this.havePermission(perm[i])) {
           return true
@@ -70,7 +70,7 @@ export default {
     },
 
     // 删除数据
-    removeOne (id) {
+    removeOne(id) {
       this.$confirm('此操作将永久删除此纪录, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -86,7 +86,7 @@ export default {
     },
 
     // 禁用记录
-    forbidOne (id) {
+    forbidOne(id) {
       this.$confirm('此操作将禁用此纪录, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -102,7 +102,7 @@ export default {
     },
 
     // 启用记录
-    enableOne (id) {
+    enableOne(id) {
       this.$confirm('此操作将启用此纪录, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -118,13 +118,13 @@ export default {
     },
 
     // 显示添加模态框
-    showAddDialog (dialogForm) {
+    showAddDialog(dialogForm) {
       this.isAdd = true
       this.dialogForm = dialogForm
       this.showDialog = true
     },
     // 编辑数据
-    showEditDialog (id) {
+    showEditDialog(id) {
       this.isAdd = false
       this.request.getById(id).then(res => {
         this.dialogForm = res.data
@@ -133,7 +133,7 @@ export default {
     },
 
     // 分页查询
-    queryPage (curPage) {
+    queryPage(curPage) {
       if (curPage) {
         this.params.current = curPage
       }
@@ -151,7 +151,7 @@ export default {
     },
 
     // 重置查询表单
-    reset (form) {
+    reset(form) {
       if (form) {
         console.log('重置表单')
         form.resetFields()
@@ -166,15 +166,15 @@ export default {
     },
 
     // 提交表单
-    submitForm () {
+    submitForm() {
       this.$refs.dialogForm.validate((valid) => {
         if (valid) {
           this.loadingSubmit = true
           console.log((this.isAdd?'添加记录:':'修改记录:') + JSON.stringify(this.dialogForm))
           // 提取add 或 mod 方法 或 edit 方法
-          let edit = this.isAdd? this.request.add: this.request.mod;
-          if(!edit) {
-              edit = this.request.edit;
+          let edit = this.isAdd?this.request.add : this.request.mod
+          if (!edit) {
+            edit = this.request.edit
           }
           edit(this.dialogForm).then(res => {
             this.loadingSubmit = false
@@ -189,22 +189,22 @@ export default {
     },
 
     // 图片字符串转数组（用于el-image）
-    srcList(imgStrs,staticPrefix) {
-      let fullImgArr = []
-      let imgArr = imgStrs.split('|')
-      imgArr.forEach((e,i)=>{
-        if(e.startsWith('http://') || e.startsWith('https://')) {
+    srcList(imgStr, staticPrefix) {
+      const fullImgArr = []
+      const imgAry = imgStr.split('|')
+      imgAry.forEach((e, i)=> {
+        if (e.startsWith('http://') || e.startsWith('https://')) {
           fullImgArr.push(e)
         } else {
-          fullImgArr.push(e.startsWith('/')?staticPrefix+e : staticPrefix+'/'+e)
+          fullImgArr.push(e.startsWith('/') ? staticPrefix + e : staticPrefix + '/' + e)
         }
-      });
+      })
       return fullImgArr
     }
 
   },
 
-  created () {
+  created() {
     this.queryPage()
     if (this.$route.meta.perm) {
       this.perm = this.$route.meta.perm

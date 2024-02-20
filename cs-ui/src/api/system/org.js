@@ -1,27 +1,27 @@
 import request from '@/utils/request'
 
 export default {
-  page (params) {
+  page(params) {
     return request({
-      url: `system/org`,
+      url: `system/org/query`,
       method: 'get',
       params: {
-        pageNum:params.current,
-        pageSize:params.size,
-        orderByColumn:params.sort,
-        isAsc: "desc",
+        pageNum: params.current,
+        pageSize: params.size,
+        orderByColumn: params.sort,
+        isAsc: 'desc'
       }
     })
   },
-  getById (id) {
+  getById(id) {
     return request({
-      //url: `system/org/query/one/${id}`,
+      // url: `system/org/query/one/${id}`,
       url: `system/org/view`,
       method: 'get',
-      params: {id}
+      params: { id }
     })
   },
-  edit (data, params) {
+  edit(data, params) {
     return request({
       url: 'system/org/edit',
       method: 'put',
@@ -29,12 +29,12 @@ export default {
       params
     })
   },
-  delete (id) {
+  delete(id) {
     return request({
-      //url: `system/org/del/${id}`,
+      // url: `system/org/del/${id}`,
       url: `system/org/del`,
       method: 'delete',
-      params: {id}
+      params: { id }
     })
-  },
+  }
 }

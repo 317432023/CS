@@ -1,5 +1,5 @@
 
-export default function (routers) {
+export default function(routers) {
   return filterAsyncRouter(routers)
 }
 
@@ -29,24 +29,24 @@ export const loadComponent = (suf, debug = false) => {
   return suf ? '@/views' + suf : '../layout'
 }
 
-function pickLastPath (url) {
+function pickLastPath(url) {
   const index = url.lastIndexOf('/')
   return index !== -1 ? url.substring(index + 1) : url
 }
 
-function isLeaf (raw) {
+function isLeaf(raw) {
   return raw.type === 0
 }
 
-function isSonOfRoot (raw) {
+function isSonOfRoot(raw) {
   return raw.pid === 0
 }
 
-function isDashboard (tmp) {
+function isDashboard(tmp) {
   return tmp.name === 'Dashboard'
 }
 
-function buildMeta (tmp, props = ['icon', 'title', 'breadcrumb', 'affix', 'noCache', 'activeMenu', 'perm']) {
+function buildMeta(tmp, props = ['icon', 'title', 'breadcrumb', 'affix', 'noCache', 'activeMenu', 'perm']) {
   const meta = {}
   props.forEach((value, index, array) => {
     meta[value] = tmp[value]
@@ -59,13 +59,13 @@ function buildMeta (tmp, props = ['icon', 'title', 'breadcrumb', 'affix', 'noCac
  * 格式化路由列表
  * @param rawRoutes 后端返回的路由列表
  */
-function formatRoutes (rawRoutes) {
+function formatRoutes(rawRoutes) {
   const fmtRoutes = []
 
   rawRoutes.forEach(raw => {
     const tmp = { ...raw }
 
-    //if (isDashboard(tmp)) return true // 相当于continue 遇到主页continue
+    // if (isDashboard(tmp)) return true // 相当于continue 遇到主页continue
 
     if (isLeaf(raw)) { // 菜单
       if (isSonOfRoot(raw)) { // 一级菜单
@@ -102,7 +102,7 @@ function formatRoutes (rawRoutes) {
 /**
  * 路由树（递归）
  */
-function _buildTree (children, fmtRoutes, pid) {
+function _buildTree(children, fmtRoutes, pid) {
   for (let i = 0, len = fmtRoutes.length; i < len; i++) {
     if (fmtRoutes[i].pid === pid) {
       children.push(fmtRoutes[i])

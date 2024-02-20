@@ -50,7 +50,7 @@ import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
 
-//import LangSelect from '@/components/LangSelect'
+// import LangSelect from '@/components/LangSelect'
 
 export default {
   components: {
@@ -60,7 +60,7 @@ export default {
     Screenfull,
     SizeSelect,
     Search,
-    //LangSelect
+    // LangSelect
   },
   computed: {
     ...mapGetters([
@@ -69,27 +69,27 @@ export default {
       'device'
     ]),
     setting: {
-        get() {
-            return this.$store.state.settings.showSettings
-        },
-        set(val) {
-            this.$store.dispatch('settings/changeSetting', {
-                key: 'showSettings',
-                value: val
-            })
-        }
+      get() {
+        return this.$store.state.settings.showSettings
+      },
+      set(val) {
+        this.$store.dispatch('settings/changeSetting', {
+          key: 'showSettings',
+          value: val
+        })
+      }
     }
   },
   methods: {
-    toggleSideBar () {
+    toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
-    logout () {
+    logout() {
       this.$confirm('确定注销登录吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(async () => {
+      }).then(async() => {
         await this.$store.dispatch('security/logout') // 20210316 改 user/logout 为 security/logout
         await this.$router.push(`/login?redirect=${this.$route.fullPath}`)
         this.$message.success('注销成功')
@@ -98,7 +98,7 @@ export default {
       })
     },
 
-    handleCommand (command) {
+    handleCommand(command) {
       switch (command) {
         case 'dashboard':
           this.$router.replace('/')

@@ -39,10 +39,10 @@ instance.interceptors.request.use(config => {
   captchaToken && (config.headers.captchaToken = captchaToken)
 
   // 为get请求添加时间戳，防止缓存
-  if (config.method == "get" || config.method == "delete") {
+  if (config.method === 'get' || config.method === 'delete') {
     config.params = {
       ...config.params,
-      _t: Date.parse(new Date()) / 1000, // 每次请求附加时间戳
+      _t: Date.parse(new Date()) / 1000 // 每次请求附加时间戳
     }
   }
 
@@ -65,10 +65,8 @@ const handleFailure = function(code, message) {
       })
     })
   } else {
-
     Message({ message: message || 'Error', type: 'error', duration: 5 * 1000 })
   }
-
 }
 
 // 响应拦截器设置
@@ -81,8 +79,8 @@ instance.interceptors.response.use(response => {
     return res
   }
 }, error => {
-  console.log('err: ' +error) // for debug
-  const code = error.response.status, message = error.message
+  console.log('err: ' + error) // for debug
+  const code = error.response.status; const message = error.message
   handleFailure(code, message)
   return Promise.reject(error)
 })

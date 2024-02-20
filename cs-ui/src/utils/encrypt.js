@@ -7,7 +7,7 @@ import RsaEncrypt from 'jsencrypt'
     '5l3HfdR2Go7G778W57l9YvZmwnJXHtgM8qS31m4uIUiIhVyoHcujl/fiF/myeVAZ\n' +
     'C5MmFRxnVn21ry7rSwIDAQAB' */
 
-export default function (text, publicKey) {
+export default function(text, publicKey) {
   if (process.env.VUE_APP_PASSWORD_ENCRYPT === 0) {
     return text
   }

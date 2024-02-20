@@ -120,7 +120,7 @@
         <!--表格-->
         <el-table class="table" row-key="id" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" v-loading="loadingTable"
                   :data="records" element-loading-text="加载中..." style="width: 100%" stripe border>
-            <el-table-column label="标题" >
+            <el-table-column label="标题" width="200">
               <template slot-scope="scope">
                 <!-- 图标方式一：Element 图标的显示 -->
                 <!--
@@ -137,7 +137,8 @@
                     <el-tag type="success">{{scope.row.type===0?'菜单':(scope.row.type===2?'目录':'按钮')}}</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column align="center" label="URL路由" prop="path" width="160"/>
+            <el-table-column align="center" label="路由名称" prop="name" width="160"/>
+            <el-table-column align="center" label="URL路由" prop="path"/>
             <el-table-column align="center" label="权限" prop="perm" width="160"/>
             <el-table-column align="center" label="URL规则" prop="pattern" width="180"/>
             <el-table-column align="center" label="排序" prop="sortNum" width="50"/>
@@ -204,7 +205,7 @@ export default {
   components: { TreeSelect, eliconSelect, svgiconSelect },
   mixins: [common],
   directives: { elDragDialog },
-  data () {
+  data() {
     return {
       hasChildren: true,
       params: {
@@ -218,7 +219,7 @@ export default {
   },
   methods: {
     // 分页查询 (覆盖了common的queryPage方法)
-    queryPage (curPage) {
+    queryPage(curPage) {
       if (curPage) {
         this.params.current = curPage
       }
@@ -242,7 +243,7 @@ export default {
       })
     },
 
-    loadTree () {
+    loadTree() {
       request.getTree().then(res => {
         this.menuTree = res.data
         console.log('菜单树[不含按钮]:' + JSON.stringify(this.menuTree))
@@ -250,7 +251,7 @@ export default {
     }
 
   },
-  created () {
+  created() {
     this.loadTree()
   }
 }

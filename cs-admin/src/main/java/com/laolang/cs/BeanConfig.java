@@ -13,6 +13,8 @@ import org.springframework.context.annotation.FilterType;
  */
 @Configuration
 @ComponentScan(basePackages = {
+    // 基础接口
+    "com.comm.infra",
     /*框架*/
     "com.frm.springmvc",
     "com.frm.springboot",

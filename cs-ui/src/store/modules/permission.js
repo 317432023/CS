@@ -6,7 +6,7 @@ import { buildRoutes } from '@/utils/routeFormat'
  * @param roles 角色数组
  * @param route 路由
  */
-function hasPermission (roles, route) {
+function hasPermission(roles, route) {
   if (route.meta && route.meta.roles) {
     // 检测角色数组中是否有 角色存在 路由元数据meta.roles中
     return roles.some(role => route.meta.roles.includes(role))
@@ -20,7 +20,7 @@ function hasPermission (roles, route) {
  * @param routes asyncRoutes 路由数组
  * @param roles 角色数组
  */
-export function filterAsyncRoutes (routes, roles) {
+export function filterAsyncRoutes(routes, roles) {
   const res = []
 
   routes.forEach(route => {
@@ -52,7 +52,8 @@ const actions = {
   /**
    * 基于角色生成 可访问的 (本地/远程)动态路由表
    */
-  generateRoutes ({ commit }, roleIds) {
+  generateRoutes({ commit }, roleIds) {
+    // eslint-disable-next-line no-async-promise-executor
     return new Promise(async resolve => {
       let accessedRoutes
 
@@ -64,7 +65,7 @@ const actions = {
         accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
       } */
       // 加载远程路由
-      const [res, e] = await loadRoutes(roleIds[0]?roleIds:undefined).then(res => [res]).catch(e => [null, e])
+      const [res, e] = await loadRoutes(roleIds[0] ? roleIds : undefined).then(res => [res]).catch(e => [null, e])
 
       if (res && res.success) {
         console.log('动态路由列表：\n' + JSON.stringify(res.data))

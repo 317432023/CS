@@ -117,7 +117,7 @@
        :page-size="params.size"
        @current-change="queryPage"
        @size-change="params.size=$event;queryPage()"
-       :page-sizes="[2, 6, 10, 20, 30, 50]"
+       :page-sizes="pagesizes"
        layout="total, sizes, prev, pager, next, jumper"
        :total="total" background/><!--small-->
 
