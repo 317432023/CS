@@ -44,9 +44,27 @@
     <!-- cyan:青色 -->
     <!-- white:白色 -->
     <!-- magenta:洋红 -->
-    <property name="Console_LOG_PATTERN"
-              value="%yellow(%date{yyyy-MM-dd HH:mm:ss}) |%highlight(%-5level) |%blue(%thread) |%blue(%file:%line) |%green(%logger) |%cyan(%msg%n)"/>
+    <!--
+        参考网址：https://www.cnblogs.com/sxdcgaq8080/p/7886251.html
+        官网说明：https://logback.qos.ch/manual/layouts.html#ClassicPatternLayout
 
+        %logger 日志名字，一般采用日志所在类名或者包名做日志名 %logger、%lo 和 %c 三种都表示日志名字
+        %C　　   类名%C = %class
+        %d      时间%d = %data
+        %F      发出日志请求的java源文件名字 %F = %file
+        %L      日志请求的行号 %L = %line
+        %m      日志正文信息 %m = %msg = %message
+        %M      日志请求发出的方法的方法名 %M = %method
+        %n      换行符
+        %level  日志级别 %p = %le = %level
+        %r      从程序运行到本条日志打印出来  的毫秒数 %r = %relative
+        %t      本条日志所在线程名字 %t = %thread
+        %i      这个在官方文档没有，但是它代表的是序号的意思
+    -->
+    <property name="Console_LOG_PATTERN"
+              value="%yellow([%date{yyyyMMdd HH:mm:ss.SSS}]) %blue([%thread]) %highlight([%-4level]) %green(%logger{5}):%line %cyan(%msg%n)"/>
+    <property name="File_LOG_PATTERN"
+              value="[%date{yyyyMMdd HH:mm:ss.SSS}] [%thread] [%-4level] %logger{5}:%line %msg%n"/>
     <!--*****************************************************************************-->
     <!--自定义项 结束-->
     <!--*****************************************************************************-->
@@ -93,7 +111,7 @@
             <maxFileSize>${log.maxSize}</maxFileSize>
         </rollingPolicy>
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %logger - %msg%n</pattern>
+            <pattern>${File_LOG_PATTERN}</pattern>
         </encoder>
     </appender>
 
@@ -118,7 +136,7 @@
             <maxFileSize>${log.maxSize}</maxFileSize>
         </rollingPolicy>
         <encoder>
-            <pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <pattern>${File_LOG_PATTERN}</pattern>
         </encoder>
     </appender>
 
@@ -147,10 +165,7 @@
             <maxFileSize>${log.maxSize}</maxFileSize>
         </rollingPolicy>
         <encoder>
-            <pattern>
-                <!-- 设置日志输出格式 -->
-                %date{yyyy-HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
-            </pattern>
+            <pattern>${File_LOG_PATTERN}</pattern>
         </encoder>
     </appender>
 
