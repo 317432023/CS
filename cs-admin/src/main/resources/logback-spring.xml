@@ -34,8 +34,6 @@
     <property name="log.maxHistory" value="30"/>
     <!-- 当天的日志大小 超过MaxFileSize时,压缩日志并保存 -->
     <property name="log.maxSize" value="10MB"/>
-    <!-- 打印sql语句 需要指定dao/mapper层包的位置 -->
-    <property name="mapper.package" value="com.cmpt.*.mapper"/>
 
     <!-- 彩色日志 -->
     <!-- 配置格式变量：Console_LOG_PATTERN 彩色日志格式 -->
@@ -169,7 +167,7 @@
         </encoder>
     </appender>
 
-
+    <!-- 系统模块日志级别控制  -->
     <!-- 过滤掉spring和mybatis的一些无用的DEBUG信息 -->
     <logger name="org.mybatis" level="info" additivity="false">
         <appender-ref ref="Console"/>
@@ -178,16 +176,10 @@
     <logger name="org.springframework.web" level="info" additivity="false">
         <appender-ref ref="Console"/>
     </logger>
-    <!--dao层包下的类的日志输出（生产环境最好要关闭）-->
-    <!--<logger name="${mapper.package}" level="debug" additivity="false">
-        <appender-ref ref="app"/>
-        <appender-ref ref="RollingFileError"/>
-        &lt;!&ndash; 控制台输出日志 &ndash;&gt;
-        <appender-ref ref="Console"/>
-    </logger>-->
+    <logger name="com.ruoyi" level="info" />
+    <logger name="com.laolang" level="info"/>
 
-
-    <!-- root级别   -->
+    <!-- root级别 -->
     <root>
         <!-- 打印debug级别日志及以上级别日志 -->
         <level value="${log.rootLevel}"/>
@@ -198,5 +190,29 @@
         <appender-ref ref="RollingFileWarn"/>
         <appender-ref ref="RollingFileError"/>
     </root>
+
+    <!-- SQL 日志输出（生产环境最好要关闭）注意：mybatis 和 具体包dao层 都使用DEBUG才能写SQL日志 -->
+    <!--
+    <logger name="com.baomidou.mybatisplus" level="DEBUG" additivity="false"/>
+    <logger name="com.ibatis" level="DEBUG" additivity="false"/>
+    <logger name="com.ibatis.common.jdbc.SimpleDataSource" level="DEBUG" additivity="false"/>
+    <logger name="com.ibatis.common.jdbc.ScriptRunner" level="DEBUG" additivity="false"/>
+    <logger name="com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate" level="DEBUG" additivity="false"/>
+    <logger name="java.sql.Connection" level="DEBUG" additivity="false"/>
+    <logger name="java.sql.Statement" level="DEBUG" additivity="false"/>
+    <logger name="java.sql.PreparedStatement" level="DEBUG" additivity="false"/>
+    <logger name="com.cmpt" level="debug" additivity="false">
+        <appender-ref ref="Console"/>
+        <appender-ref ref="RollingFileError"/>
+    </logger>
+    <logger name="com.ruoyi" level="debug" additivity="false">
+        <appender-ref ref="Console"/>
+        <appender-ref ref="RollingFileError"/>
+    </logger>
+    <logger name="com.laolang" level="debug" additivity="false">
+        <appender-ref ref="Console"/>
+        <appender-ref ref="RollingFileError"/>
+    </logger>
+     -->
 
 </configuration>

@@ -114,14 +114,6 @@
             <AppenderRef ref="Console"/>
         </Logger>
 
-        <!-- dao层包下的类的日志输出（生产环境最好要关闭）-->
-        <!--<Logger name="${mapper.package}" level="debug" additivity="false">
-            <AppenderRef ref="Filelog"/>
-            <AppenderRef ref="RollingFileError"/>
-            &lt;!&ndash; 控制台输出日志 &ndash;&gt;
-            <AppenderRef ref="Console"/>
-        </Logger>-->
-
         <Root level="${log.rootLevel}">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="Filelog"/>
@@ -129,6 +121,31 @@
             <AppenderRef ref="RollingFileWarn"/>
             <AppenderRef ref="RollingFileError"/>
         </Root>
+
+        <!-- SQL 日志输出（生产环境最好要关闭）注意：mybatis 和 具体包dao层 都使用DEBUG才能写SQL日志 -->
+        <!--
+        <Logger name="com.baomidou.mybatisplus" level="DEBUG" additivity="false"/>
+        <Logger name="com.ibatis" level="DEBUG" additivity="false"/>
+        <Logger name="com.ibatis.common.jdbc.SimpleDataSource" level="DEBUG" additivity="false"/>
+        <Logger name="com.ibatis.common.jdbc.ScriptRunner" level="DEBUG" additivity="false"/>
+        <Logger name="com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate" level="DEBUG" additivity="false"/>
+        <Logger name="java.sql.Connection" level="DEBUG" additivity="false"/>
+        <Logger name="java.sql.Statement" level="DEBUG" additivity="false"/>
+        <Logger name="java.sql.PreparedStatement" level="DEBUG" additivity="false"/>
+        <Logger name="com.cmpt" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFileError"/>
+        </Logger>
+        <Logger name="com.ruoyi" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderReff ref="RollingFileError"/>
+        </Logger>
+        <Logger name="com.laolang" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFileError"/>
+        </Logger>
+         -->
+
     </Loggers>
 
 </configuration>
