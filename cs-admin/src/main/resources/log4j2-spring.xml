@@ -21,15 +21,13 @@
      -->
     <!--变量配置-->
     <Properties>
-        <!--日志编码-->
-        <Property name="log.charset" value="utf-8"/>
         <!-- 应用名称 -->
         <!-- 生产环境value设置成 ${sys:serverId} 同时在启动时设置 -DserverId=应用名称 -->
-        <!--<Property name="log.app_name" value="${ctx:appName}"/>-->
-        <Property name="log.app_name" value="cs-admin"/>
+        <Property name="log.app_name" value="${ctx:appName}"/>
+        <!--日志编码-->
+        <Property name="log.charset" value="utf-8"/>
         <!-- 定义日志存储的路径 -->
-        <!--<Property name="log.home_dir" value="/data/applogs/${ctx:appName}_${ctx:ip}_${ctx:port}/logs"/>-->
-        <Property name="log.home_dir" value="/data/applogs/${log.app_name}/logs"/>
+        <Property name="log.home_dir" value="/data/applogs/${log.app_name}_${ctx:ip}_${ctx:port}/logs"/>
         <!-- 日志级别 -->
         <Property name="log.rootLevel" value="info"/>
         <!-- 最多同一文件夹下多少个日志文件循环覆盖，默认7个 -->
