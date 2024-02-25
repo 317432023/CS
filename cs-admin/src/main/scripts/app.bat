@@ -1,6 +1,7 @@
-rem 注释：这是一行注释
-:: 注释：这是一行注释
 @echo off
+chcp 65001 > nul
+
+:: 这是一行注释
 
 :: 运行端口号
 set PORT=8080
@@ -22,7 +23,8 @@ rem 注释：loader.path为springboot加载lib路径专享参数；java.ext.dirs
 :: 注释：set JAVA_OPT=%JAVA_OPT% -Dloader.path=lib
 :: 注释：set JAVA_OPT=%JAVA_OPT% -Djava.ext.dirs=lib
 
-set BOOT_JAR_NAME=customer-service
+set BOOT_JAR_NAME=cs-admin
+set VERSION=-2.4.1-SNAPSHOT
 
 :: 系统参数
 set SYS_PRO=
@@ -44,6 +46,6 @@ set BOOT_PAR=%BOOT_PAR% --server.tomcat.accept-count=2000
 set BOOT_PAR=%BOOT_PAR% --server.tomcat.connection-timeout=5000ms
 
 cd /d %~dp0
-java %JAVA_OPT% %SYS_PRO% -jar %BOOT_JAR_NAME%.jar %BOOT_JAR_NAME%.pid %BOOT_PAR%
+java %JAVA_OPT% %SYS_PRO% -jar %BOOT_JAR_NAME%%VERSION%.jar %BOOT_JAR_NAME%.pid %BOOT_PAR%
 
 pause

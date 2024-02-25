@@ -4,7 +4,8 @@
 # sudo dpkg-reconfigure dash 选择 “否”, 表示用bash代替dash
 # 修改脚本首行为 #!/bin/bash
 
-BOOT_JAR_NAME=customer-service
+BOOT_JAR_NAME=cs-admin
+VERSION=
 # PIDFILE=/data/application/28all/$BOOT_JAR_NAME.pid
 PIDFILE=$BOOT_JAR_NAME.pid
 
@@ -44,7 +45,7 @@ BOOT_PAR="$BOOT_PAR --server.tomcat.accept-count=2000"
 BOOT_PAR="$BOOT_PAR --server.tomcat.connection-timeout=5000ms"
 
 
-EXEC="java $JAVA_OPT $SYS_PRO -jar $BOOT_JAR_NAME.jar $BOOT_JAR_NAME.pid $BOOT_PAR"
+EXEC="java $JAVA_OPT $SYS_PRO -jar $BOOT_JAR_NAME$VERSION.jar $BOOT_JAR_NAME.pid $BOOT_PAR"
 
 # 试运行
 TESTRUN=$EXEC
