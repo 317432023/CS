@@ -11,7 +11,7 @@ spring:
   application:
     name: customer-service
   profiles:
-    active: debug
+    active: dev
   output:
     ansi:
       enabled: always
@@ -141,13 +141,13 @@ logging:
 # 见 com.cmpt.oss.upload.config.OssProperties
 # 见 com.cmpt.ws.props.WebSocketProperties
 config:
-  setting: ./cs-admin/src/main/resources/setting.properties # 这种格式仅在Idea下运行时才能找到正确目录
+  setting: cs-admin/src/main/resources/setting.properties # 这种格式仅在Idea下运行时才能找到正确目录
   #setting: ./src/main/resources/setting.properties # 这种格式仅在Idea下运行测试案例时才能找到正确目录
-  security: ./cs-admin/src/main/resources/security.properties
-  captcha: ./cs-admin/src/main/resources/captcha.properties # 这种格式仅在Idea下运行时才能找到正确目录
-  oss: ./cs-admin/src/main/resources/oss.properties # 这种格式仅在Idea下运行时才能找到正确目录
-  ws: ./cs-admin/src/main/resources/ws.properties
-  sys: ./cs-admin/src/main/resources/sys.properties
+  security: cs-admin/src/main/resources/security.properties
+  captcha: cs-admin/src/main/resources/captcha.properties # 这种格式仅在Idea下运行时才能找到正确目录
+  oss: cs-admin/src/main/resources/oss.properties # 这种格式仅在Idea下运行时才能找到正确目录
+  ws: cs-admin/src/main/resources/ws.properties
+  sys: cs-admin/src/main/resources/sys.properties
 
 page:
   plain: false

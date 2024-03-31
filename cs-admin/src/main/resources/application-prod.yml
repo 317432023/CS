@@ -77,12 +77,12 @@ spring:
     #    enabled: true
 
 logging:
-  config: ./config/log4j2-${spring.application.name}.xml
+  config: config/log4j2-spring.xml
 
 # 自定义属性文件
 config:
-  setting: ./config/setting-${spring.application.name}.properties
-  captcha: ./config/captcha.properties
-  oss: ./config/oss.properties
-  ws: ./config/ws.properties
-  sys: ./config/sys.properties
+  setting: config/setting.properties
+  captcha: config/captcha.properties
+  oss: config/oss.properties
+  ws: config/ws.properties
+  sys: config/sys.properties

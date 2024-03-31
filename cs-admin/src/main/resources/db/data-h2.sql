@@ -1,7 +1,4 @@
 
-/*会员扩展信息*/
-INSERT INTO mbr_user VALUES ('1', 'test', 'e10adc3949ba59abbe56e057f20f883e', '歪歪', '0', null, null, null, 0, '0', 0, '',null,'备注#', '2020-11-12 21:04:23', '', null, '');
-
 /*客服机构*/
 INSERT INTO sys_org VALUES ('3', 'FT1', 'SUB', 0, 1, 0, 'FT1', 'http://127.0.0.1:9090/api/mbr/getInfo', '199828', null, '2021-02-02 01:01:59', 'admin', '2020-11-12 21:01:32', 'admin');
 INSERT INTO sys_org VALUES ('4', 'FT1@测试站', 'BR', 3, 2, 0, 'FT1@6', '', '199829', null, '2021-02-02 01:01:59', 'admin', '2020-11-12 21:01:32', 'admin');
@@ -24,6 +21,9 @@ INSERT INTO sys_user VALUES ('8', 'kf01', '$2a$10$r0IrohJ71YsYzqs1kK62HeUF9HpZcu
 INSERT INTO sys_user_role VALUES ('7', '7');
 INSERT INTO sys_user_role VALUES ('8', '8');
 
+
+/*会员信息*/
+INSERT INTO mbr_user VALUES ('1', 'test', 'e10adc3949ba59abbe56e057f20f883e', '歪歪', '0', null, null, null, 0, '0', 0, '',null,'备注#', '2020-11-12 21:04:23', '', null, '');
 
 insert into tb_chat_user(tenant_id,nick_name,user_type,avatar,rel_id,create_time) values
 ('FT1@6', 'nwp', 0, '/upload/faces/1.jpg', 0, '2023-10-18 21:45:59') -- 客人

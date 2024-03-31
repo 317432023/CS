@@ -149,7 +149,9 @@ public class ChatMessageController {
             "create_time",
             "(select nick_name from tb_chat_user cu where cu.id=sender) senderNickName",
             userType==1?"(select nick_name from tb_chat_user cu where cu.id=receiver) receiverNickName":"NULL receiverNickName",
-            "(case sender when "+chatUser.getId()+" then 1 else (select (case `read` when is null then false else `read` end) from tb_chat_message_read cmr where cmr.msg_id=tb_chat_message.id and cmr.rcpt_id="+chatUser.getId()+") end) as `read`"
+            /* h2 数据库不支持ifnull函数改用case...end
+            "(case sender when "+chatUser.getId()+" then 1 else (select (case `read` when is null then false else `read` end) from tb_chat_message_read cmr where cmr.msg_id=tb_chat_message.id and cmr.rcpt_id="+chatUser.getId()+") end) as `read`"*/
+            "(case sender when "+chatUser.getId()+" then 1 else (select ifnull(`read`,false) from tb_chat_message_read cmr where cmr.msg_id=tb_chat_message.id and cmr.rcpt_id="+chatUser.getId()+") end) as `read`"
         };
         qw.select(selectColumns);
         if(userType == 0) { // 客人

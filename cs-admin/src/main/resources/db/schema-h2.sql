@@ -1,6 +1,7 @@
 
 SELECT 1 FROM DUAL;
 
+drop table if exists tb_chat_user;
 create table tb_chat_user(
   `id` int unsigned not null auto_increment,
   `tenant_id` varchar(32) not null comment '租户ID',
@@ -16,6 +17,8 @@ create table tb_chat_user(
 /**
  * message 两种格式分别为文本和图片: {"type":"text","content":"你好"} 例如：{"type":"image","content":"http://res.cs.com/upload/2023/09/26/01.jpeg"}
  */
+
+drop table if exists tb_chat_message;
 create table tb_chat_message(
   `id` bigint unsigned not null auto_increment,
   `sender` int unsigned not null comment '发送者',
@@ -25,6 +28,7 @@ create table tb_chat_message(
   primary key(`id`)
 ) comment '聊天记录';
 
+drop table if exists tb_chat_message_read;
 create table tb_chat_message_read(
   `id` bigint unsigned not null auto_increment,
   `msg_id` bigint unsigned not null comment '消息记录ID',
