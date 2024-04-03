@@ -24,7 +24,7 @@ export default {
   edit(data, params) {
     return request({
       url: 'system/org/edit',
-      method: 'put',
+      method: 'post',
       data,
       params
     })

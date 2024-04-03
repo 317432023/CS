@@ -224,6 +224,9 @@
     data() {
       return {
         request: request,
+        dialogForm: {
+          roleIds:[]
+        },
         rule: {
           username: [{required: true, message: '用户名必须填写', trigger: 'blur'}],
           password: [{required: true, message: '密码必须填写', trigger: 'blur'}],
