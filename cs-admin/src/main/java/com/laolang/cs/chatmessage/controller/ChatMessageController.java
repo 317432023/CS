@@ -39,6 +39,33 @@ public class ChatMessageController {
     private Environment environment;
 
     /**
+     * 取自身聊天用户信息
+     *
+     * @return
+     */
+    @ApiOperation(value = "取自身聊天用户信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "clientId", value = "客戶端ID", dataType = "string"),
+    })
+    @GetMapping("self")
+    public R<Map<String, Object>> self(@RequestHeader String clientId) {
+        ChatUser senderChatUser = subsysTool.getChatUser(clientId); // 消息發送者
+        Map<String, Object> chatUserInfo = new HashMap<>(); // nickName
+        chatUserInfo.put("chatUserId", senderChatUser.getId());
+        chatUserInfo.put("nickName", senderChatUser.getNickName());
+        chatUserInfo.put("tenantId", senderChatUser.getTenantId());
+        chatUserInfo.put("userType", senderChatUser.getUserType());
+        String imgUrl = senderChatUser.getAvatar() != null ? senderChatUser.getAvatar().trim() : "";
+        if (StringUtils.isNotBlank(imgUrl) && !imgUrl.startsWith("http://") && !imgUrl.startsWith("https://")) {
+            RedisTool redisTool = SpringContextHolder.getBean("redisTool", RedisTool.class);
+            String staticDomain = redisTool.hget("system_config", "STATIC_DOMAIN", ModeDict.APP_GROUP, 1);
+            imgUrl = staticDomain + (imgUrl.startsWith("/") ? "" : "/") + imgUrl;
+        }
+        chatUserInfo.put("avatar", imgUrl); // 头像
+        return R.success(chatUserInfo);
+    }
+
+    /**
      * 取未读消息数目(当前用户)
      *
      * @return
