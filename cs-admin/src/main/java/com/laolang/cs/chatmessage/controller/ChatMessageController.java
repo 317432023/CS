@@ -46,9 +46,10 @@ public class ChatMessageController {
     @ApiOperation(value = "取自身聊天用户信息")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "clientId", value = "客戶端ID", dataType = "string"),
+            @ApiImplicitParam(paramType = "query", name = "igResPrefix", value = "返回资源是否去掉前缀，默认false", dataType = "boolean"),
     })
     @GetMapping("self")
-    public R<Map<String, Object>> self(@RequestHeader String clientId) {
+    public R<Map<String, Object>> self(@RequestHeader String clientId, @RequestParam(required = false, defaultValue = "false") Boolean igResPrefix) {
         ChatUser senderChatUser = subsysTool.getChatUser(clientId); // 消息發送者
         Map<String, Object> chatUserInfo = new HashMap<>(); // nickName
         chatUserInfo.put("chatUserId", senderChatUser.getId());
@@ -56,10 +57,12 @@ public class ChatMessageController {
         chatUserInfo.put("tenantId", senderChatUser.getTenantId());
         chatUserInfo.put("userType", senderChatUser.getUserType());
         String imgUrl = senderChatUser.getAvatar() != null ? senderChatUser.getAvatar().trim() : "";
-        if (StringUtils.isNotBlank(imgUrl) && !imgUrl.startsWith("http://") && !imgUrl.startsWith("https://")) {
-            RedisTool redisTool = SpringContextHolder.getBean("redisTool", RedisTool.class);
-            String staticDomain = redisTool.hget("system_config", "STATIC_DOMAIN", ModeDict.APP_GROUP, 1);
-            imgUrl = staticDomain + (imgUrl.startsWith("/") ? "" : "/") + imgUrl;
+        if(igResPrefix == null || !igResPrefix) {
+            if (StringUtils.isNotBlank(imgUrl) && !imgUrl.startsWith("http://") && !imgUrl.startsWith("https://")) {
+                RedisTool redisTool = SpringContextHolder.getBean("redisTool", RedisTool.class);
+                String staticDomain = redisTool.hget("system_config", "STATIC_DOMAIN", ModeDict.APP_GROUP, 1);
+                imgUrl = staticDomain + (imgUrl.startsWith("/") ? "" : "/") + imgUrl;
+            }
         }
         chatUserInfo.put("avatar", imgUrl); // 头像
         return R.success(chatUserInfo);
@@ -92,9 +95,10 @@ public class ChatMessageController {
     @ApiOperation(value = "取聊天用户名单(在线情况)")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "clientId", value = "客戶端ID", dataType = "string"),
+            @ApiImplicitParam(paramType = "query", name = "igResPrefix", value = "返回资源是否去掉前缀，默认false", dataType = "boolean"),
     })
     @GetMapping("chat_users")
-    public R<List<Map<String, Object>>> onlineChatUsers(@RequestHeader String clientId) {
+    public R<List<Map<String, Object>>> onlineChatUsers(@RequestHeader String clientId, @RequestParam(required = false, defaultValue = "false") Boolean igResPrefix) {
         ChatUser senderChatUser = subsysTool.getChatUser(clientId); // 消息發送者
         List<ChatUser> rcptList = chatUserService.queryRcptIdList(senderChatUser.getId());
         Date date = DateUtil.parse("1970", "yyyy");
@@ -113,8 +117,10 @@ public class ChatMessageController {
             onlineChatUserMap.put("nickName", rcpt.getNickName());
 
             String imgUrl = rcpt.getAvatar() != null ? rcpt.getAvatar().trim() : "";
-            if (StringUtils.isNotBlank(imgUrl) && !imgUrl.startsWith("http://") && !imgUrl.startsWith("https://")) {
-                imgUrl = staticDomain + (imgUrl.startsWith("/") ? "" : "/") + imgUrl;
+            if(igResPrefix == null || !igResPrefix) {
+                if (StringUtils.isNotBlank(imgUrl) && !imgUrl.startsWith("http://") && !imgUrl.startsWith("https://")) {
+                    imgUrl = staticDomain + (imgUrl.startsWith("/") ? "" : "/") + imgUrl;
+                }
             }
 
             onlineChatUserMap.put("avatar", imgUrl); // 头像
@@ -162,9 +168,11 @@ public class ChatMessageController {
             @ApiImplicitParam(paramType = "query", name = "customerChatUserId", value = "聊天用戶ID(客服可以使用该参数；会员忽略此参数)", dataType = "int"),
             @ApiImplicitParam(paramType = "query", name = "headMsgId", value = "已取得的最早消息ID", dataType = "bigint"),
             @ApiImplicitParam(paramType = "query", name = "limit", value = "最多返回記錄數", dataType = "int"),
+            @ApiImplicitParam(paramType = "query", name = "igResPrefix", value = "返回资源是否去掉前缀，默认false", dataType = "boolean"),
+
     })
     @GetMapping("recent_messages")
-    public R<List<ChatMessage>> recentMessages(@RequestHeader String clientId,
+    public R<List<ChatMessage>> recentMessages(@RequestHeader String clientId, @RequestParam(required = false, defaultValue = "false") Boolean igResPrefix,
                                                @RequestParam(required = false, defaultValue = "0") Integer customerChatUserId,
                                                @RequestParam(required = false, defaultValue = "0") Long headMsgId,
                                                @RequestParam(required = false, defaultValue = "15") Integer limit) {
@@ -211,15 +219,17 @@ public class ChatMessageController {
         chatMessageList = service.list(qw);
         Collections.reverse(chatMessageList); // 反转顺序
 
-        // 图片如有必要加资源域名前缀
-        for (ChatMessage chatMessage : chatMessageList) {
-            if (chatMessage.getMessage() != null && "image".equals(chatMessage.getMessage().get("type"))) {
-                String imgUrl = (String) chatMessage.getMessage().get("value");
-                if (StringUtils.isNotBlank(imgUrl) && !imgUrl.startsWith("http://") && !imgUrl.startsWith("https://")) {
-                    RedisTool redisTool = SpringContextHolder.getBean("redisTool", RedisTool.class);
-                    String staticDomain = redisTool.hget("system_config", "STATIC_DOMAIN", ModeDict.APP_GROUP, 1);
-                    imgUrl = staticDomain + (imgUrl.startsWith("/") ? "" : "/") + imgUrl;
-                    chatMessage.getMessage().put("value", imgUrl);
+        RedisTool redisTool = SpringContextHolder.getBean("redisTool", RedisTool.class);
+        String staticDomain = redisTool.hget("system_config", "STATIC_DOMAIN", ModeDict.APP_GROUP, 1);
+        if(igResPrefix == null || !igResPrefix) {
+            // 图片如有必要加资源域名前缀
+            for (ChatMessage chatMessage : chatMessageList) {
+                if (chatMessage.getMessage() != null && "image".equals(chatMessage.getMessage().get("type"))) {
+                    String imgUrl = (String) chatMessage.getMessage().get("value");
+                        if (StringUtils.isNotBlank(imgUrl) && !imgUrl.startsWith("http://") && !imgUrl.startsWith("https://")) {
+                            imgUrl = staticDomain + (imgUrl.startsWith("/") ? "" : "/") + imgUrl;
+                            chatMessage.getMessage().put("value", imgUrl);
+                        }
                 }
             }
         }
