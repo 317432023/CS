@@ -81,7 +81,7 @@
                         <el-button type="primary" @click="sendMsg($event)">发送</el-button>&nbsp;
                         <el-upload style="display:inline;"
                           name="myFileName" :on-success="handleUploadSuccess" :before-upload="beforeUpload"
-                          action="http://be.laolang-cs.com/upload">
+                          :action="uploadUrl">
                           <el-button size="small" type="primary" icon="el-icon-picture" class="share-button" ></el-button>
                         </el-upload>&nbsp;
                       </el-footer>
@@ -95,6 +95,7 @@
 <script>
 
 import request from '@/api/cs/mbr'
+import open from '@/api/cs/open'
 import {generateRandomString} from '@/utils/tools'
 
 export default {
@@ -107,6 +108,7 @@ export default {
             scrollHeight: 100,
             msgList:[],
             baseUrl: process.env.VUE_APP_BASE_API,
+            uploadUrl: ''
         }
     },
     computed: {
@@ -195,7 +197,7 @@ export default {
          * 切换聊天对象
          */
         chatUserSelected(index) {
-            if(this.chatToUser && this.chatToUser.rcptId == this.users[index].rcptId) {
+            if(this.chatToUser && this.chatToUser.rcptId === this.users[index].rcptId) {
                 return
             }
             this.chatToUser = this.users[index] // 当前选中的用户
@@ -206,7 +208,7 @@ export default {
             obj.style.cssText='text-align:center;background:skyblue';
 
             this.users.forEach((user,ix,ary)=>{
-                if(ix != index) {
+                if(ix !== index) {
                     obj = that.$refs['user'+ix][0];
                     obj.style.cssText='text-align:center;';
                 }
@@ -368,6 +370,12 @@ export default {
         }
     },
     created () {
+        open.getUploadUrl().then(res=>{
+            this.uploadUrl = res.data
+            console.log(this.uploadUrl)
+        }).catch(e=>{
+          console.error('getUploadUrl failed')
+        })
     },
     mounted(){
         console.log("mounted")
