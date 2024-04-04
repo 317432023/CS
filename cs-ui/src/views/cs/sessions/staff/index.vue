@@ -359,11 +359,11 @@ export default {
         },
         handleUploadSuccess(res,file) {
             // 上传文件成功res=》{"code":200,"data":{"resPrefix":"","res":["/upload/jpeg/2023/11/29/e10c3a6c-0b0f-4d69-9106-c832d0598e3a.jpeg"]},"msg":"","success":true}
-            if(res.code !== 200) {
+            if(res.code !== 200 && res.code !== 0) {
                 this.$message.error('上传失败')
                 return
             }
-            let imgUrlAry = res.data.res;
+            let imgUrlAry = res.data.res
             let imgUrl = imgUrlAry[0]
             let msgBody = {"type": "image","value": imgUrl}
             this.$sendMsg(msgBody)
@@ -380,10 +380,10 @@ export default {
     mounted(){
         console.log("mounted")
         let oh = 80
-        this.scrollHeight = document.documentElement.clientHeight - 20 - oh;
+        this.scrollHeight = document.documentElement.clientHeight - 20 - oh
         window.onresize = ()=> {
             if ( this.scrollHeight ) {
-               this.scrollHeight = document.documentElement.clientHeight - 20 - oh;
+               this.scrollHeight = document.documentElement.clientHeight - 20 - oh
             }
         }
 
