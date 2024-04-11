@@ -1,6 +1,5 @@
 package com.laolang.cs.server.authen.websocket;
 
-import cn.hutool.extra.spring.SpringUtil;
 import com.cmpt.ws.WebSocketUser;
 import com.cmpt.ws.props.WebSocketProperties;
 import com.comm.pojo.SystemException;
@@ -27,6 +26,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CsSocketChannelInterceptor implements ChannelInterceptor {
     private WebSocketProperties webSocketProperties;
+    private SubsysTool subsysTool;
 
     /**
      * 发送消息到通道前
@@ -43,7 +43,16 @@ public class CsSocketChannelInterceptor implements ChannelInterceptor {
         String token, userType, tenantId; // 令牌 用户类型 租户
 
         if(accessor.getCommand() == null) {
-            // 这种情况一般属于心跳 需要用 accessor.getMessageType() 判定
+            switch (accessor.getMessageType()) {
+                case HEARTBEAT: // 心跳
+                    webSocketUser = (WebSocketUser)accessor.getUser();
+                    log.info("收到心跳 clientId => " + webSocketUser.getName() + ", userId => " + webSocketUser.getUserId());
+                    // 更新在线会话
+                    subsysTool.renew(webSocketUser.getName(), webSocketUser.getUserId());
+                    break;
+                default:
+                    break;
+            }
             return message;
         }
 
@@ -61,9 +70,8 @@ public class CsSocketChannelInterceptor implements ChannelInterceptor {
                 // authenticationManager.authenticate(JwtAuthentication(token))
                 if(StringUtils.isNotBlank(token)) {
                     // 鉴权
-                    SubsysTool getInfoTool = SpringUtil.getBean(SubsysTool.class);
                     try {
-                        ChatUser chatUser = getInfoTool.authenticate(token, tenantId, StringUtils.isNotBlank(userType)?Integer.parseInt(userType):null);
+                        ChatUser chatUser = subsysTool.authenticate(token, tenantId, StringUtils.isNotBlank(userType)?Integer.parseInt(userType):null);
                         webSocketUser = new WebSocketUser(chatUser.getClientId(), chatUser.getId().toString());
                         accessor.setUser(webSocketUser);
                         // not documented anywhere but necessary otherwise NPE in StompSubProtocolHandler!

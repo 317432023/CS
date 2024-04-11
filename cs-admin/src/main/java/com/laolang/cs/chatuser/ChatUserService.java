@@ -28,19 +28,41 @@ public class ChatUserService extends ServiceImpl<ChatUserMapper, ChatUser> imple
     private SysUserMapper sysUserMapper;
     private SysOrgMapper sysOrgMapper;
 
+    public ChatUser queryRcpt(Integer senderId, Integer rcptId) {
+        ChatUser senderChatUser = getById(senderId); // 消息发送者
+        String lastMessageTimeSql = senderChatUser.getUserType() == 1 ?
+                "(select create_time from tb_chat_message where receiver=tb_chat_user.id order by create_time desc limit 1) last_message_time" :
+                "(select create_time from tb_chat_message where receiver="+senderId+" order by create_time desc limit 1) last_message_time"
+                ;
+        QueryWrapper<ChatUser> qw = new QueryWrapper<ChatUser>()
+                .select("id","create_time","tenant_id","nick_name","user_type","avatar","rel_id",
+                        lastMessageTimeSql
+                )
+                .eq("tenant_id", senderChatUser.getTenantId())
+                .eq("user_type", senderChatUser.getUserType() == 0?1:0) // 若消息發送者是客人則取客服列表否則取客人列表
+                .eq("id", rcptId)
+                ;
+
+        return super.getOne(qw);
+    }
+
     /**
      * 取得聊天对手列表
      * @param senderId 聊天用戶發送者ID
      * @return
      */
-    public List<ChatUser> queryRcptIdList(Integer senderId) {
-        ChatUser senderChatUser = getById(senderId); // 消息發送者
+    public List<ChatUser> queryRcptList(Integer senderId) {
+        ChatUser senderChatUser = getById(senderId); // 消息发送者
+        String lastMessageTimeSql = senderChatUser.getUserType() == 1 ?
+                "(select create_time from tb_chat_message where receiver=tb_chat_user.id order by create_time desc limit 1) last_message_time" :
+                "(select create_time from tb_chat_message where receiver=" + senderId + " order by create_time desc limit 1) last_message_time";
         QueryWrapper<ChatUser> qw = new QueryWrapper<ChatUser>()
-            .select("id","create_time","tenant_id","nick_name","user_type","avatar","rel_id",
-                "(select create_time from tb_chat_message where receiver=tb_chat_user.id order by create_time desc limit 1) last_message_time"
-            )
-            .eq("tenant_id", senderChatUser.getTenantId())
-            .eq("user_type", senderChatUser.getUserType() == 0?1:0); // 若消息發送者是客人則取客服列表否則取客人列表
+                .select("id", "create_time", "tenant_id", "nick_name", "user_type", "avatar", "rel_id",
+                        lastMessageTimeSql
+                )
+                .eq("tenant_id", senderChatUser.getTenantId())
+                .eq("user_type", senderChatUser.getUserType() == 0 ? 1 : 0) // 若消息發送者是客人則取客服列表否則取客人列表
+                ;
 
         return super.list(qw);
     }

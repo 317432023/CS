@@ -16,6 +16,7 @@ public enum MsgType {
     tip("提醒消息", null),
     chat("聊天内容", StompChatConsumer.class),
     read("已读消息", StompReadConsumer.class),
+    event("事件消息", null)
     ;
 
     public final String code;

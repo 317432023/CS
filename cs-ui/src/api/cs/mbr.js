@@ -5,10 +5,11 @@ export default {
      * 查询聊天对手列表
      * @param clientId
      */
-    getChatUsers(clientId) {
+    getChatUsers(clientId, rcptId) {
         return request({
             url: `/api/mbr/chat_users`,
             method: 'get',
+            params: { rcptId },
             headers: {'clientId': clientId}
         })
     },

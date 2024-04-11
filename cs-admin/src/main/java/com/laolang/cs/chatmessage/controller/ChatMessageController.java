@@ -95,12 +95,22 @@ public class ChatMessageController {
     @ApiOperation(value = "取聊天用户名单(在线情况)")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "clientId", value = "客戶端ID", dataType = "string"),
+            @ApiImplicitParam(paramType = "query", name = "rcptId", value = "聊天用户ID", dataType = "string"),
             @ApiImplicitParam(paramType = "query", name = "igResPrefix", value = "返回资源是否去掉前缀，默认false", dataType = "boolean"),
     })
     @GetMapping("chat_users")
-    public R<List<Map<String, Object>>> onlineChatUsers(@RequestHeader String clientId, @RequestParam(required = false, defaultValue = "false") Boolean igResPrefix) {
+    public R<List<Map<String, Object>>> onlineChatUsers(@RequestHeader String clientId, @RequestParam(required = false, defaultValue = "0") Integer rcptId, @RequestParam(required = false, defaultValue = "false") Boolean igResPrefix) {
         ChatUser senderChatUser = subsysTool.getChatUser(clientId); // 消息發送者
-        List<ChatUser> rcptList = chatUserService.queryRcptIdList(senderChatUser.getId());
+        List<ChatUser> rcptList;
+        if (rcptId == null || rcptId <= 0) {
+            rcptList = chatUserService.queryRcptList(senderChatUser.getId());
+        } else {
+            rcptList = new ArrayList<>();
+            ChatUser user = chatUserService.queryRcpt(senderChatUser.getId(), rcptId);
+            if (user != null) {
+                rcptList.add(user);
+            }
+        }
         Date date = DateUtil.parse("1970", "yyyy");
         rcptList.forEach(e -> {
             if (e.getLastMessageTime() == null) e.setLastMessageTime(date);
@@ -133,7 +143,7 @@ public class ChatMessageController {
                 onlineCache.put(rcpt.getId(), online);
             }
             onlineChatUserMap.put("online", online); // 是否在线
-            onlineChatUserMap.put("lastMessageTime", rcpt.getLastMessageTime()); // 最后一次发送或接收消息的时间
+            onlineChatUserMap.put("lastMessageTime", DateUtil.format(rcpt.getLastMessageTime(), "yyyy-MM-dd HH:mm:ss")); // 最后一次发送或接收消息的时间
 
             // 未读消息数目
             QueryWrapper<ChatMessageRead> qw = new QueryWrapper<>();

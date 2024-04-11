@@ -1,5 +1,6 @@
 package com.laolang.cs.server.consumer;
 
+import cn.hutool.core.date.DateUtil;
 import com.frm.redis.ModeDict;
 import com.frm.redis.RedisTool;
 import com.frm.springmvc.SpringContextHolder;
@@ -8,6 +9,7 @@ import com.laolang.cs.chatmessage.ChatMessageRead;
 import com.laolang.cs.chatmessage.ChatMessageReadService;
 import com.laolang.cs.chatmessage.ChatMessageService;
 import com.laolang.cs.chatuser.ChatUserService;
+import com.laolang.cs.server.authen.SubsysTool;
 import com.laolang.cs.server.protocol.Msg;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +36,7 @@ public class StompChatConsumer extends StompAbsConsumer implements Consumer<Msg>
     private ChatMessageService chatMessageService;
     private ChatMessageReadService chatMessageReadService;
     private ChatUserService chatUserService;
+    private SubsysTool subsysTool;
 
     @Override
     public void accept(Msg recvMsg) {
@@ -48,7 +51,7 @@ public class StompChatConsumer extends StompAbsConsumer implements Consumer<Msg>
 
         // 取得接收者ID列表，设置未读消息
         List<Integer> rcptIdList = chatUserService.queryRcptIdList(recvMsg.getSender(), recvMsg.getRoomId());
-        if(rcptIdList.size() > 0) {
+        if(!rcptIdList.isEmpty()) {
             chatMessageReadService.saveBatch(
                 rcptIdList.stream().map(rcptId -> new ChatMessageRead()
                     .setRead(false)
@@ -79,6 +82,16 @@ public class StompChatConsumer extends StompAbsConsumer implements Consumer<Msg>
             }
         }
         broadcast(recvMsg.setMsgId(chatMessage.getId().toString()).setCreateTime(now));
+
+        for (Integer receiver : rcptIdList) {
+            // 通知每个聊天对手有消息待接收
+            if( subsysTool.checkOnline(receiver) ) {
+                String clientId = subsysTool.getClientId(receiver);
+                recvMsg.getMessagingTemplate().convertAndSendToUser(clientId, "/alone/cs/getResponse",
+                        Msg.event(recvMsg.getSender() + "," + DateUtil.format(now, "yyyy-MM-dd HH:mm:ss"), recvMsg.getMsgId()));
+            }
+        }
+
     }
 
 }

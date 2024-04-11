@@ -28,6 +28,9 @@ INSERT INTO mbr_user VALUES ('1', 'test', 'e10adc3949ba59abbe56e057f20f883e', '�
 insert into tb_chat_user(tenant_id,nick_name,user_type,avatar,rel_id,create_time) values
 ('FT1@6', 'nwp', 0, '/upload/faces/1.jpg', 0, '2023-10-18 21:45:59') -- 客人
 ;
+insert into tb_chat_user(tenant_id,nick_name,user_type,avatar,rel_id,create_time) values
+('FT1@6', 'FT1客服01', 1, '/upload/faces/2.jpg', 8, '2023-10-18 21:45:59') --
+;
 
 -- 测试
 insert into tb_chat_message(sender,receiver,message,create_time) values(1,1,'{"type":"text","value":"请问什么时候开放注册"}','2023-10-29 21:58:00');

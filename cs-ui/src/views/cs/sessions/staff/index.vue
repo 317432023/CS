@@ -221,8 +221,8 @@ export default {
          * 显示消息
          */
         showMsg(msg) {
-            // 接收的消息格式如: {"msgId":"by98v5jxix5drsv96iiv17fkx4gbgyri","msgType":"chat","roomId":1,"msgBody":{"type":"text","value":"你好！"},"sender":xx}
-            if(msg && typeof msg == 'object') {
+            // 接收的消息格式如: {"msgId":"by98v5jxix5drsv96iiv17fkx4gbgyri","msgType":"chat","roomId":1,"msgBody":{"type":"text","value":"你好！"},"sender":xx,"createTime": "2024-04-11 23:22:04"}
+            if(msg && typeof msg === 'object') {
                 switch (msg.msgType) {
                     case 'chat':
                         // 经过转换后插入消息对象数组 this.msgList 中 (由vue绑定自动显示)
@@ -257,16 +257,39 @@ export default {
                         }
                         else
                         {
-                            //ignore
+                            // ignore
                         }
-                        break;
+                        break
                     case 'ack':
                         console.log(`消息 ${msg.msgId} 发送成功`)
                         //ignore
-                        break;
+                        break
                     case 'tip':
                         this.$message.error(msg.msgBody.value)
-                        break;
+                        break
+                    case 'event':
+                        // 消息事件 一对一消息 目前仅代表收到消息
+                        let evtStr = msg.msgBody.value
+                        let ary = evtStr.split(',')
+                        let userId = ary[0]
+                        let lastMessageTime = ary[1]
+                        let a = this.users.filter(obj => (obj.rcptId + '') === userId)
+                        if(a.length > 0) {
+                            a[0].lastMessageTime = lastMessageTime
+                        } else {
+                            let that = this
+                            // 往users数组中插入一个用户
+                            request.getChatUsers(that.clientId, userId).then(res=>{
+                                // console.log("取得聊天对手 => " + JSON.stringify(res.data))
+                                if(res.data.length > 0) {
+                                    const user = res.data[0]
+                                    that.users.push(user)
+                                }
+                            })
+                        }
+                        break
+                    default:
+                        break
                 }
             } else {
                 console.warn(msg)

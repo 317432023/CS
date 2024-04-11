@@ -92,10 +92,10 @@ public final class SubsysTool {
         // 生成客服clientId
         StringBuilder strBuf = new StringBuilder(100);
         strBuf.append(token).append('#');
-        if(userType == 0) {
+        if (userType == 0) {
             strBuf.append(tenantId).append('#');
         }
-        strBuf.append(userType).toString();
+        strBuf.append(userType);
         String clientId = strBuf.toString();
 
         // 放进 chatUser 对象中
@@ -173,6 +173,10 @@ public final class SubsysTool {
         return redisTool.hasKey(webSocketProperties.getOnlinePrefix() + chatUserId, ModeDict.APP);
     }
 
+    public String getClientId(Integer chatUserId) {
+        return redisTool.getString(webSocketProperties.getOnlinePrefix() + chatUserId, ModeDict.APP);
+    }
+
     /**
      * 检查用户是否在线
      * @param clientId
@@ -184,6 +188,27 @@ public final class SubsysTool {
             throw new SystemException(401, "未登录或会话已失效");
         }
         return Integer.parseInt(userId);
+    }
+
+    public void renew(String clientId, String userId) {
+        int onlineDuration = webSocketProperties.getOnlineDuration();
+
+        /**
+         * 在线用户，数据结构：用户ID=>用户令牌
+         */
+        if(redisTool.hasKey(webSocketProperties.getOnlinePrefix() + userId, ModeDict.APP)) {
+            String oldClientId = redisTool.getString(webSocketProperties.getOnlinePrefix() + userId, ModeDict.APP);
+            if(!oldClientId.equals(clientId)) {
+                // 移除旧的连接
+                redisTool.del(ModeDict.APP, webSocketProperties.getConnPrefix() + oldClientId);
+            }
+        }
+        redisTool.setString(webSocketProperties.getOnlinePrefix() + userId, clientId, ModeDict.APP, onlineDuration*60L);
+
+        /**
+         * 数据结构：用户令牌=>用户ID
+         */
+        redisTool.set(webSocketProperties.getConnPrefix() + clientId, userId, ModeDict.APP);
     }
 
     /**
