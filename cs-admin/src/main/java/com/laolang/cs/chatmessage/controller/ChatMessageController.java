@@ -2,6 +2,7 @@ package com.laolang.cs.chatmessage.controller;
 
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.cmpt.sys.comm.Constants;
 import com.comm.pojo.R;
 import com.frm.redis.ModeDict;
 import com.frm.redis.RedisTool;
@@ -60,7 +61,7 @@ public class ChatMessageController {
         if(igResPrefix == null || !igResPrefix) {
             if (StringUtils.isNotBlank(imgUrl) && !imgUrl.startsWith("http://") && !imgUrl.startsWith("https://")) {
                 RedisTool redisTool = SpringContextHolder.getBean("redisTool", RedisTool.class);
-                String staticDomain = redisTool.hget("system_config", "STATIC_DOMAIN", ModeDict.APP_GROUP, 1);
+                String staticDomain = redisTool.hget(Constants.SYS_CONFIG_KEY, "STATIC_DOMAIN", ModeDict.APP_GROUP, 1);
                 imgUrl = staticDomain + (imgUrl.startsWith("/") ? "" : "/") + imgUrl;
             }
         }
@@ -120,7 +121,7 @@ public class ChatMessageController {
         List<Map<String, Object>> rcptMapList = new ArrayList<>();
         Map<Integer, Boolean> onlineCache = new HashMap<>();
         RedisTool redisTool = SpringContextHolder.getBean("redisTool", RedisTool.class);
-        String staticDomain = redisTool.hget("system_config", "STATIC_DOMAIN", ModeDict.APP_GROUP, 1);
+        String staticDomain = redisTool.hget(Constants.SYS_CONFIG_KEY, "STATIC_DOMAIN", ModeDict.APP_GROUP, 1);
         for (ChatUser rcpt : rcptList) {
             Map<String, Object> onlineChatUserMap = new HashMap<>(); // nickName
             onlineChatUserMap.put("rcptId", rcpt.getId());
@@ -230,7 +231,7 @@ public class ChatMessageController {
         Collections.reverse(chatMessageList); // 反转顺序
 
         RedisTool redisTool = SpringContextHolder.getBean("redisTool", RedisTool.class);
-        String staticDomain = redisTool.hget("system_config", "STATIC_DOMAIN", ModeDict.APP_GROUP, 1);
+        String staticDomain = redisTool.hget(Constants.SYS_CONFIG_KEY, "STATIC_DOMAIN", ModeDict.APP_GROUP, 1);
         if(igResPrefix == null || !igResPrefix) {
             // 图片如有必要加资源域名前缀
             for (ChatMessage chatMessage : chatMessageList) {

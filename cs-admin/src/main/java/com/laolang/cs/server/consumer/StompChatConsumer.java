@@ -1,6 +1,7 @@
 package com.laolang.cs.server.consumer;
 
 import cn.hutool.core.date.DateUtil;
+import com.cmpt.sys.comm.Constants;
 import com.frm.redis.ModeDict;
 import com.frm.redis.RedisTool;
 import com.frm.springmvc.SpringContextHolder;
@@ -76,7 +77,7 @@ public class StompChatConsumer extends StompAbsConsumer implements Consumer<Msg>
             String imgUrl = (String)recvMsg.getMsgBody().get("value");
             if(!imgUrl.startsWith("http://") && !imgUrl.startsWith("https://")) {
                 RedisTool redisTool = SpringContextHolder.getBean("redisTool", RedisTool.class);
-                String staticDomain = redisTool.hget("system_config", "STATIC_DOMAIN", ModeDict.APP_GROUP, 1);
+                String staticDomain = redisTool.hget(Constants.SYS_CONFIG_KEY, "STATIC_DOMAIN", ModeDict.APP_GROUP, 1);
                 imgUrl = staticDomain + (imgUrl.startsWith("/") ? "" : "/") + imgUrl;
                 recvMsg.getMsgBody().put("value", imgUrl);
             }
@@ -87,6 +88,7 @@ public class StompChatConsumer extends StompAbsConsumer implements Consumer<Msg>
             // 通知每个聊天对手有消息待接收
             if( subsysTool.checkOnline(receiver) ) {
                 String clientId = subsysTool.getClientId(receiver);
+                log.info("通知对手收到消息，对手clientId: " + clientId + ", msg => " + recvMsg.getMsgBody().get("value"));
                 recvMsg.getMessagingTemplate().convertAndSendToUser(clientId, "/alone/cs/getResponse",
                         Msg.event(recvMsg.getSender() + "," + DateUtil.format(now, "yyyy-MM-dd HH:mm:ss"), recvMsg.getMsgId()));
             }
