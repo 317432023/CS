@@ -99,6 +99,7 @@ public class ChatUserService extends ServiceImpl<ChatUserMapper, ChatUser> imple
      */
     public ChatUser syncChatUser(String tenantId, String nickName, Integer userType, Long relId, String avatar) {
         Assert.isTrue(userType != null && (userType == 0 || userType == 1), "400 - userType 参数不合规");
+        if(avatar == null) {avatar = "";}
         ChatUser chatUser;
         if(userType == 1) {
             Assert.isTrue(relId != null && relId > 0L, "400 - relId 参数不合规");
