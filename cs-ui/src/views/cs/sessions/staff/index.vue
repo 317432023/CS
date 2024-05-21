@@ -10,16 +10,16 @@
           <el-avatar v-else shape="square" :size="64" fit="fill" :src="user.avatar" :class="{gray: !user.online}" />
 
           <span class="title">{{ user.nickName }}</span>
-          <span style="font: italic normal 12px/30px arial, sans-serif; color: grey;">{{ user.lastMessageTime !== '1970-01-01 00:00:00'?user.lastMessageTime.substring(5):'' }}</span>
+          <span style="font: italic normal 12px/30px arial, sans-serif; color: grey;">{{ (user.lastMessageTime && user.lastMessageTime !== '1970-01-01 00:00:00')?user.lastMessageTime.substring(5):'                   ' }}</span>
         </div>
         <br>
       </el-col>
       <el-col v-if="chatToUser != null" id="chatMain" :span="18">
         <el-container :style="{ height: scrollHeight + 'px' }">
           <el-header style="text-align: center; font-size: 12px; line-height: 60px; font-weight:bold;">
-            <span class="title">与 {{ chatToUser.nickName }} 聊天</span>
+            <span class="title">与 {{ chatToUser.nickName }} 聊天&nbsp;<el-button @click="handleLoadHis">加载历史</el-button></span>
           </el-header>
-          <el-main id="chat-cnt" ref="mainscroll">
+          <el-main id="chat-cnt" ref="mainscroll" @scroll="handleScroll">
             <el-row v-for="(msg,index) in msgList" :key="msg.id" :ref="'msg_'+msg.id">
               <el-col :span="4"><el-avatar v-if="msg.sender === msg.receiver" shape="square" :size="48" fit="fill" :src="getAvatar(msg.sender)" /><span v-else style="visibility:hidden">.</span></el-col>
               <el-col :span="16">
@@ -119,6 +119,9 @@ export default {
       }
     }
 
+    // 监听滚动事件
+    // this.$refs.mainscroll.addEventListener('scroll', this.handleScroll)
+
     // 打开连接
     this.connect(this.$store.getters.token, 1).then(res => {
       console.log('res => ' + res + ', this.$store.getters.connected=' + this.$store.getters.connected)
@@ -133,20 +136,62 @@ export default {
    * 组件销毁
    */
   beforeDestroy() {
+    // 组件销毁前移除事件监听
+    // this.$refs.mainscroll.removeEventListener('scroll', this.handleScroll)
     // 断开连接 (先取消订阅)
     this.$store.dispatch('websocket/WEBSOCKET_DISCONNECT') // 断开链接
   },
   methods: {
+    handleScroll(event) {
+      const target = event.target;
+      if (target.scrollTop === 0) {
+        // 滚动条到达顶部，执行你需要的操作
+        console.log('滚动条到达顶部')
+      }
+    },
     scrollToTop() {
       this.$nextTick(() => {
         const scrollEl = document.getElementById('chat-cnt')
-        scrollEl.scrollTop = 0
+        scrollEl.scrollTop = 1
       })
     },
     scrollToBottom() {
       this.$nextTick(() => {
         const scrollEl = document.getElementById('chat-cnt')
         scrollEl.scrollTop = scrollEl.scrollHeight
+      })
+    },
+    handleLoadHis() {
+      console.log('按下按钮')
+      if (this.msgList.length === 0) {
+        return
+      }
+      const headMsgId = this.msgList[0].id
+      console.log(headMsgId)
+      console.log('this.chatToUser:'+JSON.stringify(this.chatToUser))
+      request.getRecentMessages(this.clientId, { customerChatUserId: this.chatToUser.rcptId, headMsgId: headMsgId }).then((res) => {
+        // console.log('加载聊天历史：' + JSON.stringify(res.data))
+        if (res.data.length > 0) {
+          this.msgList = [...res.data, ...this.msgList]
+          this.$message.success('已加载成功')
+          const obj = res.data[res.data.length - 1]
+          if (!obj.read) {
+            // console.log("发送已读：" + obj.id)
+            this.$sendRead(obj.id)
+          }
+        } else {
+          this.$message.info('已加载全部聊天历史')
+        }
+      })
+    },
+    reduceChatUsers(userAry, clientId, lastChatUserId) {
+      request.getChatUsers(clientId, 0, lastChatUserId).then(res => {
+        // console.log("取得聊天对手 => " + JSON.stringify(res.data))
+        if (res.data.length > 0) {
+          lastChatUserId = res.data[res.data.length - 1].rcptId
+          for(let v of res.data) {userAry.push(v)}
+          this.reduceChatUsers(userAry, clientId, lastChatUserId)
+        }
       })
     },
     /**
@@ -173,10 +218,17 @@ export default {
             that.refreshChatRoom()
           } else {
             // 取得聊天用户列表更新到 users 中
-            request.getChatUsers(that.clientId).then(res => {
+            const userAry = []
+            that.reduceChatUsers(userAry, that.clientId, 0)
+            console.log();
+            that.users = userAry
+            /* request.getChatUsers(that.clientId, 0, lastChatUserId).then(res => {
               // console.log("取得聊天对手 => " + JSON.stringify(res.data))
+              if (res.data.length > 0) {
+                lastChatUserId = res.data[res.data.length - 1].rcptId
+              }
               that.users = res.data
-            })
+            })*/
           }
         } }).then(res => resolve(res)).catch(e => reject(e))
       })
@@ -212,6 +264,7 @@ export default {
         return
       }
       this.chatToUser = user // 当前选中的用户
+      console.log("当前选中的用户="+JSON.stringify(this.chatToUser))
 
       const that = this
       let obj = that.$refs['user' + user.rcptId][0]

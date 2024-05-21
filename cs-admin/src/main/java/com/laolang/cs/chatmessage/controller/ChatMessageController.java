@@ -98,13 +98,18 @@ public class ChatMessageController {
             @ApiImplicitParam(paramType = "header", name = "clientId", value = "客戶端ID", dataType = "string"),
             @ApiImplicitParam(paramType = "query", name = "rcptId", value = "聊天用户ID", dataType = "string"),
             @ApiImplicitParam(paramType = "query", name = "igResPrefix", value = "返回资源是否去掉前缀，默认false", dataType = "boolean"),
+            @ApiImplicitParam(paramType = "query", name = "lastChatUserId", value = "返回资源是否去掉前缀，默认0", dataType = "int"),
     })
     @GetMapping("chat_users")
-    public R<List<Map<String, Object>>> onlineChatUsers(@RequestHeader String clientId, @RequestParam(required = false, defaultValue = "0") Integer rcptId, @RequestParam(required = false, defaultValue = "false") Boolean igResPrefix) {
+    public R<List<Map<String, Object>>> onlineChatUsers(@RequestHeader String clientId,
+                                                        @RequestParam(required = false, defaultValue = "0") Integer rcptId,
+                                                        @RequestParam(required = false, defaultValue = "false") Boolean igResPrefix,
+                                                        @RequestParam(required = false, defaultValue = "0") Integer lastChatUserId
+    ) {
         ChatUser senderChatUser = subsysTool.getChatUser(clientId); // 消息發送者
         List<ChatUser> rcptList;
         if (rcptId == null || rcptId <= 0) {
-            rcptList = chatUserService.queryRcptList(senderChatUser.getId());
+            rcptList = chatUserService.queryRcptList(senderChatUser.getId(), lastChatUserId);
         } else {
             rcptList = new ArrayList<>();
             ChatUser user = chatUserService.queryRcpt(senderChatUser.getId(), rcptId);

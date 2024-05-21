@@ -51,7 +51,7 @@ public class ChatUserService extends ServiceImpl<ChatUserMapper, ChatUser> imple
      * @param senderId 聊天用戶發送者ID
      * @return
      */
-    public List<ChatUser> queryRcptList(Integer senderId) {
+    public List<ChatUser> queryRcptList(Integer senderId, Integer lastChatUserId) {
         ChatUser senderChatUser = getById(senderId); // 消息发送者
         String lastMessageTimeSql = senderChatUser.getUserType() == 1 ?
                 "(select create_time from tb_chat_message where receiver=tb_chat_user.id order by create_time desc limit 1) last_message_time" :
@@ -62,6 +62,7 @@ public class ChatUserService extends ServiceImpl<ChatUserMapper, ChatUser> imple
                 )
                 .eq("tenant_id", senderChatUser.getTenantId())
                 .eq("user_type", senderChatUser.getUserType() == 0 ? 1 : 0) // 若消息發送者是客人則取客服列表否則取客人列表
+                .gt("id", lastChatUserId).orderByAsc("id").last("limit 100")
                 ;
 
         return super.list(qw);
