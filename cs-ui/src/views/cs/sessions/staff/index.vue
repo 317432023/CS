@@ -109,7 +109,7 @@ export default {
       console.error('getUploadUrl failed')
     })
   },
-  mounted() {
+  async mounted() {
     console.log('mounted')
     const oh = 80
     this.scrollHeight = document.documentElement.clientHeight - 20 - oh
@@ -122,6 +122,10 @@ export default {
     // 监听滚动事件
     // this.$refs.mainscroll.addEventListener('scroll', this.handleScroll)
 
+    // 关闭连接
+    if (this.$store.getters.connected) {
+      await this.$store.dispatch('websocket/WEBSOCKET_DISCONNECT')
+    }
     // 打开连接
     this.connect(this.$store.getters.token, 1).then(res => {
       console.log('res => ' + res + ', this.$store.getters.connected=' + this.$store.getters.connected)
@@ -143,7 +147,7 @@ export default {
   },
   methods: {
     handleScroll(event) {
-      const target = event.target;
+      const target = event.target
       if (target.scrollTop === 0) {
         // 滚动条到达顶部，执行你需要的操作
         console.log('滚动条到达顶部')
@@ -168,7 +172,7 @@ export default {
       }
       const headMsgId = this.msgList[0].id
       console.log(headMsgId)
-      console.log('this.chatToUser:'+JSON.stringify(this.chatToUser))
+      console.log('this.chatToUser:' + JSON.stringify(this.chatToUser))
       request.getRecentMessages(this.clientId, { customerChatUserId: this.chatToUser.rcptId, headMsgId: headMsgId }).then((res) => {
         // console.log('加载聊天历史：' + JSON.stringify(res.data))
         if (res.data.length > 0) {
@@ -189,7 +193,7 @@ export default {
         // console.log("取得聊天对手 => " + JSON.stringify(res.data))
         if (res.data.length > 0) {
           lastChatUserId = res.data[res.data.length - 1].rcptId
-          for(let v of res.data) {userAry.push(v)}
+          for (const v of res.data) { userAry.push(v) }
           this.reduceChatUsers(userAry, clientId, lastChatUserId)
         }
       })
@@ -220,7 +224,6 @@ export default {
             // 取得聊天用户列表更新到 users 中
             const userAry = []
             that.reduceChatUsers(userAry, that.clientId, 0)
-            console.log();
             that.users = userAry
             /* request.getChatUsers(that.clientId, 0, lastChatUserId).then(res => {
               // console.log("取得聊天对手 => " + JSON.stringify(res.data))
@@ -264,7 +267,7 @@ export default {
         return
       }
       this.chatToUser = user // 当前选中的用户
-      console.log("当前选中的用户="+JSON.stringify(this.chatToUser))
+      console.log('当前选中的用户=' + JSON.stringify(this.chatToUser))
 
       const that = this
       let obj = that.$refs['user' + user.rcptId][0]
@@ -303,8 +306,7 @@ export default {
               this.chatToUser.lastMessageTime = obj.createTime // 更新最后一次消息时间
               this.msgList.push(obj) // （在末尾）向数组添加新元素
               this.scrollToBottom() // 聊天内容滚动到底部
-
-              if (obj.senderNickName === this.curUser) {
+              if ('客服#' + obj.senderNickName === this.curUser) {
                 if (obj.message.type === 'text' && this.textarea === obj.message.value) {
                   this.textarea = '' // 发送成功并接收到自己发送的文本消息则清空文本框
                 }
@@ -332,7 +334,7 @@ export default {
             const a = this.users.filter(obj => (obj.rcptId + '') === userId)
             if (a.length > 0) {
               a[0].lastMessageTime = lastMessageTime
-              // 收到道消息提醒
+              // 收到消息提醒
               this.$message.info('收到一条新消息，来自【' + a[0].nickName + '】')
               this.$refs.audioPlayer.play()
             } else {
@@ -343,7 +345,7 @@ export default {
                 if (res.data.length > 0) {
                   const user = res.data[0]
                   that.users.push(user)
-                  // 收到道消息提醒
+                  // 收到消息提醒
                   that.$message.info('收到一条新消息，来自【' + user.nickName + '】')
                   that.$refs.audioPlayer.play()
                 }
