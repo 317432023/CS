@@ -184,7 +184,7 @@ export default {
         const menuIds = halfKeys.concat(keys)
         console.log('本次提交的权限列表=>' + JSON.stringify(menuIds))
         request.updateRoleMenus({ roleId: this.currentRoleId, menuIds }).then(res => {
-          if (res.success) {
+          if (res.code === 0 || res.success) {
             this.menuDialog = false
             this.$message.success(res.message)
           }

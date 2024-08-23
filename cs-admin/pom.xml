@@ -93,31 +93,8 @@
                     <artifactId>pagehelper-spring-boot-starter</artifactId>
                     <groupId>com.github.pagehelper</groupId>
                 </exclusion>
-                <exclusion>
-                    <artifactId>springfox-boot-starter</artifactId>
-                    <groupId>io.springfox</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>swagger-annotations</artifactId>
-                    <groupId>io.swagger</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>swagger-models</artifactId>
-                    <groupId>io.swagger</groupId>
-                </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <artifactId>swagger-annotations</artifactId>
-            <groupId>io.swagger</groupId>
-            <version>1.5.22</version>
-        </dependency>
-        <dependency>
-            <artifactId>swagger-models</artifactId>
-            <groupId>io.swagger</groupId>
-            <version>1.5.22</version>
-        </dependency>
-
         <!-- 会员api规格 -->
         <dependency>
             <groupId>cmpt</groupId>
@@ -211,7 +188,7 @@
         <dependency>
             <groupId>p6spy</groupId>
             <artifactId>p6spy</artifactId>
-            <version>3.8.7</version>
+            <version>${p6spy.version}</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -226,7 +203,6 @@
         <dependency>
             <groupId>org.jboss.logging</groupId>
             <artifactId>jboss-logging</artifactId>
-            <version>3.4.1.Final</version>
         </dependency>
 
         <!-- xstream for xml -->
@@ -237,9 +213,14 @@
         </dependency>
 
         <!-- 数据库驱动 -->
-        <dependency>
+        <!--<dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>-->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
         </dependency>
 
@@ -247,7 +228,7 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-generator</artifactId>
-            <version>3.4.1</version>
+            <version>${mybatis-plus.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>mybatis-plus-extension</artifactId>
@@ -265,6 +246,17 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cmpt</groupId>
+            <artifactId>cmpt-springdoc</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.soaringloong</groupId>
+            <artifactId>jfrm-spring-boot-starter-mybatis</artifactId>
+            <version>1.0.1-jdk17-snapshot</version>
         </dependency>
 
     </dependencies>

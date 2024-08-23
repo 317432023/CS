@@ -226,7 +226,7 @@ export default {
       this.loadingTable = true
       console.log('params = ' + JSON.stringify(this.params) + ', queryForm = ' + JSON.stringify(this.queryForm))
       this.request.page(this.params, this.queryForm).then(res => {
-        if (res.success) {
+        if (res.code === 0 || res.success) {
           this.records = res.data.records
           this.total = res.data.total
 

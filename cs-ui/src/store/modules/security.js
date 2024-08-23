@@ -48,7 +48,7 @@ const actions = {
     // const { width, height, mode } = params
     return new Promise((resolve, reject) => {
       captcha(params).then(res => {
-        if (res.success) {
+        if (res.code === 0 || res.success) {
           const { data } = res
 
           commit('SET_CAPTCHA_TOKEN', data.captchaToken) // 验证码令牌放进内存 state.captchaToken = data.captchaToken
@@ -68,7 +68,7 @@ const actions = {
     const { username, password, captcha } = userInfo
     return new Promise((resolve, reject) => {
       login({}, { username: username.trim(), password: password, captcha: captcha }).then(res => {
-        if (res.success) {
+        if (res.code === 0 || res.success) {
           const { data } = res
           if (process.env.VUE_APP_SEC_STRATEGY !== 'cookieStore') {
             commit('SET_TOKEN', data) // 令牌放进内存

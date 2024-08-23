@@ -17,7 +17,7 @@ import java.util.Date;
 /**
  * ChatUser
  *
- * @date 2023/9/11 0:39
+ * @since 2023/9/11 0:39
  */
 @TableName("tb_chat_user")@Getter@Setter@Accessors(chain = true)@EqualsAndHashCode(of = {"avatar"})
 public class ChatUser implements Serializable {

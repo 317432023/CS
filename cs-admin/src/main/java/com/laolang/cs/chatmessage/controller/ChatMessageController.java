@@ -12,9 +12,12 @@ import com.laolang.cs.chatmessage.ChatMessageRead;
 import com.laolang.cs.chatmessage.ChatMessageReadService;
 import com.laolang.cs.chatmessage.ChatMessageService;
 import com.laolang.cs.chatuser.ChatUser;
-import com.laolang.cs.chatuser.ChatUserService;
+import com.laolang.cs.chatuser.service.ChatUserService;
 import com.laolang.cs.server.authen.SubsysTool;
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.env.Environment;
@@ -26,9 +29,9 @@ import java.util.*;
 /**
  * ChatMessageController
  *
- * @date 2023/9/11 0:44
+ * @since 2023/9/11 0:44
  */
-@Api(tags = {"会员-客服接口"})
+@Tag(name = "会员-客服接口")
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/mbr")
@@ -44,11 +47,9 @@ public class ChatMessageController {
      *
      * @return
      */
-    @ApiOperation(value = "取自身聊天用户信息")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", name = "clientId", value = "客戶端ID", dataType = "string"),
-            @ApiImplicitParam(paramType = "query", name = "igResPrefix", value = "返回资源是否去掉前缀，默认false", dataType = "boolean"),
-    })
+    @Operation(summary = "取自身聊天用户信息")
+    @Parameter(name = "clientId", description = "客戶端ID", in = ParameterIn.HEADER, required = true, example = "1024")
+    @Parameter(name = "igResPrefix", description = "返回资源是否去掉前缀，默认false", in = ParameterIn.QUERY, example = "true")
     @GetMapping("self")
     public R<Map<String, Object>> self(@RequestHeader String clientId, @RequestParam(required = false, defaultValue = "false") Boolean igResPrefix) {
         ChatUser senderChatUser = subsysTool.getChatUser(clientId); // 消息發送者
@@ -58,7 +59,7 @@ public class ChatMessageController {
         chatUserInfo.put("tenantId", senderChatUser.getTenantId());
         chatUserInfo.put("userType", senderChatUser.getUserType());
         String imgUrl = senderChatUser.getAvatar() != null ? senderChatUser.getAvatar().trim() : "";
-        if(igResPrefix == null || !igResPrefix) {
+        if (igResPrefix == null || !igResPrefix) {
             if (StringUtils.isNotBlank(imgUrl) && !imgUrl.startsWith("http://") && !imgUrl.startsWith("https://")) {
                 RedisTool redisTool = SpringContextHolder.getBean("redisTool", RedisTool.class);
                 String staticDomain = redisTool.hget(Constants.SYS_CONFIG_KEY, "STATIC_DOMAIN", ModeDict.APP_GROUP, 1);
@@ -74,10 +75,8 @@ public class ChatMessageController {
      *
      * @return
      */
-    @ApiOperation(value = "取未读消息数目(当前用户)")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", name = "clientId", value = "客戶端ID", dataType = "string"),
-    })
+    @Operation(summary = "取未读消息数目(当前用户)")
+    @Parameter(name = "clientId", description = "客戶端ID", in = ParameterIn.HEADER, required = true, example = "1024")
     @GetMapping("unread_message_num")
     public R<Long> unreadMessageNum(@RequestHeader String clientId) {
         ChatUser chatUser = subsysTool.getChatUser(clientId);
@@ -93,13 +92,11 @@ public class ChatMessageController {
      *
      * @return
      */
-    @ApiOperation(value = "取聊天用户名单(在线情况)")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", name = "clientId", value = "客戶端ID", dataType = "string"),
-            @ApiImplicitParam(paramType = "query", name = "rcptId", value = "聊天用户ID", dataType = "string"),
-            @ApiImplicitParam(paramType = "query", name = "igResPrefix", value = "返回资源是否去掉前缀，默认false", dataType = "boolean"),
-            @ApiImplicitParam(paramType = "query", name = "lastChatUserId", value = "返回资源是否去掉前缀，默认0", dataType = "int"),
-    })
+    @Operation(summary = "取聊天用户名单(在线情况)")
+    @Parameter(name = "clientId", description = "客戶端ID", in = ParameterIn.HEADER, required = true, example = "1024")
+    @Parameter(name = "rcptId", description = "聊天用户ID", in = ParameterIn.QUERY, example = "0")
+    @Parameter(name = "igResPrefix", description = "返回资源是否去掉前缀，默认false", in = ParameterIn.QUERY, example = "true")
+    @Parameter(name = "lastChatUserId", description = "上一个聊天用户ID，默认0", in = ParameterIn.QUERY, example = "0")
     @GetMapping("chat_users")
     public R<List<Map<String, Object>>> onlineChatUsers(@RequestHeader String clientId,
                                                         @RequestParam(required = false, defaultValue = "0") Integer rcptId,
@@ -133,7 +130,7 @@ public class ChatMessageController {
             onlineChatUserMap.put("nickName", rcpt.getNickName());
 
             String imgUrl = rcpt.getAvatar() != null ? rcpt.getAvatar().trim() : "";
-            if(igResPrefix == null || !igResPrefix) {
+            if (igResPrefix == null || !igResPrefix) {
                 if (StringUtils.isNotBlank(imgUrl) && !imgUrl.startsWith("http://") && !imgUrl.startsWith("https://")) {
                     imgUrl = staticDomain + (imgUrl.startsWith("/") ? "" : "/") + imgUrl;
                 }
@@ -174,19 +171,12 @@ public class ChatMessageController {
      * @param limit              条数，默认15条
      * @return
      */
-    @ApiOperation(value = "取最近聊天历史")
-    @ApiResponses(value = {
-            @ApiResponse(code = 0 / 200, message = "OK"),
-            @ApiResponse(code = 1, message = "FAIL"),
-    })
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", name = "clientId", value = "客戶端ID", dataType = "string"),
-            @ApiImplicitParam(paramType = "query", name = "customerChatUserId", value = "聊天用戶ID(客服可以使用该参数；会员忽略此参数)", dataType = "int"),
-            @ApiImplicitParam(paramType = "query", name = "headMsgId", value = "已取得的最早消息ID", dataType = "bigint"),
-            @ApiImplicitParam(paramType = "query", name = "limit", value = "最多返回記錄數", dataType = "int"),
-            @ApiImplicitParam(paramType = "query", name = "igResPrefix", value = "返回资源是否去掉前缀，默认false", dataType = "boolean"),
-
-    })
+    @Operation(summary = "取最近聊天历史")
+    @Parameter(name = "clientId", description = "客戶端ID", in = ParameterIn.HEADER, required = true, example = "1024")
+    @Parameter(name = "customerChatUserId", description = "聊天用戶ID(客服可以使用该参数；会员忽略此参数)", in = ParameterIn.QUERY, example = "0")
+    @Parameter(name = "headMsgId", description = "已取得的最早消息ID", in = ParameterIn.QUERY, example = "0")
+    @Parameter(name = "limit", description = "最多返回記錄數", in = ParameterIn.QUERY, example = "15")
+    @Parameter(name = "igResPrefix", description = "返回资源是否去掉前缀，默认false", in = ParameterIn.QUERY, example = "true")
     @GetMapping("recent_messages")
     public R<List<ChatMessage>> recentMessages(@RequestHeader String clientId, @RequestParam(required = false, defaultValue = "false") Boolean igResPrefix,
                                                @RequestParam(required = false, defaultValue = "0") Integer customerChatUserId,
@@ -195,9 +185,14 @@ public class ChatMessageController {
         ChatUser chatUser = subsysTool.getChatUser(clientId);
         int userType = chatUser.getUserType();
         List<ChatMessage> chatMessageList;
-        String readSQL = "h2".equalsIgnoreCase(environment.getProperty("spring.datasource.platform", "mysql")) ?
+
+        boolean h2Flag = "h2".equalsIgnoreCase(environment.getProperty("spring.sql.init.platform", "mysql")) ||
+                "h2".equalsIgnoreCase(environment.getProperty("spring.datasource.platform", "mysql"));
+
+        // 是否已读SQL语句 根据数据不同语句不通 由于 h2 数据库不支持 ifnull 函数改用case...end
+        String readSQL = h2Flag ?
                 "(case `read` when is null then false else `read` end)" :
-                "ifnull(`read`,false)"; // 是否已读SQL语句 根据数据不同语句不通 由于 h2 数据库不支持 ifnull 函数改用case...end
+                "ifnull(`read`,false)";
         String[] selectColumns = new String[]{
                 "id",
                 "sender",
@@ -237,15 +232,15 @@ public class ChatMessageController {
 
         RedisTool redisTool = SpringContextHolder.getBean("redisTool", RedisTool.class);
         String staticDomain = redisTool.hget(Constants.SYS_CONFIG_KEY, "STATIC_DOMAIN", ModeDict.APP_GROUP, 1);
-        if(igResPrefix == null || !igResPrefix) {
+        if (igResPrefix == null || !igResPrefix) {
             // 图片如有必要加资源域名前缀
             for (ChatMessage chatMessage : chatMessageList) {
                 if (chatMessage.getMessage() != null && "image".equals(chatMessage.getMessage().get("type"))) {
                     String imgUrl = (String) chatMessage.getMessage().get("value");
-                        if (StringUtils.isNotBlank(imgUrl) && !imgUrl.startsWith("http://") && !imgUrl.startsWith("https://")) {
-                            imgUrl = staticDomain + (imgUrl.startsWith("/") ? "" : "/") + imgUrl;
-                            chatMessage.getMessage().put("value", imgUrl);
-                        }
+                    if (StringUtils.isNotBlank(imgUrl) && !imgUrl.startsWith("http://") && !imgUrl.startsWith("https://")) {
+                        imgUrl = staticDomain + (imgUrl.startsWith("/") ? "" : "/") + imgUrl;
+                        chatMessage.getMessage().put("value", imgUrl);
+                    }
                 }
             }
         }

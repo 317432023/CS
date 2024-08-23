@@ -262,7 +262,7 @@
           size: 1000,
           orgId: orgId
         }).then(res => res).catch(err => err)
-        if (res.success) {
+        if (res.code === 0 || res.success) {
           return res.data.records
         }
         return null

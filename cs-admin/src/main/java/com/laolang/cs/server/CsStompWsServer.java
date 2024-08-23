@@ -10,7 +10,7 @@ import com.cmpt.ws.WebSocketUser;
 import com.comm.pojo.SystemException;
 import com.frm.springmvc.SpringContextHolder;
 import com.laolang.cs.chatuser.ChatUser;
-import com.laolang.cs.chatuser.ChatUserService;
+import com.laolang.cs.chatuser.service.ChatUserService;
 import com.laolang.cs.server.authen.SubsysTool;
 import com.laolang.cs.server.protocol.Msg;
 import com.laolang.cs.server.protocol.MsgType;

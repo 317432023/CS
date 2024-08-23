@@ -11,7 +11,7 @@ spring:
   application:
     name: customer-service
   profiles:
-    active: dev
+    active: local
   output:
     ansi:
       enabled: always
@@ -24,7 +24,7 @@ spring:
     view:
       suffix: .html
 
-    # 自定义属性 见 com.cmpt.sys.web.config.WebConfig.java
+    # 自定义属性 见 com.frm.springboot.WebConfig.java
     cors-filter: true # 是否实例化(开启)跨域过滤器
 
   web:
@@ -76,6 +76,7 @@ spring:
         max-wait: -1 # 最大阻塞等待时间（使用负值表示没有限制） 默认 -1
         max-idle: 8 # 最大空闲连接 默认 8
         min-idle: 0 # 最小空闲连接 默认 0
+
     redisson:
       config: |
         singleServerConfig:
@@ -122,10 +123,6 @@ mybatis-plus:
       logic-delete-value: 1
       logic-not-delete-value: 0
 
-  # 自定义属性 见 com.frm.mybatisplus.MyBatisPlusConfig.java
-  pagination: true # 是否使用mybatis-plus分页
-  optimistic: true # 是否使用mybatis-plus乐观锁
-
 pagehelper:
   helperDialect: mysql
   reasonable: true
@@ -134,6 +131,31 @@ pagehelper:
 
 logging:
   config: classpath:log4j2-spring.xml
+
+--- ### 文档 ###
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui
+  default-flat-param-object: true # 参见 https://doc.xiaominfo.com/docs/faq/v4/knife4j-parameterobject-flat-param 文档
+
+# knife4j的增强配置
+knife4j: # since v2.0.6, 用以替代 @EnableKnife4j
+  enable: true # 是否开启增强属性，默认false
+  documents:
+    - group: 4.5.0版本 # 所属分组
+      name: 接口签名 # 类似于接口中的tag,对于自定义文档的分组
+      locations: classpath:md/* # markdown文件路径,可以是一个文件夹(classpath:markdowns/*)，也可以是单个文件(classpath:md/sign.md)
+  setting:
+    language: zh-CN # Ui默认显示语言,目前主要有两种:中文(zh-CN)、英文(en-US)。默认zh-CN
+  production: false # 开启生产环境屏蔽，默认false，注意：一定要先开启knife4j增强才会生效
+  basic:
+    enable: true # 对Knife4j提供的资源提供BasicHttp校验,保护文档。默认false
+    username: test
+    password: 123123
 
 # 自定义属性文件
 # 见 com.cmpt.sys.security.config.SettingProperties
@@ -153,3 +175,14 @@ page:
   plain: false
   rowsAlias: records
   totalAlias: total
+
+--- ### 自定义 ###
+jfrm:
+  info:
+    version: 1.0.1-snapshot
+    base-package: com.cmpt.**.mapper,com.laolang.cs.**.mapper # 该包目录将用于 MyBatis Mapper 扫描
+  mybatis-plus:
+    pagination:
+      enabled: true # 开启分页
+    optimistic:
+      enabled: true # 开启乐观锁

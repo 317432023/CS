@@ -1,0 +1,62 @@
+spring:
+
+  h2:
+    console:
+      enabled: true # 是否启用控制台
+      path: /h2-console # 控制台可用路径
+      settings:
+        trace: true
+        web-allow-others: true
+
+  # 数据源
+  datasource:
+    driver-class-name: com.p6spy.engine.spy.P6SpyDriver # 一般使用 org.h2.Driver，这儿使用了p6spy 做代理
+    # 文件模式 file:./<dbname>；内存模式 mem:<dbname>
+    url: jdbc:p6spy:h2:mem:customer-service;TRACE_LEVEL_FILE=0;CASE_INSENSITIVE_IDENTIFIERS=TRUE;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1;MODE=MYSQL;
+    username: sa
+    password: 9527
+    dynamic: # mybatis-plus 多数据源配置
+      hikari:
+        is-auto-commit: true
+        max-pool-size: 16 # 最大连接池数量
+        connection-timeout: 60000
+        minimum-idle: 4 # 最小空闲连接
+        idle-timeout: 500000
+        max-lifetime: 1200000
+        connection-test-query: SELECT 1
+      primary: master
+      datasource:
+        master:
+          url: ${spring.datasource.url}
+          username: ${spring.datasource.username}
+          password: ${spring.datasource.password}
+        # 从库数据源
+        slave:
+          # 从数据源开关/默认关闭
+          lazy: true
+          url: ${spring.datasource.url}
+          username: ${spring.datasource.username}
+          password: ${spring.datasource.password}
+  sql:
+    init:
+      encoding: utf-8
+      separator: ;
+      platform: h2 # 加载 schema-${platform}.sql文件，或者data-${platform}.sql
+      # 启动时需要初始化的建表语句
+      schema-locations: #[classpath:db/schema-h2-sys.sql,classpath:db/schema-h2-mem.sql,classpath:db/schema-h2.sql] # 多个sql文件，可以用逗号分隔
+        - classpath:db/schema-h2-oss.sql
+        - classpath:db/schema-h2-org.sql
+        - classpath:db/schema-h2-sys.sql
+        - classpath:db/schema-h2-mbr.sql
+        - classpath:db/schema-h2-sns.sql
+        - classpath:db/schema-h2.sql
+      # 初始化的数据
+      data-locations: #[classpath:db/data-h2-sys.sql,classpath:db/data-h2.sql]
+        - classpath:db/data-h2-org.sql
+        - classpath:db/data-h2-sys.sql
+        - classpath:db/data-h2.sql
+      mode: always # Spring Boot2.x 必须添加 initialization-mode配置才会执行 always为始终执行初始化，embedded只初始化内存数据库（默认值）,如h2等，never为不执行初始化
+      continue-on-error: false # 遇到语句错误时是否继续
+      ## 执行schema.sql或者data.sql时，用的用户。一般在 mysql、oracle、sqlserver 数据库中才会用到
+      #username:
+      #password:

@@ -67,7 +67,7 @@ const actions = {
       // 加载远程路由
       const [res, e] = await loadRoutes(roleIds[0] ? roleIds : undefined).then(res => [res]).catch(e => [null, e])
 
-      if (res && res.success) {
+      if (res && (res.code === 0 || res.success)) {
         console.log('动态路由列表：\n' + JSON.stringify(res.data))
 
         accessedRoutes = buildRoutes(res.data)

@@ -1,22 +1,45 @@
 spring:
-
   datasource:
     driver-class-name: com.p6spy.engine.spy.P6SpyDriver
     url: jdbc:p6spy:mysql://${spring.redis.host}:3306/customer-service?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
     username: root
-    password: db123!@#
+    password: password
 
-    initialization-mode: always
-    continue-on-error: false
+    dynamic: # mybatis-plus 多数据源配置
+      hikari:
+        is-auto-commit: true
+        max-pool-size: 16 # 最大连接池数量
+        connection-timeout: 60000
+        minimum-idle: 4 # 最小空闲连接
+        idle-timeout: 500000
+        max-lifetime: 1200000
+        connection-test-query: SELECT 1
+      primary: master
+      datasource:
+        master:
+          url: ${spring.datasource.url}
+          username: ${spring.datasource.username}
+          password: ${spring.datasource.password}
+        # 从库数据源
+        slave:
+          # 从数据源开关/默认关闭
+          lazy: true
+          url: ${spring.datasource.url}
+          username: ${spring.datasource.username}
+          password: ${spring.datasource.password}
 
-    platform: mysql
-    schema:
-      - classpath:db/schema-h2-oss.sql
-      - classpath:db/schema-h2-org.sql
-      - classpath:db/schema-h2-sys.sql
-      - classpath:db/schema-h2-mbr.sql
-      - classpath:db/schema-h2-sns.sql
-      - classpath:db/schema-h2.sql
-    data: classpath:db/data-h2-org.sql,classpath:db/data-h2-sys.sql,classpath:db/data-h2.sql
-    sql-script-encoding: utf-8
-    separator: ;
+  sql:
+    init:
+      mode: always
+      continue-on-error: false
+      platform: mysql
+      schema-locations:
+        - classpath:db/schema-h2-oss.sql
+        - classpath:db/schema-h2-org.sql
+        - classpath:db/schema-h2-sys.sql
+        - classpath:db/schema-h2-mbr.sql
+        - classpath:db/schema-h2-sns.sql
+        - classpath:db/schema-h2.sql
+      data-locations: classpath:db/data-h2-org.sql,classpath:db/data-h2-sys.sql,classpath:db/data-h2.sql
+      encoding: utf-8
+      separator: ;

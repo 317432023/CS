@@ -1,10 +1,9 @@
-package com.laolang.cs.chatuser;
+package com.laolang.cs.chatuser.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.laolang.cs.chatuser.ChatUser;
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Repository;
 
-@Repository
 @Mapper
 public interface ChatUserMapper extends BaseMapper<ChatUser> {
 }

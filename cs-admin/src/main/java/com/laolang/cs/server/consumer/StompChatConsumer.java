@@ -9,7 +9,7 @@ import com.laolang.cs.chatmessage.ChatMessage;
 import com.laolang.cs.chatmessage.ChatMessageRead;
 import com.laolang.cs.chatmessage.ChatMessageReadService;
 import com.laolang.cs.chatmessage.ChatMessageService;
-import com.laolang.cs.chatuser.ChatUserService;
+import com.laolang.cs.chatuser.service.ChatUserService;
 import com.laolang.cs.server.authen.SubsysTool;
 import com.laolang.cs.server.protocol.Msg;
 import lombok.AllArgsConstructor;

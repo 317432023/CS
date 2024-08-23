@@ -84,7 +84,7 @@ export default {
 
           this.request.modifyPassword(this.dialogForm).then(res => {
             this.loadingSubmit = false
-            if (res.success) {
+            if (res.code === 0 || res.success) {
               // this.showDialog = false
               // this.$notify.success(res.message ? res.message : 'success')
 

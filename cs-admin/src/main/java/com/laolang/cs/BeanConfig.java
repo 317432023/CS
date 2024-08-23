@@ -19,7 +19,7 @@ import org.springframework.context.annotation.FilterType;
     "com.frm.springmvc",
     "com.frm.springboot",
     "com.frm.redis",
-    "com.frm.mybatisplus",
+    /*"com.frm.mybatisplus",*/
     /*组件:文档*/"com.cmpt.doc",
     /*组件:验证码*/"com.cmpt.captcha",
     /*组件:文件上传*/"com.cmpt.oss",

@@ -126,7 +126,7 @@ export default {
       }
       this.$store.dispatch('security/login', user).then(res => {
         this.loading = false
-        if (res.success) {
+        if (res.code === 0 || res.success) {
           // 记住账号密码
           Cookies.set('admin', JSON.stringify({
             rememberMe: this.rememberMe,
@@ -172,7 +172,7 @@ export default {
         this.$store.dispatch('security/captcha', { width: 160, height: 40 })
       ]).then(res => res).catch(e => e)
       /* await this.$store.dispatch('security/captcha', { width: 200, height: 80, mode: 2 }).then(res => {
-        if (res.success) {
+        if (res.code === 0 || res.success) {
           const { data } = res
           content = data.content
         } else {
@@ -185,7 +185,7 @@ export default {
 
       if (e) {
         console.error(e.message) // for debug
-      } else if (res.success) {
+      } else if (res.code === 0 || res.success) {
         const { data } = res
         content = data.content
       } else {

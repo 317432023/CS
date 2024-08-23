@@ -14,7 +14,7 @@ import com.comm.pojo.SystemException;
 import com.frm.redis.ModeDict;
 import com.frm.redis.RedisTool;
 import com.laolang.cs.chatuser.ChatUser;
-import com.laolang.cs.chatuser.ChatUserService;
+import com.laolang.cs.chatuser.service.ChatUserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

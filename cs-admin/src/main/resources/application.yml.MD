@@ -77,9 +77,6 @@ mybatis-plus:
   #mapper-locations: classpath*:**/mapper/*Mapper.xml
   #type-aliases-package: com.soarer.seed.sys.model.entity
 
-  # 自定义属性
-  pagination: true # 是否使用mybatis-plus分页
-  optimistic: true # 是否使用mybatis-plus乐观锁
 
 ####################################
 # 分页插件配置

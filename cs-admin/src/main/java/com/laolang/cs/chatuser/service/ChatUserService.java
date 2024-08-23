@@ -1,4 +1,4 @@
-package com.laolang.cs.chatuser;
+package com.laolang.cs.chatuser.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -8,6 +8,8 @@ import com.cmpt.org.entity.SysOrg;
 import com.cmpt.org.mapper.SysOrgMapper;
 import com.cmpt.sys.dao.mapper.SysUserMapper;
 import com.cmpt.sys.model.entity.SysUser;
+import com.laolang.cs.chatuser.ChatUser;
+import com.laolang.cs.chatuser.mapper.ChatUserMapper;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
