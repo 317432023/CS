@@ -188,13 +188,13 @@ export default {
         }
       })
     },
-    reduceChatUsers(userAry, clientId, lastChatUserId) {
-      request.getChatUsers(clientId, 0, lastChatUserId).then(res => {
+    reduceChatUsers(userAry, clientId, lastChatUserId, limit) {
+      request.getChatUsers(clientId, 0, lastChatUserId, limit).then(res => {
         // console.log("取得聊天对手 => " + JSON.stringify(res.data))
         if (res.data.length > 0) {
           lastChatUserId = res.data[res.data.length - 1].rcptId
           for (const v of res.data) { userAry.push(v) }
-          this.reduceChatUsers(userAry, clientId, lastChatUserId)
+          // this.reduceChatUsers(userAry, clientId, lastChatUserId, limit)
         }
       })
     },
@@ -223,15 +223,8 @@ export default {
           } else {
             // 取得聊天用户列表更新到 users 中
             const userAry = []
-            that.reduceChatUsers(userAry, that.clientId, 0)
+            that.reduceChatUsers(userAry, that.clientId, 0, 20)
             that.users = userAry
-            /* request.getChatUsers(that.clientId, 0, lastChatUserId).then(res => {
-              // console.log("取得聊天对手 => " + JSON.stringify(res.data))
-              if (res.data.length > 0) {
-                lastChatUserId = res.data[res.data.length - 1].rcptId
-              }
-              that.users = res.data
-            })*/
           }
         } }).then(res => resolve(res)).catch(e => reject(e))
       })

@@ -6,12 +6,13 @@ export default {
    * @param clientId
    * @param rcptId
    * @param lastChatUserId
+   * @param limit
    */
-  getChatUsers(clientId, rcptId, lastChatUserId = 0) {
+  getChatUsers(clientId, rcptId, lastChatUserId = 0, limit = 20) {
     return request({
       url: `/api/mbr/chat_users`,
       method: 'get',
-      params: { rcptId, lastChatUserId },
+      params: { rcptId, lastChatUserId, limit },
       headers: { 'clientId': clientId }
     })
   },

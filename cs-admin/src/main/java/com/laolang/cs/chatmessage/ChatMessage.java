@@ -14,7 +14,7 @@ import java.util.Map;
  * 聊天消息
  * ChatMessage
  *
- * @date 2023/9/11 0:53
+ * @since 2023/9/11 0:53
  */
 @TableName(value = "tb_chat_message",autoResultMap = true)@Getter@Setter@Accessors(chain = true)
 public class ChatMessage implements Serializable {

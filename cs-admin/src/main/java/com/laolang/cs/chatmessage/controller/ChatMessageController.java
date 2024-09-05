@@ -97,16 +97,18 @@ public class ChatMessageController {
     @Parameter(name = "rcptId", description = "聊天用户ID", in = ParameterIn.QUERY, example = "0")
     @Parameter(name = "igResPrefix", description = "返回资源是否去掉前缀，默认false", in = ParameterIn.QUERY, example = "true")
     @Parameter(name = "lastChatUserId", description = "上一个聊天用户ID，默认0", in = ParameterIn.QUERY, example = "0")
+    @Parameter(name = "limit", description = "限制返回记录数，默认50", in = ParameterIn.QUERY, example = "0")
     @GetMapping("chat_users")
     public R<List<Map<String, Object>>> onlineChatUsers(@RequestHeader String clientId,
                                                         @RequestParam(required = false, defaultValue = "0") Integer rcptId,
                                                         @RequestParam(required = false, defaultValue = "false") Boolean igResPrefix,
-                                                        @RequestParam(required = false, defaultValue = "0") Integer lastChatUserId
+                                                        @RequestParam(required = false, defaultValue = "0") Integer lastChatUserId,
+                                                        @RequestParam(required = false, defaultValue = "50") Integer limit
     ) {
         ChatUser senderChatUser = subsysTool.getChatUser(clientId); // 消息發送者
         List<ChatUser> rcptList;
         if (rcptId == null || rcptId <= 0) {
-            rcptList = chatUserService.queryRcptList(senderChatUser.getId(), lastChatUserId);
+            rcptList = chatUserService.queryRcptList(senderChatUser.getId(), lastChatUserId, limit);
         } else {
             rcptList = new ArrayList<>();
             ChatUser user = chatUserService.queryRcpt(senderChatUser.getId(), rcptId);

@@ -9,8 +9,10 @@ create table tb_chat_user(
   `user_type` int unsigned default 0 not null comment '用户类型0-客人; 1-客服人员(有关联系统用户)',
   `avatar` varchar(200) comment '头像',
   `rel_id` bigint unsigned not null default 0 comment '关联用户ID',
+  `last_message_time` datetime comment '最后聊天时间（包括发送和接收）',
   `create_time` datetime,
   unique index uq_index(`tenant_id`,`user_type`,`nick_name`),
+  index sort_index (`last_message_time`),
   primary key(`id`)
 ) comment '聊天用户';
 

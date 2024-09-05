@@ -1,7 +1,7 @@
 package com.laolang.cs.server;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
-import com.alibaba.fastjson.JSON;
+import cn.hutool.json.JSONUtil;
 import com.cmpt.org.entity.SysOrg;
 import com.cmpt.org.service.SysOrgService;
 import com.cmpt.sys.model.entity.SysUser;
@@ -26,7 +26,7 @@ import java.security.Principal;
 /**
  * CsStompWsServer
  *
- * @date 2023/9/15 23:57
+ * @since 2023/9/15 23:57
  */
 @Slf4j
 @Controller
@@ -48,26 +48,26 @@ public class CsStompWsServer {
 
     /**
      * 接收并转发聊天信息
-     * @param msg<p>
-     *     msgId:'',   // 消息ID
-     *     msgType:'', // 消息类型
-     *     roomId: 0,  // 聊天室ID
-     *     msgBody: '' // 消息体
-     * @param roomId 群ID=客人的聊天用户ID
+     *
+     * @param msg<p>    msgId:'',   // 消息ID
+     *                  msgType:'', // 消息类型
+     *                  roomId: 0,  // 聊天室ID
+     *                  msgBody: '' // 消息体
+     * @param roomId    群ID=客人的聊天用户ID
      * @param principal
      */
     @MessageMapping("/cs/massRequest/{roomId}")
     public void sendMass(Msg msg, @DestinationVariable Integer roomId, Principal principal) {
-        log.info("[接收消息]>>>> msg: {}", JSON.toJSONString(msg) );
+        log.info("[接收消息]>>>> msg: {}", JSONUtil.toJsonStr(msg));
 
-        final WebSocketUser webSocketUser = (WebSocketUser)principal;
-        if(webSocketUser == null) {
+        final WebSocketUser webSocketUser = (WebSocketUser) principal;
+        if (webSocketUser == null) {
             log.error("非法连接");
             throw new SystemException(500, "非法连接");
         }
 
         MsgType msgType = msg.getMsgType();
-        if(msgType == null) {
+        if (msgType == null) {
             throw new SystemException(500, "消息类型缺失");
         }
 
@@ -95,19 +95,19 @@ public class CsStompWsServer {
             }
 
             // 二、消息处理
-            if(msgType.stompClazz == null) {
+            if (msgType.stompClazz == null) {
                 return;
             }
             SpringContextHolder.getBean(msgType.stompClazz).accept(
-                msg.setMessagingTemplate(messagingTemplate)
-                    .setSender(chatUser.getId()) // 消息发送者 ID
-                    .setClientId(clientId) // 消息发送者客户端会话
-                    .setRoomId(roomId) // 当前群ID
-                    // 以下展示需要
-                    .setSenderNickName(chatUser.getNickName()) // 消息发送者昵称
+                    msg.setMessagingTemplate(messagingTemplate)
+                            .setSender(chatUser.getId()) // 消息发送者 ID
+                            .setClientId(clientId) // 消息发送者客户端会话
+                            .setRoomId(roomId) // 当前群ID
+                            // 以下展示需要
+                            .setSenderNickName(chatUser.getNickName()) // 消息发送者昵称
             );
         } catch (Exception e) {
-            log.error(ExceptionUtil.stacktraceToString(e,1000));
+            log.error(ExceptionUtil.stacktraceToString(e, 1000));
             // 提示 当前用户
             messagingTemplate.convertAndSendToUser(clientId, "/alone/cs/getResponse", Msg.tip("系统接收消息失败").setMsgId(msg.getMsgId()));
         }

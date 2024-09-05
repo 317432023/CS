@@ -19,7 +19,11 @@ import java.util.Date;
  *
  * @since 2023/9/11 0:39
  */
-@TableName("tb_chat_user")@Getter@Setter@Accessors(chain = true)@EqualsAndHashCode(of = {"avatar"})
+@TableName("tb_chat_user")
+@Getter
+@Setter
+@Accessors(chain = true)
+@EqualsAndHashCode(of = {"avatar"})
 public class ChatUser implements Serializable {
     private static final long serialVersionUID = -913408839608339811L;
     @TableId(type = IdType.AUTO)
@@ -46,32 +50,34 @@ public class ChatUser implements Serializable {
      */
     private String avatar;
     /**
-     *  关联用户ID 本系统客服人员 或 接入系统会员
+     * 关联用户ID 本系统客服人员 或 接入系统会员
      */
     @TableField(updateStrategy = FieldStrategy.NEVER)
     private Long relId;
+    /**
+     * 最后一次接收或发送消息的日期
+     */
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonFormat(timezone = "GMT+8", locale = "zh_CN", pattern = "yyyy-MM-dd HH:mm:ss")//@JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    private Date lastMessageTime;
 
     @Override
     public String toString() {
         return new StringBuilder().append('{')
-            .append("\"id\":").append(id).append(',')
-            .append("\"tenantId\":").append('\"').append(tenantId).append('\"').append(',')
-            .append("\"nickName\":").append('\"').append(nickName).append('\"').append(',')
-            .append("\"userType\":").append(userType).append(',')
-            .append("\"relId\":").append(relId).append(',')
-            .append("\"createTime\":").append('\"').append(DateUtil.format(createTime,"yyyy-MM-dd HH:mm:ss")).append('\"')
-            .append('}')
-            .toString();
+                .append("\"id\":").append(id).append(',')
+                .append("\"tenantId\":").append('\"').append(tenantId).append('\"').append(',')
+                .append("\"nickName\":").append('\"').append(nickName).append('\"').append(',')
+                .append("\"userType\":").append(userType).append(',')
+                .append("\"relId\":").append(relId).append(',')
+                .append("\"createTime\":").append('\"').append(DateUtil.format(createTime, "yyyy-MM-dd HH:mm:ss")).append('\"').append(',')
+                .append("\"lastMessageTime\":").append('\"').append(DateUtil.format(createTime, "yyyy-MM-dd HH:mm:ss")).append('\"')
+                .append('}')
+                .toString();
     }
 
-    @TableField(exist = false)@JsonIgnore@JSONField(serialize = false, deserialize = false)
+    @TableField(exist = false)
+    @JsonIgnore
+    @JSONField(serialize = false, deserialize = false)
     private String clientId;
-
-    /**
-     * 最后一次接收或发送消息的日期
-     */
-    @TableField(exist = false)@JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @JsonFormat(timezone = "GMT+8",locale = "zh_CN", pattern = "yyyy-MM-dd HH:mm:ss")//@JSONField(format = "yyyy-MM-dd HH:mm:ss")
-    private Date lastMessageTime;
 
 }
