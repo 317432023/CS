@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 export default {
-  page (params) {
+  page(params) {
     return request({
       url: `system/config/query/list/${params.current}/${params.size}`,
       method: 'post',
@@ -12,27 +12,27 @@ export default {
       }
     })
   },
-  add (data) {
+  add(data) {
     return request({
       url: 'system/config/add',
       method: 'post',
       data
     })
   },
-  delete (id) {
+  delete(id) {
     return request({
       url: `system/config/del/${id}`,
       method: 'delete'
     })
   },
-  mod (data) {
+  mod(data) {
     return request({
       url: 'system/config/mod',
       method: 'put',
       data
     })
   },
-  getById (id) {
+  getById(id) {
     return request({
       url: `system/config/query/one/${id}`,
       method: 'get'

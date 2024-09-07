@@ -8,7 +8,7 @@ import request from '../utils/request'
  * 列出当前用户有权限查看的机构列表
  */
 export default {
-  orgList () {
+  orgList() {
     return request({
       url: 'cmm/org_list',
       method: 'get'

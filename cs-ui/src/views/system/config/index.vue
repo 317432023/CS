@@ -2,10 +2,10 @@
   <div class="app-container">
     <!-- 对话框 新增/编辑 -->
     <el-dialog
+      v-el-drag-dialog
       :title="isAdd?'新增':'编辑'"
       :visible.sync="showDialog"
       :close-on-click-modal="false"
-      v-el-drag-dialog
       width="600px"
       @closed="reset($refs.dialogForm)"
     >
