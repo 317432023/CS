@@ -177,13 +177,6 @@
             </exclusions>
         </dependency>
 
-        <!-- jackson for json -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.12.7.1</version>
-        </dependency>
-
         <!--SQL性能分析器,开发环境使用-->
         <dependency>
             <groupId>p6spy</groupId>

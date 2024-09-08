@@ -12,7 +12,7 @@ import java.util.Date;
  * 聊天消息已读情况
  * ChatMessageRead
  *
- * @date 2023/9/20 15:44
+ * @since 2023/9/20 15:44
  */
 @TableName("tb_chat_message_read")@Getter@Setter
 @Accessors(chain = true)

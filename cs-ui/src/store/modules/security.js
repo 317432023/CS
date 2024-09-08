@@ -11,7 +11,7 @@ const state = {
   nickname: '', // 昵称
   avatar: '', // 头像
   roles: [], roleIds: [], // 角色数组
-  orgId: -1 // 机构ID
+  tenantId: -1 // 机构ID
 }
 const getters = {
 
@@ -38,8 +38,8 @@ const mutations = {
   SET_ROLE_IDS: (state, roleIds) => {
     state.roleIds = roleIds
   },
-  SET_ORG_ID: (state, orgId) => {
-    state.orgId = orgId
+  SET_TENANT_ID: (state, tenantId) => {
+    state.tenantId = tenantId
   }
 }
 const actions = {
@@ -95,7 +95,7 @@ const actions = {
           reject(new Error('Verification failed, please Login again.'))
         }
 
-        const { orgId, roleIds, roles, username, nickname, avatar } = data
+        const { tenantId, roleIds, roles, username, nickname, avatar } = data
 
         // roles must be a non-empty array
         // if (!roles || roles.length === 0) {
@@ -104,7 +104,7 @@ const actions = {
 
         commit('SET_ROLES', roles)
         commit('SET_ROLE_IDS', roleIds)
-        commit('SET_ORG_ID', orgId)
+        commit('SET_TENANT_ID', tenantId)
         commit('SET_USERNAME', username)
         commit('SET_NICKNAME', nickname)
         commit('SET_AVATAR', avatar)

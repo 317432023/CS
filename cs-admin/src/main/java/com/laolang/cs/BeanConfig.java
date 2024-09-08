@@ -24,7 +24,7 @@ import org.springframework.context.annotation.FilterType;
     /*组件:验证码*/"com.cmpt.captcha",
     /*组件:文件上传*/"com.cmpt.oss",
     /*组件:Websocket*/"com.cmpt.ws",
-    /*组件:多租戶*/"com.cmpt.org",
+    /*组件:多租戶*/"com.cmpt.tenant",
     /*控制台API*/"com.cmpt.sys",
     /*会员API规格*/"com.cmpt.mbr",
     /*社交用户API*/"com.cmpt.sns",

@@ -2,10 +2,10 @@ package com.laolang.cs.server;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.json.JSONUtil;
-import com.cmpt.org.entity.SysOrg;
-import com.cmpt.org.service.SysOrgService;
 import com.cmpt.sys.model.entity.SysUser;
 import com.cmpt.sys.service.SysUserService;
+import com.cmpt.tenant.entity.SysTenant;
+import com.cmpt.tenant.service.SysTenantService;
 import com.cmpt.ws.WebSocketUser;
 import com.comm.pojo.SystemException;
 import com.frm.springmvc.SpringContextHolder;
@@ -34,15 +34,15 @@ public class CsStompWsServer {
 
     private final SimpMessagingTemplate messagingTemplate;
     private final SysUserService sysUserService;
-    private final SysOrgService sysOrgService;
+    private final SysTenantService sysTenantService;
     private final ChatUserService chatUserService;
     private final SubsysTool subsysTool;
 
-    public CsStompWsServer(SimpMessagingTemplate messagingTemplate, SubsysTool subsysTool, SysUserService sysUserService, SysOrgService sysOrgService, ChatUserService chatUserService) {
+    public CsStompWsServer(SimpMessagingTemplate messagingTemplate, SubsysTool subsysTool, SysUserService sysUserService, SysTenantService sysTenantService, ChatUserService chatUserService) {
         this.messagingTemplate = messagingTemplate;
         this.subsysTool = subsysTool;
         this.sysUserService = sysUserService;
-        this.sysOrgService = sysOrgService;
+        this.sysTenantService = sysTenantService;
         this.chatUserService = chatUserService;
     }
 
@@ -89,9 +89,9 @@ public class CsStompWsServer {
                 // 客服 所属站点 必须与客人所属站点一致
                 SysUser sysUser = sysUserService.getById(chatUser.getRelId());
                 Assert.isTrue(sysUser != null, "500-找不到用户");
-                SysOrg sysOrg = sysOrgService.getById(sysUser.getOrgId());
-                Assert.isTrue(sysOrg != null, "500-找不到机构");
-                Assert.isTrue(sysOrg.getOrgKey().equals(customerUser.getTenantId()), "400-参数不合法");
+                SysTenant sysTenant = sysTenantService.getById(sysUser.getTenantId());
+                Assert.isTrue(sysTenant != null, "500-找不到机构");
+                Assert.isTrue(sysTenant.getTenantKey().equals(customerUser.getTenantId()), "400-参数不合法");
             }
 
             // 二、消息处理

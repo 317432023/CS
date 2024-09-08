@@ -43,16 +43,16 @@ spring:
       separator: ;
       platform: h2 # 加载 schema-${platform}.sql文件，或者data-${platform}.sql
       # 启动时需要初始化的建表语句
-      schema-locations: #[classpath:db/schema-h2-sys.sql,classpath:db/schema-h2-mem.sql,classpath:db/schema-h2.sql] # 多个sql文件，可以用逗号分隔
+      schema-locations: #[classpath:db/schema-h2-sys.sql,classpath:db/schema-h2-mbr.sql,classpath:db/schema-h2.sql] # 多个sql文件，可以用逗号分隔
         - classpath:db/schema-h2-oss.sql
-        - classpath:db/schema-h2-org.sql
+        - classpath:db/schema-h2-tenant.sql
         - classpath:db/schema-h2-sys.sql
         - classpath:db/schema-h2-mbr.sql
         - classpath:db/schema-h2-sns.sql
         - classpath:db/schema-h2.sql
       # 初始化的数据
       data-locations: #[classpath:db/data-h2-sys.sql,classpath:db/data-h2.sql]
-        - classpath:db/data-h2-org.sql
+        - classpath:db/data-h2-tenant.sql
         - classpath:db/data-h2-sys.sql
         - classpath:db/data-h2.sql
       mode: always # Spring Boot2.x 必须添加 initialization-mode配置才会执行 always为始终执行初始化，embedded只初始化内存数据库（默认值）,如h2等，never为不执行初始化

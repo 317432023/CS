@@ -5,8 +5,8 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.cmpt.org.entity.SysOrg;
-import com.cmpt.org.service.SysOrgService;
+import com.cmpt.tenant.entity.SysTenant;
+import com.cmpt.tenant.service.SysTenantService;
 import com.cmpt.sys.security.domain.AdminUserDetails;
 import com.cmpt.ws.props.WebSocketProperties;
 import com.comm.pojo.R;
@@ -29,7 +29,7 @@ import static com.comm.iface.Constants.LOGIN_TOKEN_PREFIX;
  * 取子系统用户信息
  * GetInfoTool
  *
- * @date 2023/9/11 23:21
+ * @since 2023/9/11 23:21
  */
 @Slf4j
 @AllArgsConstructor
@@ -129,7 +129,7 @@ public final class SubsysTool {
      *       "updateTime" : "1677406941000",
      *       "id" : 100002,
      *       "avatar" : "/upload/faces/01.jpg",
-     *       "orgId" : 6,
+     *       "tenantId" : 6,
      *       "username" : "nwp"
      *     }
      *   },
@@ -138,14 +138,14 @@ public final class SubsysTool {
      */
     public static R getInfo(String token, String tenantId) {
         // 根据 tenantId 提取 远程接口地址，格式如：http://127.0.0.1:9090/api/mbr/getInfo
-        SysOrgService sysOrgService = SpringUtil.getBean(SysOrgService.class);
-        Assert.isTrue(sysOrgService != null, "500-系统内部异常，请联系管理");
-        SysOrg sysOrg = sysOrgService.getOne(new QueryWrapper<SysOrg>().eq("org_key", tenantId));
-        Assert.isTrue(sysOrg != null, ()->String.format("404-找不到机构%s，请联系管理", tenantId));
-        String getInfoUrl = sysOrg.getDomain();
-        if(StringUtils.isBlank(getInfoUrl) && sysOrg.getPid() != null && sysOrg.getPid() > 0) {
-            SysOrg pSysOrg = sysOrgService.getById(sysOrg.getPid());
-            getInfoUrl = pSysOrg.getDomain();
+        SysTenantService sysTenantService = SpringUtil.getBean(SysTenantService.class);
+        Assert.isTrue(sysTenantService != null, "500-系统内部异常，请联系管理");
+        SysTenant sysTenant = sysTenantService.getOne(new QueryWrapper<SysTenant>().eq("tenant_key", tenantId));
+        Assert.isTrue(sysTenant != null, ()->String.format("404-找不到机构%s，请联系管理", tenantId));
+        String getInfoUrl = sysTenant.getDomain();
+        if(StringUtils.isBlank(getInfoUrl) && sysTenant.getPid() != null && sysTenant.getPid() > 0) {
+            SysTenant pSysTenant = sysTenantService.getById(sysTenant.getPid());
+            getInfoUrl = pSysTenant.getDomain();
         }
         Assert.isTrue(StringUtils.isNotBlank(getInfoUrl), ()->String.format("500-机构%s认证地址未配置，请联系管理", tenantId));
 
@@ -225,7 +225,7 @@ public final class SubsysTool {
         }
         if(chatUser == null) {
             chatUser = chatUserService.getById(chatUserId);
-            /**
+            /*
              * 缓存数据结构：用户ID=>用户信息
              */
             redisTool.set(webSocketProperties.getChatUserCachePrefix() + chatUserId, chatUser, ModeDict.APP);

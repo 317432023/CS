@@ -10,19 +10,19 @@
           v-el-drag-dialog>
             <el-form status-icon  :model="dialogForm" :inline="true" ref="dialogForm" :rules="rule" style="font-weight: bold;" size="small" label-position="right" label-width="80px" >
 
-                <el-form-item prop="name" label="机构KEY">
-                    <el-input v-model="dialogForm.orgKey" size="mini" placeholder="机构KEY" :disabled="!isAdd"/>
+                <el-form-item prop="name" label="租户KEY">
+                    <el-input v-model="dialogForm.tenantKey" size="mini" placeholder="租户KEY" :disabled="!isAdd"/>
                 </el-form-item>
-                <el-form-item prop="name" label="机构名称">
-                    <el-input v-model="dialogForm.name" size="mini" placeholder="机构名称"/>
+                <el-form-item prop="name" label="租户名称">
+                    <el-input v-model="dialogForm.name" size="mini" placeholder="租户名称"/>
                 </el-form-item>
-                <el-form-item prop="domain" label="机构域名">
-                    <el-input v-model="dialogForm.domain" size="mini" placeholder="机构域名"/>
+                <el-form-item prop="domain" label="租户域名">
+                    <el-input v-model="dialogForm.domain" size="mini" placeholder="租户域名"/>
                 </el-form-item>
                 <el-form-item prop="qq" label="客服QQ">
                     <el-input v-model="dialogForm.qq" size="mini" placeholder="客服QQ"/>
                 </el-form-item>
-                <el-form-item prop="kind" label="机构性质">
+                <el-form-item prop="kind" label="租户性质">
                     <el-radio-group size="mini" v-model="dialogForm.kind" fill="#009688" :disabled="!isAdd">
                         <el-radio-button size="mini" label="SUB">总/子公司</el-radio-button>
                         <el-radio-button size="mini" label="BR">分公司/站点</el-radio-button>
@@ -52,9 +52,9 @@
                 <el-select multiple filterable allow-create size="mini" v-model="params.sort"
                            placeholder="排序字段">
                     <el-option label="" value="id"></el-option>
-                    <el-option label="机构KEY" value="orgKey"></el-option>
-                    <el-option label="机构名称" value="name"></el-option>
-                    <el-option label="机构域名" value="domain"></el-option>
+                    <el-option label="租户KEY" value="tenantKey"></el-option>
+                    <el-option label="租户名称" value="name"></el-option>
+                    <el-option label="租户域名" value="domain"></el-option>
                     <el-option label="客服QQ" value="qq"></el-option>
                     <el-option label="是否禁用" value="disabled"></el-option>
                     <el-option label="过期日期" value="expireDate"></el-option>
@@ -73,7 +73,7 @@
             </el-form-item>
             <el-form-item>
                 <el-button size="mini" type="success" @click="queryPage()" icon="el-icon-search">查询</el-button>
-                <el-button size="mini" type="primary" @click="showAddDialog({})" icon="el-icon-plus" v-if="havePermission('system:org:edit')">新增</el-button>
+                <el-button size="mini" type="primary" @click="showAddDialog({})" icon="el-icon-plus" v-if="havePermission('system:tenant:edit')">新增</el-button>
             </el-form-item>
         </el-form>
 
@@ -81,9 +81,9 @@
         <!--表格-->
         <el-table v-loading="loadingTable" :data="records" highlight-current-row element-loading-text="加载中..." border fit>
             <!--<el-table-column align="center" label="主键" prop="id"></el-table-column>-->
-            <el-table-column align="center" label="机构KEY" prop="orgKey"></el-table-column>
-            <el-table-column align="center" label="机构名称" prop="name"></el-table-column>
-            <el-table-column align="center" label="机构域名" prop="domain"></el-table-column>
+            <el-table-column align="center" label="租户KEY" prop="tenantKey"></el-table-column>
+            <el-table-column align="center" label="租户名称" prop="name"></el-table-column>
+            <el-table-column align="center" label="租户域名" prop="domain"></el-table-column>
             <el-table-column align="center" label="客服QQ" prop="qq"></el-table-column>
             <el-table-column align="center" label="禁用" prop="disabled" width="50">
               <template slot-scope="scope">
@@ -94,10 +94,10 @@
             </el-table-column>
             <el-table-column align="center" label="过期日期" prop="expireDate"></el-table-column>
             <el-table-column align="center" label="创建时间" prop="createTime"></el-table-column>
-            <el-table-column align="center" label="操作"  min-width="120" fixed="right"  v-if="haveAnyPermission(['system:org:mod','system:org:del'])">
+            <el-table-column align="center" label="操作"  min-width="120" fixed="right"  v-if="haveAnyPermission(['system:tenant:mod','system:tenant:del'])">
                 <template slot-scope="scope">
-                    <el-button @click="showEditDialog(scope.row.id)" size="mini" type="success" icon="el-icon-edit" :loading="loadingEdit"  v-if="havePermission('system:org:edit')" />
-                    <el-button @click="removeOne(scope.row.id)" size="mini" type="danger" icon="el-icon-delete" v-if="havePermission('system:org:del')"/>
+                    <el-button @click="showEditDialog(scope.row.id)" size="mini" type="success" icon="el-icon-edit" :loading="loadingEdit"  v-if="havePermission('system:tenant:edit')" />
+                    <el-button @click="removeOne(scope.row.id)" size="mini" type="danger" icon="el-icon-delete" v-if="havePermission('system:tenant:del')"/>
                 </template>
             </el-table-column>
         </el-table>
@@ -117,11 +117,11 @@
 
 <script>
 import elDragDialog from '@/directive/el-drag-dialog'
-import request from '@/api/system/org'
+import request from '@/api/system/tenant'
 import common from '@/mixins/common'
 
 export default {
-  name: 'Org',
+  name: 'Tenant',
   mixins: [common],
   directives: { elDragDialog },
   data() {
@@ -129,9 +129,9 @@ export default {
       request: request,
       rule: {
         /* id: [{ required: true, message: '必须填写', trigger: 'blur' }],*/
-        orgKey: [{ required: true, message: '机构KEY填写', trigger: 'blur' }],
-        name: [{ required: true, message: '机构名称必须填写', trigger: 'blur' }],
-        domain: [{ required: true, message: '机构域名必须填写', trigger: 'blur' }],
+        tenantKey: [{ required: true, message: '租户KEY填写', trigger: 'blur' }],
+        name: [{ required: true, message: '租户名称必须填写', trigger: 'blur' }],
+        domain: [{ required: true, message: '租户域名必须填写', trigger: 'blur' }],
         qq: [{ required: false, message: '客服QQ必须填写', trigger: 'blur' }],
         disabled: [{ required: true, message: '是否禁用必须选择', trigger: 'blur' }],
         expireDate: [{ required: true, message: '过期时间必须填写', trigger: 'blur' }]

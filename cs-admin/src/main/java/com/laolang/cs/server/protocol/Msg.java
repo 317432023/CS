@@ -20,7 +20,7 @@ import java.util.Map;
  * 私有协议
  * Msg - WebSocket 消息
  *
- * @date 2023/2/26 21:03
+ * @since 2023/2/26 21:03
  */
 @Getter
 @Setter

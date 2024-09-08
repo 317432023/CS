@@ -71,9 +71,9 @@
           </el-radio-group>
         </el-form-item>
 
-        <el-form-item label="所属站点" prop="orgId">
+        <el-form-item label="所属站点" prop="tenantId">
           <el-select
-            v-model="dialogForm.orgId"
+            v-model="dialogForm.tenantId"
             size="mini"
             placeholder="所属站点"
             style="width:450px"
@@ -121,7 +121,7 @@
         <el-input v-model="queryForm.email" size="mini" placeholder="邮箱" clearable class="search-input" />
       </el-form-item>
       <el-form-item label="站点">
-        <el-select v-model="queryForm.orgId" size="mini" placeholder="站点" clearable class="search-input">
+        <el-select v-model="queryForm.tenantId" size="mini" placeholder="站点" clearable class="search-input">
           <el-option v-for="item in orgs" :key="'org' + item.id" :label="item.name" :value="item.id">
             <span style="float:left">{{ item.name }}</span>
             <span style="float:right; color: #8492a6; font-size: 13px">{{ item.id }}</span>
@@ -303,7 +303,7 @@ export default {
         sex: [{ required: false, message: '请填写性别', trigger: 'blur' }],
         birth: [{ required: false, message: '请填写生日', trigger: 'blur' }],
         avatar: [{ required: false, message: '请选择头像', trigger: 'blur' }],
-        orgId: [{ required: true, message: '请选择站点', trigger: 'blur' }],
+        tenantId: [{ required: true, message: '请选择站点', trigger: 'blur' }],
         roleIds: [{ required: true, message: '请选择角色', trigger: 'blur' }]
       },
       orgs: [],
@@ -328,19 +328,19 @@ export default {
         this.orgs = res.data
       })
     },
-    async getRoles(orgId) {
+    async getRoles(tenantId) {
       const res = await roleApi.page({
         current: 1,
         size: 1000,
-        orgId: orgId
+        tenantId: tenantId
       }).then(res => res).catch(err => err)
       if (res.code === 0 || res.success) {
         return res.data.records
       }
       return null
     },
-    async loadDialogRoles(orgId) {
-      this.dialogRoles = orgId ? await this.getRoles(orgId) : []
+    async loadDialogRoles(tenantId) {
+      this.dialogRoles = tenantId ? await this.getRoles(tenantId) : []
     },
 
     // begin Overrides 覆盖 common.js 中的方法
@@ -357,8 +357,8 @@ export default {
       this.isAdd = false
       this.request.getById(id).then(res => {
         // 取用户所属站点
-        const orgId = res.data.orgId
-        this.loadDialogRoles(orgId)
+        const tenantId = res.data.tenantId
+        this.loadDialogRoles(tenantId)
         this.dialogForm = res.data
         this.showDialog = true
       })

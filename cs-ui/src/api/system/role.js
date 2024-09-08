@@ -12,42 +12,42 @@ export default {
       }
     })
   }, */
-  page (params, data) {
+  page(params, data) {
     return request({
       url: 'system/role/query/list',
       method: 'post',
-      params, // {current:1,size:6, orgId:xx}
+      params, // {current:1,size:6, tenantId:xx}
       data
     })
   },
-  add (data) {
+  add(data) {
     return request({
       url: 'system/role/add',
       method: 'post',
       data
     })
   },
-  delete (id) {
+  delete(id) {
     return request({
       url: `system/role/del/${id}`,
       method: 'delete'
     })
   },
-  mod (data) {
+  mod(data) {
     return request({
       url: 'system/role/mod',
       method: 'put',
       data
     })
   },
-  getById (id) {
+  getById(id) {
     return request({
       url: `system/role/query/one/${id}`,
       method: 'get'
     })
   },
 
-  updateRoleMenus (data) {
+  updateRoleMenus(data) {
     return request({
       url: 'system/role/mod/menu',
       method: 'put',
@@ -56,7 +56,7 @@ export default {
   },
 
   // begin for 更新角色菜单 需要的额外请求
-  getMenuTree (type) {
+  getMenuTree(type) {
     return request({
       url: 'system/role/query/menuTree',
       method: 'get',
@@ -66,7 +66,7 @@ export default {
     })
   },
 
-  getRoleMenus (roleId) {
+  getRoleMenus(roleId) {
     return request({
       url: 'system/role/query/menu',
       method: 'get',

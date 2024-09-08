@@ -1,7 +1,7 @@
 
 /*客服机构*/
-INSERT INTO sys_org VALUES ('3', 'FT1', 'SUB', 0, 1, 0, 'FT1', 'http://127.0.0.1:9090/api/mbr/getInfo', '199828', null, '2021-02-02 01:01:59', 'admin', '2020-11-12 21:01:32', 'admin');
-INSERT INTO sys_org VALUES ('4', 'FT1@测试站', 'BR', 3, 2, 0, 'FT1@6', '', '199829', null, '2021-02-02 01:01:59', 'admin', '2020-11-12 21:01:32', 'admin');
+INSERT INTO sys_tenant VALUES ('3', 'FT1', 'SUB', 0, 1, 0, 'FT1', 'http://127.0.0.1:9090/api/mbr/getInfo', '199828', null, '2021-02-02 01:01:59', 'admin', '2020-11-12 21:01:32', 'admin');
+INSERT INTO sys_tenant VALUES ('4', 'FT1@测试站', 'BR', 3, 2, 0, 'FT1@6', '', '199829', null, '2021-02-02 01:01:59', 'admin', '2020-11-12 21:01:32', 'admin');
 
 /*客服权限组*/
 INSERT INTO sys_role VALUES ('7', 'MANAGER', 'FT1管理员', '应用管理员', 'SUB', '3', '0', '2021-02-08 10:00:00', '', '2021-02-08 10:00:00', '');

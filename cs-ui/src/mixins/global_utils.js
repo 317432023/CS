@@ -10,7 +10,7 @@
  *     this.global_getQueryString('id')
  * <p>
  * @author Administrator
- * @date 2023-10-4
+ * @since 2023-10-4
  */
 import {getQueryString, generateRandomString} from "../utils/tools";
 

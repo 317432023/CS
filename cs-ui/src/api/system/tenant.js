@@ -3,7 +3,7 @@ import request from '@/utils/request'
 export default {
   page(params) {
     return request({
-      url: `system/org/query`,
+      url: `system/tenant/query`,
       method: 'get',
       params: {
         pageNum: params.current,
@@ -15,15 +15,15 @@ export default {
   },
   getById(id) {
     return request({
-      // url: `system/org/query/one/${id}`,
-      url: `system/org/view`,
+      // url: `system/tenant/query/one/${id}`,
+      url: `system/tenant/view`,
       method: 'get',
       params: { id }
     })
   },
   edit(data, params) {
     return request({
-      url: 'system/org/edit',
+      url: 'system/tenant/edit',
       method: 'post',
       data,
       params
@@ -31,8 +31,8 @@ export default {
   },
   delete(id) {
     return request({
-      // url: `system/org/del/${id}`,
-      url: `system/org/del`,
+      // url: `system/tenant/del/${id}`,
+      url: `system/tenant/del`,
       method: 'delete',
       params: { id }
     })

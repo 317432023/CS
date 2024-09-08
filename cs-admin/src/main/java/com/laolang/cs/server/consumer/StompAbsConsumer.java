@@ -5,7 +5,7 @@ import com.laolang.cs.server.protocol.Msg;
 /**
  * StompAbsConsumer
  *
- * @date 2023/9/20 0:57
+ * @since 2023/9/20 0:57
  */
 public abstract class StompAbsConsumer {
 

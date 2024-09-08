@@ -4,7 +4,7 @@ const getters = {
   token: state => state.security.token,
   avatar: state => state.security.avatar || 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
   name: state => state.security.nickname || state.security.username,
-  roles: state => state.security.roles, roleIds: state => state.security.roleIds, orgId: state => state.security.orgId,
+  roles: state => state.security.roles, roleIds: state => state.security.roleIds, tenantId: state => state.security.tenantId,
   // 多语言支持
   language: state => state.app.language,
   // 标签页支持

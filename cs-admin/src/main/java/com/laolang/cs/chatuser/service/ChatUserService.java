@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.cmpt.org.entity.SysOrg;
-import com.cmpt.org.mapper.SysOrgMapper;
+import com.cmpt.tenant.entity.SysTenant;
+import com.cmpt.tenant.mapper.SysTenantMapper;
 import com.cmpt.sys.dao.mapper.SysUserMapper;
 import com.cmpt.sys.model.entity.SysUser;
 import com.laolang.cs.chatuser.ChatUser;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Service@Transactional(rollbackFor = Exception.class)
 public class ChatUserService extends ServiceImpl<ChatUserMapper, ChatUser> implements IService<ChatUser> {
     private SysUserMapper sysUserMapper;
-    private SysOrgMapper sysOrgMapper;
+    private SysTenantMapper sysTenantMapper;
 
     public ChatUser queryRcpt(Integer senderId, Integer rcptId) {
         ChatUser senderChatUser = getById(senderId); // 消息发送者
@@ -113,9 +113,9 @@ public class ChatUserService extends ServiceImpl<ChatUserMapper, ChatUser> imple
             Assert.isTrue(sysUser != null, "404 - 找不到系统用户" + relId);
             Assert.isTrue(!sysUser.getDisabled(), "403 - 系统用户已被禁用" + relId);
 
-            // 将 tenantId 与 系统用户所属机构的 org_key 进行比对验证
-            SysOrg sysOrg = sysOrgMapper.selectById(sysUser.getOrgId());
-            Assert.isTrue(sysOrg != null, ()->String.format("500 - 找不到机构 %d", sysUser.getOrgId()));
+            // 将 tenantId 与 系统用户所属机构的 tenant_key 进行比对验证
+            SysTenant sysTenant = sysTenantMapper.selectById(sysUser.getTenantId());
+            Assert.isTrue(sysTenant != null, ()->String.format("500 - 找不到机构 %d", sysUser.getTenantId()));
 
             chatUser = getOne(new LambdaQueryWrapper<ChatUser>().eq(ChatUser::getUserType, userType).eq(ChatUser::getRelId, relId));
             if(chatUser == null) {
@@ -126,7 +126,7 @@ public class ChatUserService extends ServiceImpl<ChatUserMapper, ChatUser> imple
                 chatUser.setNickName("客服#" + (StringUtils.isNotBlank(nickName)? nickName : relId)); // 此处昵称以 系统用户 昵称为准
                 avatar = StringUtils.isNotBlank(avatar)?avatar.trim():(sysUser.getAvatar()==null?"":sysUser.getAvatar().trim());
                 chatUser.setAvatar(avatar);
-                chatUser.setTenantId(sysOrg.getOrgKey());
+                chatUser.setTenantId(sysTenant.getTenantKey());
             }
         } else {
             Assert.isTrue(StringUtils.isNotBlank(tenantId), "400 - tenantId 参数不合规");

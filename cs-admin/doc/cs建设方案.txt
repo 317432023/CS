@@ -2,7 +2,7 @@
 
 1.1、租户
 
-每个站点以应用标识(app_id)+站点ID(org_id/station_id)作为租户ID(tenant_id)
+每个站点以应用标识(app_id)+站点ID(tenant_id/station_id)作为租户ID(tenant_id)
 
 例如：租户 FT1@6 表示FT1的应用下面的站点6
 

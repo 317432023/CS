@@ -18,10 +18,10 @@
             <el-radio-button size="mini" :label="0">否</el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="所属机构" prop="orgId" >
-          <el-select size="mini" v-model="dialogForm.orgId" placeholder="所属机构" style="width:450px" clearable
+        <el-form-item label="所属机构" prop="tenantId" >
+          <el-select size="mini" v-model="dialogForm.tenantId" placeholder="所属机构" style="width:450px" clearable
                      filterable :disabled="!isAdd">
-            <el-option :label="item.name" :value="item.id" v-for="item in orgs" :key="'dialogOrg' + item.id"/>
+            <el-option :label="item.name" :value="item.id" v-for="item in tenants" :key="'dialogOrg' + item.id"/>
           </el-select>
         </el-form-item>
       </el-form>
@@ -56,7 +56,7 @@
           <el-option label="角色名" value="name"></el-option>
           <el-option label="角色备注" value="remark"></el-option>
           <el-option label="是否禁用（0-启用,1-禁用）" value="disabled"></el-option>
-          <el-option label="站点ID" value="orgId"></el-option>
+          <el-option label="站点ID" value="tenantId"></el-option>
           <el-option label="创建时间" value="createTime"></el-option>
           <el-option label="更新时间" value="updateTime"></el-option>
         </el-select>
@@ -83,7 +83,7 @@
     <el-table v-loading="loadingTable" :data="records" highlight-current-row element-loading-text="加载中..." border fit>
       <!--<el-table-column align="center" label="主键" prop="id"></el-table-column>-->
       <el-table-column align="center" label="角色代码" prop="code"></el-table-column>
-      <el-table-column align="center" label="站点ID" prop="orgId"></el-table-column>
+      <el-table-column align="center" label="站点ID" prop="tenantId"></el-table-column>
       <el-table-column align="center" label="角色名" prop="name"></el-table-column>
       <el-table-column align="center" label="角色备注" prop="remark"></el-table-column>
       <el-table-column align="center" label="禁用" prop="disabled" width="50">
@@ -132,9 +132,9 @@ import cmmApi from '@/api/cmm'
 
 export default {
   name: 'Role',
-  mixins: [common],
   directives: { elDragDialog },
-  data () {
+  mixins: [common],
+  data() {
     return {
       request: request,
       rule: {
@@ -143,9 +143,9 @@ export default {
         name: [{ required: true, message: '角色名必须填写', trigger: 'blur' }],
         remark: [{ required: true, message: '角色备注必须填写', trigger: 'blur' }],
         disabled: [{ required: true, message: '是否禁用（0-启用,1-禁用）必须填写', trigger: 'blur' }],
-        orgId: [{ required: true, message: '站点ID必须填写', trigger: 'blur' }]
+        tenantId: [{ required: true, message: '站点ID必须填写', trigger: 'blur' }]
       },
-      orgs: [],
+      tenants: [],
       // 所有菜单的权限树
       menuTree: [],
       menuDialog: false,
@@ -154,13 +154,18 @@ export default {
       currentRoleId: ''
     }
   },
+  created() {
+    // 会先调用common#queryPage
+    this.loadTenants()
+    this.loadTree()
+  },
   methods: {
-    loadOrgs () {
+    loadTenants() {
       cmmApi.orgList().then(res => {
-        this.orgs = res.data
+        this.tenants = res.data
       })
     },
-    showMenuDialog (id) {
+    showMenuDialog(id) {
       request.getRoleMenus(id).then(res => {
         this.roleMenus = res.data
         this.menuDialog = true
@@ -171,12 +176,12 @@ export default {
         })
       })
     },
-    loadTree () {
+    loadTree() {
       request.getMenuTree().then(res => {
         this.menuTree = res.data
       })
     },
-    updateRoleMenus () {
+    updateRoleMenus() {
       this.loadingSubmit = true
       this.$nextTick(() => {
         const keys = this.$refs.menu.getCheckedKeys()
@@ -193,11 +198,6 @@ export default {
           .finally(() => { this.loadingSubmit = false })
       })
     }
-  },
-  created () {
-    // 会先调用common#queryPage
-    this.loadOrgs()
-    this.loadTree()
   }
 }
 </script>
