@@ -73,8 +73,8 @@ const handleFailure = function(code, message) {
 instance.interceptors.response.use(response => {
   const res = response.data
   if (res.code !== 0 && res.code !== 200) {
-    handleFailure(res.code, res.msg||res.message)
-    return Promise.reject(new Error(res.msg || res.message || 'Unknown Error'))
+    handleFailure(res.code, res.msg)
+    return Promise.reject(new Error(res.msg || 'Unknown Error'))
   } else {
     return res
   }

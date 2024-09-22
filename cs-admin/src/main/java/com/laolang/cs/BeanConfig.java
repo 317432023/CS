@@ -16,11 +16,8 @@ import org.springframework.context.annotation.FilterType;
     // 基础接口
     "com.comm.infra",
     /*框架*/
-    "com.frm.springmvc",
-    "com.frm.springboot",
+    "com.frm.springmvc",// 若使用ruoyi框架不能扫描com.frm.springmvc包
     "com.frm.redis",
-    /*"com.frm.mybatisplus",*/
-    /*组件:文档*/"com.cmpt.doc",
     /*组件:验证码*/"com.cmpt.captcha",
     /*组件:文件上传*/"com.cmpt.oss",
     /*组件:Websocket*/"com.cmpt.ws",

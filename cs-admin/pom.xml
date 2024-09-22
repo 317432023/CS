@@ -52,21 +52,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>frm</groupId>
-            <artifactId>frm-springmvc</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>frm</groupId>
-            <artifactId>frm-springboot</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>frm</groupId>
-            <artifactId>frm-mybatisplus</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
             <groupId>comm</groupId>
             <artifactId>comm-infra</artifactId>
             <version>${project.parent.version}</version>
@@ -240,18 +225,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
-        <dependency>
-            <groupId>cmpt</groupId>
-            <artifactId>cmpt-springdoc</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.soaringloong</groupId>
-            <artifactId>jfrm-spring-boot-starter-mybatis</artifactId>
-            <version>1.0.1-jdk17-snapshot</version>
-        </dependency>
-
     </dependencies>
 
     <build>

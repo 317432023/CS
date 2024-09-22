@@ -137,10 +137,10 @@ export default {
           const path = this.$route.query.redirect
           // this.$router.replace(path || '/dashboard')
           this.$router.push(path || '/dashboard')
-          this.$message.success(res.msg||res.message)
+          this.$message.success(res.msg)
         } else {
           this.loginForm.captcha = ''
-          this.$message.error(res.msg||res.message)
+          this.$message.error(res.msg)
         }
       }).catch(e => {
         window.console.error(e.message) // for debug
@@ -176,7 +176,7 @@ export default {
           const { data } = res
           content = data.content
         } else {
-          console.log(res.msg||res.message)
+          console.log(res.msg)
         }
 
       }).catch(e => {
@@ -189,7 +189,7 @@ export default {
         const { data } = res
         content = data.content
       } else {
-        console.log(res.msg||res.message)
+        console.log(res.msg)
       }
 
       this.captchaData = content

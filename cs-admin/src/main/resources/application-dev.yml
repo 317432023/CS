@@ -35,11 +35,11 @@ spring:
       platform: mysql
       schema-locations:
         - classpath:db/schema-h2-oss.sql
-        - classpath:db/schema-h2-org.sql
+        - classpath:db/schema-h2-tenant.sql
         - classpath:db/schema-h2-sys.sql
         - classpath:db/schema-h2-mbr.sql
         - classpath:db/schema-h2-sns.sql
         - classpath:db/schema-h2.sql
-      data-locations: classpath:db/data-h2-org.sql,classpath:db/data-h2-sys.sql,classpath:db/data-h2.sql
+      data-locations: classpath:db/data-h2-tenant.sql,classpath:db/data-h2-sys.sql,classpath:db/data-h2.sql
       encoding: utf-8
       separator: ;
