@@ -24,6 +24,7 @@ public class OpenApiController {
 
     /**
      * 取上传地址
+     *
      * @return
      */
     @GetMapping("getUploadUrl")
@@ -31,11 +32,11 @@ public class OpenApiController {
         final String uploadConfigKey = "STATIC_UPLOAD";
 
         String uploadUrl = redisTool.hget(Constants.SYS_CONFIG_KEY, uploadConfigKey, ModeDict.APP_GROUP, 1);
-        if(uploadUrl == null) {
+        if (uploadUrl == null) {
             SysConfig sysConfig = sysConfigService.getOne(Wrappers.<SysConfig>lambdaQuery()
                     .eq(SysConfig::getConfigKey, uploadConfigKey)
             );
-            uploadUrl = sysConfig == null?"":sysConfig.getConfigValue();
+            uploadUrl = sysConfig == null ? "" : sysConfig.getConfigValue();
             if (uploadUrl == null) {
                 uploadUrl = "";
             } else {

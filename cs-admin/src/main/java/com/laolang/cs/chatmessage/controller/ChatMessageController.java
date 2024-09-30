@@ -3,6 +3,8 @@ package com.laolang.cs.chatmessage.controller;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.cmpt.sys.comm.Constants;
+import com.cmpt.sys.model.entity.SysUser;
+import com.cmpt.sys.service.SysUserService;
 import com.comm.pojo.R;
 import com.frm.redis.ModeDict;
 import com.frm.redis.RedisTool;
@@ -41,6 +43,7 @@ public class ChatMessageController {
     private ChatUserService chatUserService;
     private SubsysTool subsysTool;
     private Environment environment;
+    private SysUserService sysUserService;
 
     /**
      * 取自身聊天用户信息
@@ -52,7 +55,7 @@ public class ChatMessageController {
     @Parameter(name = "igResPrefix", description = "返回资源是否去掉前缀，默认false", in = ParameterIn.QUERY, example = "true")
     @GetMapping("self")
     public R<Map<String, Object>> self(@RequestHeader String clientId, @RequestParam(required = false, defaultValue = "false") Boolean igResPrefix) {
-        ChatUser senderChatUser = subsysTool.getChatUser(clientId); // 消息發送者
+        ChatUser senderChatUser = subsysTool.getChatUser(clientId); // 消息发送者
         Map<String, Object> chatUserInfo = new HashMap<>(); // nickName
         chatUserInfo.put("chatUserId", senderChatUser.getId());
         chatUserInfo.put("nickName", senderChatUser.getNickName());
@@ -131,7 +134,15 @@ public class ChatMessageController {
             onlineChatUserMap.put("rcptId", rcpt.getId());
             onlineChatUserMap.put("nickName", rcpt.getNickName());
 
-            String imgUrl = rcpt.getAvatar() != null ? rcpt.getAvatar().trim() : "";
+            String avatar;
+            if (rcpt.getUserType() == 0) {
+                avatar = rcpt.getAvatar();
+            } else {
+                SysUser sysUser = sysUserService.getById(rcpt.getRelId());
+                avatar = sysUser.getAvatar();
+            }
+
+            String imgUrl = avatar != null ? avatar.trim() : "";
             if (igResPrefix == null || !igResPrefix) {
                 if (StringUtils.isNotBlank(imgUrl) && !imgUrl.startsWith("http://") && !imgUrl.startsWith("https://")) {
                     imgUrl = staticDomain + (imgUrl.startsWith("/") ? "" : "/") + imgUrl;
@@ -202,21 +213,21 @@ public class ChatMessageController {
                 "message",
                 "create_time",
                 "(select nick_name from tb_chat_user cu where cu.id=sender) senderNickName",
-                userType == 1 ? "(select nick_name from tb_chat_user cu where cu.id=receiver) receiverNickName" : "NULL receiverNickName",
+                "(select nick_name from tb_chat_user cu where cu.id=receiver) receiverNickName",
                 "(case sender when " + chatUser.getId() + " then 1 else (select " + readSQL + " from tb_chat_message_read cmr where cmr.msg_id=tb_chat_message.id and cmr.rcpt_id=" + chatUser.getId() + ") end) as `read`"
         };
         QueryWrapper<ChatMessage> qw = new QueryWrapper<>();
         qw.select(selectColumns);
         if (userType == 0) { // 客人
-            qw.eq("receiver", chatUser.getId()); // 群ID = 客人 ID
+            qw.eq("room_id", chatUser.getId()); // 群ID = 客人 ID
         } else { // 客服
             if (customerChatUserId != null && customerChatUserId > 0) {
                 ChatUser customerChatUser = chatUserService.getById(customerChatUserId);
                 Assert.isTrue(customerChatUser.getUserType() == 0, "400-仅能查询客人用户的聊天历史");
                 Assert.isTrue(customerChatUser.getTenantId().equals(chatUser.getTenantId()), "403-无权限查询该用户历史");
-                qw.eq("receiver", customerChatUserId); // 群ID = 客人 ID
+                qw.eq("room_id", customerChatUserId); // 群ID = 客人 ID
             } else {
-                qw.exists("select 1 from tb_chat_user cu where cu.id=receiver and cu.tenant_id='" + chatUser.getTenantId() + "'");
+                qw.exists("select 1 from tb_chat_user cu where cu.id=room_id and cu.tenant_id='" + chatUser.getTenantId() + "'");
             }
         }
 

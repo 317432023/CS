@@ -24,7 +24,8 @@ drop table if exists tb_chat_message;
 create table tb_chat_message(
   `id` bigint unsigned not null auto_increment,
   `sender` int unsigned not null comment '发送者',
-  `receiver` int unsigned not null comment '接收者', -- 注意接收者是一个群ID
+  `receiver` int unsigned not null comment '接收者',
+  `room_id` int unsigned not null comment '群ID',
   `message` text comment '聊天内容',
   `create_time` datetime,
   primary key(`id`)

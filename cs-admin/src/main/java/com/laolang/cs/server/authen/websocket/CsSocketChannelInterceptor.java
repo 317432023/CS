@@ -10,11 +10,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.stereotype.Component;
+
+import java.util.Objects;
 
 /**
  * CsSocketChannelInterceptor
@@ -30,6 +33,7 @@ public class CsSocketChannelInterceptor implements ChannelInterceptor {
 
     /**
      * 发送消息到通道前
+     *
      * @param message
      * @param channel
      * @return
@@ -37,21 +41,19 @@ public class CsSocketChannelInterceptor implements ChannelInterceptor {
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         // 获取连接头信息
-        StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class); //StompHeaderAccessor.wrap(message);
+        StompHeaderAccessor accessor = Objects.requireNonNull(MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class));//StompHeaderAccessor.wrap(message);
 
         WebSocketUser webSocketUser = null;
         String token, userType, tenantId; // 令牌 用户类型 租户
 
-        if(accessor.getCommand() == null) {
-            switch (accessor.getMessageType()) {
-                case HEARTBEAT: // 心跳
-                    webSocketUser = (WebSocketUser)accessor.getUser();
+        if (accessor.getCommand() == null) {
+            if (Objects.requireNonNull(accessor.getMessageType()) == SimpMessageType.HEARTBEAT) { // 心跳
+                webSocketUser = (WebSocketUser) accessor.getUser();
+                if (webSocketUser != null) {
                     log.info("收到心跳 clientId => " + webSocketUser.getName() + ", userId => " + webSocketUser.getUserId());
                     // 更新在线会话
                     subsysTool.renew(webSocketUser.getName(), webSocketUser.getUserId());
-                    break;
-                default:
-                    break;
+                }
             }
             return message;
         }
@@ -60,7 +62,7 @@ public class CsSocketChannelInterceptor implements ChannelInterceptor {
             case CONNECT:
                 // 获取头中的token
                 token = accessor.getFirstNativeHeader(webSocketProperties.getTokenName());
-                if(StringUtils.isNotBlank(token)) {
+                if (StringUtils.isNotBlank(token)) {
                     accessor.removeNativeHeader(webSocketProperties.getTokenName());
                 }
                 userType = accessor.getFirstNativeHeader("userType");
@@ -68,10 +70,10 @@ public class CsSocketChannelInterceptor implements ChannelInterceptor {
 
                 // validate and convert to a Principal based on your own requirements e.g.
                 // authenticationManager.authenticate(JwtAuthentication(token))
-                if(StringUtils.isNotBlank(token)) {
+                if (StringUtils.isNotBlank(token)) {
                     // 鉴权
                     try {
-                        ChatUser chatUser = subsysTool.authenticate(token, tenantId, StringUtils.isNotBlank(userType)?Integer.parseInt(userType):null);
+                        ChatUser chatUser = subsysTool.authenticate(token, tenantId, StringUtils.isNotBlank(userType) ? Integer.parseInt(userType) : null);
                         webSocketUser = new WebSocketUser(chatUser.getClientId(), chatUser.getId().toString());
                         accessor.setUser(webSocketUser);
                         // not documented anywhere but necessary otherwise NPE in StompSubProtocolHandler!
@@ -82,8 +84,8 @@ public class CsSocketChannelInterceptor implements ChannelInterceptor {
                     }
                 }
 
-                if(webSocketUser == null) {
-                    throw new SystemException(401, "连接未认证，原因：" + (StringUtils.isBlank(token)?"缺少令牌":"令牌无效 " + token) );
+                if (webSocketUser == null) {
+                    throw new SystemException(401, "连接未认证，原因：" + (StringUtils.isBlank(token) ? "缺少令牌" : "令牌无效 " + token));
                 }
 
                 break;
@@ -99,7 +101,7 @@ public class CsSocketChannelInterceptor implements ChannelInterceptor {
 
         }
 
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             token = webSocketUser != null ? webSocketUser.getName() : null;
             log.debug("MessageType => " + accessor.getMessageType().name() + " , token => " + token);
         }
@@ -109,6 +111,7 @@ public class CsSocketChannelInterceptor implements ChannelInterceptor {
 
     /**
      * 发送消息到通道后
+     *
      * @param message
      * @param channel
      * @return
@@ -120,6 +123,7 @@ public class CsSocketChannelInterceptor implements ChannelInterceptor {
 
     /**
      * 发送完成后
+     *
      * @param message
      * @param channel
      * @return

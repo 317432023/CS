@@ -25,6 +25,11 @@ public class ChatMessage implements Serializable {
     private Integer sender;
     @TableField(updateStrategy = FieldStrategy.NEVER)
     private Integer receiver;
+    /**
+     * 房间ID（客服系统使用访客ID作为房间ID）
+     */
+    @TableField(updateStrategy = FieldStrategy.NEVER)
+    private Integer roomId;
     @TableField(updateStrategy = FieldStrategy.NEVER, typeHandler = JacksonTypeHandler.class)
     private Map<String,Object> message;
     @TableField(updateStrategy = FieldStrategy.NEVER)

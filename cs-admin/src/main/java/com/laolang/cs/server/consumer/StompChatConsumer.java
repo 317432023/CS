@@ -47,7 +47,8 @@ public class StompChatConsumer extends StompAbsConsumer implements Consumer<Msg>
         ChatMessage chatMessage = new ChatMessage()
                 .setMessage(msgBody)
                 .setSender(recvMsg.getSender()) // 发送者是当前 用户
-                .setReceiver(recvMsg.getRoomId()); // 接收者是一个 群ID = 客人ID
+                .setReceiver(recvMsg.getRcptId())
+                .setRoomId(recvMsg.getRoomId());
         // 消息落地
         boolean ret = chatMessageService.persistMessage(chatMessage.setCreateTime(now), recvMsg.getMsgType());
 
@@ -86,6 +87,10 @@ public class StompChatConsumer extends StompAbsConsumer implements Consumer<Msg>
         broadcast(recvMsg.setMsgId(chatMessage.getId().toString()).setCreateTime(now));
 
         for (Integer receiver : rcptIdList) {
+            if (!receiver.equals(chatMessage.getReceiver())) {
+                // 忽略当前站点的其他人工坐席
+                continue;
+            }
             // 通知每个聊天对手有消息待接收
             if (subsysTool.checkOnline(receiver)) {
                 String clientId = subsysTool.getClientId(receiver);

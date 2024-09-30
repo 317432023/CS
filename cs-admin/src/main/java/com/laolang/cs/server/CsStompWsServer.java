@@ -80,18 +80,22 @@ public class CsStompWsServer {
             if (chatUser.getUserType() == 0) {
                 // 客人 Id
                 Assert.isTrue(roomId.equals(chatUser.getId()), "400-参数不合法 roomId");
+                Assert.isTrue(msg.getRcptId() != null && msg.getRcptId() > 0, "400-缺少内容 rcptId");
+                ChatUser seatUser = chatUserService.getById(msg.getRcptId());
+                Assert.isTrue(seatUser != null, "404-找不到客服");
+                Assert.isTrue(seatUser.getUserType() == 1, "400-内容不合法 rcptId");
+
+                this.checkValid(seatUser, chatUser);
             } else {
                 // 客人
                 ChatUser customerUser = chatUserService.getById(roomId); // 客人ID作为群ID
-                Assert.isTrue(customerUser != null, "500-找不到群组");
+                Assert.isTrue(customerUser != null, "404-找不到群组");
                 Assert.isTrue(customerUser.getUserType() == 0, "400-参数不合法 roomId");
 
-                // 客服 所属站点 必须与客人所属站点一致
-                SysUser sysUser = sysUserService.getById(chatUser.getRelId());
-                Assert.isTrue(sysUser != null, "500-找不到用户");
-                SysTenant sysTenant = sysTenantService.getById(sysUser.getTenantId());
-                Assert.isTrue(sysTenant != null, "500-找不到机构");
-                Assert.isTrue(sysTenant.getTenantKey().equals(customerUser.getTenantId()), "400-参数不合法");
+                this.checkValid(chatUser, customerUser);
+
+                // 设置接收者ID
+                msg.setRcptId(customerUser.getId());
             }
 
             // 二、消息处理
@@ -114,4 +118,12 @@ public class CsStompWsServer {
 
     }
 
+    private void checkValid(ChatUser seatUser, ChatUser customerUser) {
+        // 客服 所属站点 必须与客人所属站点一致
+        SysUser sysUser = sysUserService.getById(seatUser.getRelId());
+        Assert.isTrue(sysUser != null, "404-找不到用户");
+        SysTenant sysTenant = sysTenantService.getById(sysUser.getTenantId());
+        Assert.isTrue(sysTenant != null, "404-找不到系统租户");
+        Assert.isTrue(sysTenant.getTenantKey().equals(customerUser.getTenantId()), "400-参数不合法");
+    }
 }

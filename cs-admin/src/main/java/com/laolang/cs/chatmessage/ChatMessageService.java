@@ -32,8 +32,8 @@ public class ChatMessageService extends ServiceImpl<ChatMessageMapper, ChatMessa
             ChatUser receiver = chatUserService.getById(chatMessage.getReceiver());
             receiver.setLastMessageTime(chatMessage.getCreateTime());
             chatUserService.updateById(receiver);
-            if (!chatMessage.getSender().equals(receiver.getId())) {
-                // 更新发送者最后聊天时间
+            if (!chatMessage.getRoomId().equals(receiver.getId())) {
+                // 更新坐席最后聊天时间
                 ChatUser sender = chatUserService.getById(chatMessage.getSender());
                 sender.setLastMessageTime(chatMessage.getCreateTime());
                 chatUserService.updateById(sender);

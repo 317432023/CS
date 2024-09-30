@@ -193,7 +193,7 @@ public final class SubsysTool {
     public void renew(String clientId, String userId) {
         int onlineDuration = webSocketProperties.getOnlineDuration();
 
-        /**
+        /*
          * 在线用户，数据结构：用户ID=>用户令牌
          */
         if(redisTool.hasKey(webSocketProperties.getOnlinePrefix() + userId, ModeDict.APP)) {
@@ -205,7 +205,7 @@ public final class SubsysTool {
         }
         redisTool.setString(webSocketProperties.getOnlinePrefix() + userId, clientId, ModeDict.APP, onlineDuration*60L);
 
-        /**
+        /*
          * 数据结构：用户令牌=>用户ID
          */
         redisTool.set(webSocketProperties.getConnPrefix() + clientId, userId, ModeDict.APP);

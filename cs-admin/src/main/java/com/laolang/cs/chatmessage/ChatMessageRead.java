@@ -17,6 +17,8 @@ import java.util.Date;
 @TableName("tb_chat_message_read")@Getter@Setter
 @Accessors(chain = true)
 public class ChatMessageRead implements Serializable {
+    private static final long serialVersionUID = -4282439323639519557L;
+
     @TableId(type = IdType.AUTO)
     private Long id;
 

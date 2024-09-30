@@ -46,11 +46,13 @@ public class Msg {
      msgId:'',   // 消息ID
      msgType:'', // 消息类型
      roomId: 0,  // 聊天室ID
+     rcptId: 0,  // 接收者ID
      msgBody: '' // 消息体
     */
     private String msgId;
     private MsgType msgType;
     private Integer roomId;
+    private Integer rcptId;
     private Map<String,Object> msgBody;
 
     public static void main(String[] args) {

@@ -63,16 +63,15 @@ public class ChatUser implements Serializable {
 
     @Override
     public String toString() {
-        return new StringBuilder().append('{')
-                .append("\"id\":").append(id).append(',')
-                .append("\"tenantId\":").append('\"').append(tenantId).append('\"').append(',')
-                .append("\"nickName\":").append('\"').append(nickName).append('\"').append(',')
-                .append("\"userType\":").append(userType).append(',')
-                .append("\"relId\":").append(relId).append(',')
-                .append("\"createTime\":").append('\"').append(DateUtil.format(createTime, "yyyy-MM-dd HH:mm:ss")).append('\"').append(',')
-                .append("\"lastMessageTime\":").append('\"').append(DateUtil.format(createTime, "yyyy-MM-dd HH:mm:ss")).append('\"')
-                .append('}')
-                .toString();
+        return '{' +
+                "\"id\":" + id + ',' +
+                "\"tenantId\":" + '\"' + tenantId + '\"' + ',' +
+                "\"nickName\":" + '\"' + nickName + '\"' + ',' +
+                "\"userType\":" + userType + ',' +
+                "\"relId\":" + relId + ',' +
+                "\"createTime\":" + '\"' + DateUtil.format(createTime, "yyyy-MM-dd HH:mm:ss") + '\"' + ',' +
+                "\"lastMessageTime\":" + '\"' + DateUtil.format(createTime, "yyyy-MM-dd HH:mm:ss") + '\"' +
+                '}';
     }
 
     @TableField(exist = false)

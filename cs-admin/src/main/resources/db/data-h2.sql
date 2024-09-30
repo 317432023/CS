@@ -33,27 +33,27 @@ insert into tb_chat_user(tenant_id,nick_name,user_type,avatar,rel_id,create_time
 ;
 
 -- 测试
-insert into tb_chat_message(sender,receiver,message,create_time) values(1,1,'{"type":"text","value":"请问什么时候开放注册"}','2023-10-29 21:58:00');
-insert into tb_chat_message(sender,receiver,message,create_time) values(2,1,'{"type":"text","value":"您好，请关注网址首页公告"}','2023-10-29 21:59:00');
-insert into tb_chat_message(sender,receiver,message,create_time) values(2,1,'{"type":"image","value":"/upload/jpeg/2023/11/05/676ca8e38c071ca7856a63e2eeb3efa4-e7e4c546-b462-41ae-a7cf-320d03cea94c.jpeg"}','2023-10-29 22:00:01');
-insert into tb_chat_message(sender,receiver,message,create_time) values(1,1,'{"type":"text","value":"请问什么时候开放注册"}','2023-10-29 22:00:02');
-insert into tb_chat_message(sender,receiver,message,create_time) values(2,1,'{"type":"text","value":"您好，请关注网址首页公告"}','2023-10-29 22:00:02');
-insert into tb_chat_message(sender,receiver,message,create_time) values(2,1,'{"type":"image","value":"/upload/jpeg/2023/11/05/676ca8e38c071ca7856a63e2eeb3efa4-e7e4c546-b462-41ae-a7cf-320d03cea94c.jpeg"}','2023-10-29 22:00:03');
-insert into tb_chat_message(sender,receiver,message,create_time) values(1,1,'{"type":"text","value":"请问什么时候开放注册"}','2023-10-29 22:00:04');
-insert into tb_chat_message(sender,receiver,message,create_time) values(2,1,'{"type":"text","value":"您好，请关注网址首页公告"}','2023-10-29 22:00:05');
-insert into tb_chat_message(sender,receiver,message,create_time) values(2,1,'{"type":"image","value":"/upload/jpeg/2023/11/05/676ca8e38c071ca7856a63e2eeb3efa4-e7e4c546-b462-41ae-a7cf-320d03cea94c.jpeg"}','2023-10-29 22:00:06');
-insert into tb_chat_message(sender,receiver,message,create_time) values(1,1,'{"type":"text","value":"请问什么时候开放注册"}','2023-10-29 22:00:07');
-insert into tb_chat_message(sender,receiver,message,create_time) values(2,1,'{"type":"text","value":"您好，请关注网址首页公告"}','2023-10-29 22:00:08');
-insert into tb_chat_message(sender,receiver,message,create_time) values(2,1,'{"type":"image","value":"/upload/jpeg/2023/11/05/676ca8e38c071ca7856a63e2eeb3efa4-e7e4c546-b462-41ae-a7cf-320d03cea94c.jpeg"}','2023-10-29 22:00:09');
-insert into tb_chat_message(sender,receiver,message,create_time) values(1,1,'{"type":"text","value":"请问什么时候开放注册"}','2023-10-29 22:00:10');
-insert into tb_chat_message(sender,receiver,message,create_time) values(2,1,'{"type":"text","value":"您好，请关注网址首页公告"}','2023-10-29 22:00:11');
-insert into tb_chat_message(sender,receiver,message,create_time) values(2,1,'{"type":"image","value":"/upload/jpeg/2023/11/05/676ca8e38c071ca7856a63e2eeb3efa4-e7e4c546-b462-41ae-a7cf-320d03cea94c.jpeg"}','2023-10-29 22:00:12');
-insert into tb_chat_message(sender,receiver,message,create_time) values(1,1,'{"type":"text","value":"请问什么时候开放注册"}','2023-10-29 22:00:13');
-insert into tb_chat_message(sender,receiver,message,create_time) values(2,1,'{"type":"text","value":"您好，请关注网址首页公告"}','2023-10-29 22:00:14');
-insert into tb_chat_message(sender,receiver,message,create_time) values(2,1,'{"type":"image","value":"/upload/jpeg/2023/11/05/676ca8e38c071ca7856a63e2eeb3efa4-e7e4c546-b462-41ae-a7cf-320d03cea94c.jpeg"}','2023-10-29 22:00:15');
-insert into tb_chat_message(sender,receiver,message,create_time) values(1,1,'{"type":"text","value":"请问什么时候开放注册"}','2023-10-29 22:00:16');
-insert into tb_chat_message(sender,receiver,message,create_time) values(2,1,'{"type":"text","value":"您好，请关注网址首页公告"}','2023-10-29 22:00:17');
-insert into tb_chat_message(sender,receiver,message,create_time) values(2,1,'{"type":"image","value":"/upload/jpeg/2023/11/05/676ca8e38c071ca7856a63e2eeb3efa4-e7e4c546-b462-41ae-a7cf-320d03cea94c.jpeg"}','2023-10-29 22:00:18');
+INSERT INTO tb_chat_message(sender,receiver,message,create_time,room_id) VALUES (1, 2, '{"type":"text","value":"请问什么时候开放注册"}', '2023-10-29 21:58:00', 1);
+INSERT INTO tb_chat_message(sender,receiver,message,create_time,room_id) VALUES (2, 1, '{"type":"text","value":"您好，请关注网址首页公告"}', '2023-10-29 21:59:00', 1);
+INSERT INTO tb_chat_message(sender,receiver,message,create_time,room_id) VALUES (2, 1, '{"type":"image","value":"/upload/jpeg/2023/11/05/676ca8e38c071ca7856a63e2eeb3efa4-e7e4c546-b462-41ae-a7cf-320d03cea94c.jpeg"}', '2023-10-29 22:00:01', 1);
+INSERT INTO tb_chat_message(sender,receiver,message,create_time,room_id) VALUES (1, 2, '{"type":"text","value":"请问什么时候开放注册"}', '2023-10-29 22:00:02', 1);
+INSERT INTO tb_chat_message(sender,receiver,message,create_time,room_id) VALUES (2, 1, '{"type":"text","value":"您好，请关注网址首页公告"}', '2023-10-29 22:00:02', 1);
+INSERT INTO tb_chat_message(sender,receiver,message,create_time,room_id) VALUES (2, 1, '{"type":"image","value":"/upload/jpeg/2023/11/05/676ca8e38c071ca7856a63e2eeb3efa4-e7e4c546-b462-41ae-a7cf-320d03cea94c.jpeg"}', '2023-10-29 22:00:03', 1);
+INSERT INTO tb_chat_message(sender,receiver,message,create_time,room_id) VALUES (1, 2, '{"type":"text","value":"请问什么时候开放注册"}', '2023-10-29 22:00:04', 1);
+INSERT INTO tb_chat_message(sender,receiver,message,create_time,room_id) VALUES (2, 1, '{"type":"text","value":"您好，请关注网址首页公告"}', '2023-10-29 22:00:05', 1);
+INSERT INTO tb_chat_message(sender,receiver,message,create_time,room_id) VALUES (2, 1, '{"type":"image","value":"/upload/jpeg/2023/11/05/676ca8e38c071ca7856a63e2eeb3efa4-e7e4c546-b462-41ae-a7cf-320d03cea94c.jpeg"}', '2023-10-29 22:00:06', 1);
+INSERT INTO tb_chat_message(sender,receiver,message,create_time,room_id) VALUES ( 1, 2, '{"type":"text","value":"请问什么时候开放注册"}', '2023-10-29 22:00:07', 1);
+INSERT INTO tb_chat_message(sender,receiver,message,create_time,room_id) VALUES ( 2, 1, '{"type":"text","value":"您好，请关注网址首页公告"}', '2023-10-29 22:00:08', 1);
+INSERT INTO tb_chat_message(sender,receiver,message,create_time,room_id) VALUES ( 2, 1, '{"type":"image","value":"/upload/jpeg/2023/11/05/676ca8e38c071ca7856a63e2eeb3efa4-e7e4c546-b462-41ae-a7cf-320d03cea94c.jpeg"}', '2023-10-29 22:00:09', 1);
+INSERT INTO tb_chat_message(sender,receiver,message,create_time,room_id) VALUES ( 1, 2, '{"type":"text","value":"请问什么时候开放注册"}', '2023-10-29 22:00:10', 1);
+INSERT INTO tb_chat_message(sender,receiver,message,create_time,room_id) VALUES ( 2, 1, '{"type":"text","value":"您好，请关注网址首页公告"}', '2023-10-29 22:00:11', 1);
+INSERT INTO tb_chat_message(sender,receiver,message,create_time,room_id) VALUES ( 2, 1, '{"type":"image","value":"/upload/jpeg/2023/11/05/676ca8e38c071ca7856a63e2eeb3efa4-e7e4c546-b462-41ae-a7cf-320d03cea94c.jpeg"}', '2023-10-29 22:00:12', 1);
+INSERT INTO tb_chat_message(sender,receiver,message,create_time,room_id) VALUES ( 1, 2, '{"type":"text","value":"请问什么时候开放注册"}', '2023-10-29 22:00:13', 1);
+INSERT INTO tb_chat_message(sender,receiver,message,create_time,room_id) VALUES ( 2, 1, '{"type":"text","value":"您好，请关注网址首页公告"}', '2023-10-29 22:00:14', 1);
+INSERT INTO tb_chat_message(sender,receiver,message,create_time,room_id) VALUES ( 2, 1, '{"type":"image","value":"/upload/jpeg/2023/11/05/676ca8e38c071ca7856a63e2eeb3efa4-e7e4c546-b462-41ae-a7cf-320d03cea94c.jpeg"}', '2023-10-29 22:00:15', 1);
+INSERT INTO tb_chat_message(sender,receiver,message,create_time,room_id) VALUES ( 1, 2, '{"type":"text","value":"请问什么时候开放注册"}', '2023-10-29 22:00:16', 1);
+INSERT INTO tb_chat_message(sender,receiver,message,create_time,room_id) VALUES ( 2, 1, '{"type":"text","value":"您好，请关注网址首页公告"}', '2023-10-29 22:00:17', 1);
+INSERT INTO tb_chat_message(sender,receiver,message,create_time,room_id) VALUES ( 2, 1, '{"type":"image","value":"/upload/jpeg/2023/11/05/676ca8e38c071ca7856a63e2eeb3efa4-e7e4c546-b462-41ae-a7cf-320d03cea94c.jpeg"}', '2023-10-29 22:00:18', 1);
 
 update sys_config set config_value='http://be.laolang-cs.com' where config_key='STATIC_DOMAIN';
 update sys_config set config_value='http://be.laolang-cs.com/upload' where config_key='STATIC_UPLOAD';
