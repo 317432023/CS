@@ -1,6 +1,5 @@
 package com.laolang.cs;
 
-import com.github.pagehelper.autoconfigure.PageHelperAutoConfiguration;
 import com.soaringloong.jfrm.framework.mybatis.core.mapper.SpringBeanNameGenerator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,7 +9,7 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ApplicationListener;
 import org.springframework.util.StringUtils;
 
-@SpringBootApplication(nameGenerator = SpringBeanNameGenerator.class, exclude = PageHelperAutoConfiguration.class)
+@SpringBootApplication(nameGenerator = SpringBeanNameGenerator.class)
 //@ServletComponentScan("com.tk.ind.web.body") using CacheRequestBodyFilter instead.
 public class CsApplication {
     public static void main(String[] args) {

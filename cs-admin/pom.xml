@@ -85,6 +85,12 @@
             <groupId>cmpt</groupId>
             <artifactId>cmpt-mbr-web</artifactId>
             <version>${project.parent.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>pagehelper-spring-boot-starter</artifactId>
+                    <groupId>com.github.pagehelper</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>cmpt</groupId>
@@ -224,6 +230,45 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+        <!--SpringBoot Pagehelper :https://github.com/pagehelper/Mybatis-PageHelper -->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <!--使用spring boot2整合 pagehelper-spring-boot-starter必须排除一下依赖
+                 因为pagehelper-spring-boot-starter也已经在pom依赖了mybatis与mybatis-spring
+                 所以会与mybatis-plus-boot-starter中的mybatis与mybatis-spring发生冲突
+             -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.mybatis</groupId>
+                    <artifactId>mybatis</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.mybatis</groupId>
+                    <artifactId>mybatis-spring</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jsqlparser</artifactId>
+                    <groupId>com.github.jsqlparser</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>pagehelper</artifactId>
+                    <groupId>com.github.pagehelper</groupId>
+                </exclusion>
+            </exclusions>
+            <version>2.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper</artifactId>
+            <version>${pagehelper.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>jsqlparser</artifactId>
+                    <groupId>com.github.jsqlparser</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
