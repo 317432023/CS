@@ -210,6 +210,7 @@ public class ChatMessageController {
                 "id",
                 "sender",
                 "receiver",
+                "room_id",
                 "message",
                 "create_time",
                 "(select nick_name from tb_chat_user cu where cu.id=sender) senderNickName",

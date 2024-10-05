@@ -21,9 +21,9 @@
           </el-header>
           <el-main id="chat-cnt" ref="mainscroll" @scroll="handleScroll">
             <el-row v-for="(msg,index) in msgList" :key="msg.id" :ref="'msg_'+msg.id">
-              <el-col :span="4"><el-avatar v-if="msg.sender === msg.receiver" shape="square" :size="48" fit="fill" :src="getAvatar(msg.sender)" /><span v-else style="visibility:hidden">.</span></el-col>
+              <el-col :span="4"><el-avatar v-if="msg.sender === msg.roomId" shape="square" :size="48" fit="fill" :src="getAvatar(msg.sender)" /><span v-else style="visibility:hidden">.</span></el-col>
               <el-col :span="16">
-                <div :style="{textAlign:msg.sender !== msg.receiver?'right':'left'}">
+                <div :style="{textAlign:msg.sender !== msg.roomId?'right':'left'}">
                   <span style="font-weight: bold;color: lightsteelblue;">{{ msg.senderNickName }}</span><br>
                   <span v-if="msg.message.type==='text'">
                     {{ msg.message.value }}
@@ -38,7 +38,7 @@
                   <div style="font: italic normal 12px/30px arial, sans-serif; color: grey;">{{ msg.createTime }}</div>
                 </div>
               </el-col>
-              <el-col v-if="msg.sender === msg.receiver" :span="4">&nbsp;</el-col><el-col v-else :span="4"><el-avatar shape="square" :size="48" fit="fill" :src="$store.getters.avatar" style="float:right" /></el-col>
+              <el-col v-if="msg.sender === msg.roomId" :span="4">&nbsp;</el-col><el-col v-else :span="4"><el-avatar shape="square" :size="48" fit="fill" :src="$store.getters.avatar" style="float:right" /></el-col>
             </el-row>
           </el-main>
           <el-footer id="input-cont0">
@@ -198,6 +198,13 @@ export default {
         }
       })
     },
+    async getChatUser(clientId, rcptId) {
+      const [user, e] = await request.getChatUsers(clientId, rcptId).then(res => {
+        // console.log("取得聊天对手 => " + JSON.stringify(res.data))
+        return res.data.length > 0 ? res.data[0] : null
+      }).catch(e => e)
+      return user
+    },
     /**
      * 连接websocket
      * @param token 接入系统令牌
@@ -289,26 +296,37 @@ export default {
             const obj = {
               id: msg.msgId,
               sender: msg.sender,
-              receiver: msg.roomId,
+              receiver: msg.rcptId,
+              roomId: msg.roomId,
               message: msg.msgBody,
               createTime: msg.createTime,
               senderNickName: msg.senderNickName
               // receiverNickName:null,
             }
-            if (this.chatToUser.rcptId === msg.roomId) {
-              this.chatToUser.lastMessageTime = obj.createTime // 更新最后一次消息时间
-              this.msgList.push(obj) // （在末尾）向数组添加新元素
-              this.scrollToBottom() // 聊天内容滚动到底部
-              if ('客服#' + obj.senderNickName === this.curUser) {
-                if (obj.message.type === 'text' && this.textarea === obj.message.value) {
-                  this.textarea = '' // 发送成功并接收到自己发送的文本消息则清空文本框
+            if (this.chatToUser) {
+              if (this.chatToUser.rcptId === msg.roomId) { // 当前群消息
+                this.msgList.push(obj) // （在末尾）向数组添加新元素
+                this.scrollToBottom() // 聊天内容滚动到底部
+                if ('客服#' + obj.senderNickName === this.curUser) { // 收到自己发送的消息
+                  if (obj.message.type === 'text' && this.textarea === obj.message.value) {
+                    this.textarea = '' // 发送成功并接收到自己发送的文本消息则清空文本框
+                  }
+                } else { // 收到对方的消息
+                  this.chatToUser.lastMessageTime = obj.createTime // 更新最后一次消息时间
+                  console.log(`发送消息已读 ${obj.id}`)
+                  this.$sendRead(obj.id)
                 }
-              } else {
-                console.log(`发送消息已读 ${obj.id}`)
-                this.$sendRead(obj.id)
               }
             } else {
-              // ignore
+              if (obj.sender === obj.roomId) { // 收到对方的消息
+                // eslint-disable-next-line no-unused-vars
+                let foundUser = this.users.find(element => element.rcptId === obj.sender)
+                if (!foundUser) {
+                  foundUser = this.getChatUser(this.clientId, obj.sender)
+                  this.users.push(foundUser)
+                }
+                foundUser.lastMessageTime = obj.createTime
+              }
             }
             break
           case 'ack':
