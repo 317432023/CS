@@ -2,6 +2,7 @@ package com.laolang.cs.server;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.cmpt.sys.model.entity.SysUser;
 import com.cmpt.sys.service.SysUserService;
 import com.cmpt.tenant.entity.SysTenant;
@@ -80,12 +81,22 @@ public class CsStompWsServer {
             if (chatUser.getUserType() == 0) {
                 // 客人 Id
                 Assert.isTrue(roomId.equals(chatUser.getId()), "400-参数不合法 roomId");
-                Assert.isTrue(msg.getRcptId() != null && msg.getRcptId() > 0, "400-缺少内容 rcptId");
-                ChatUser seatUser = chatUserService.getById(msg.getRcptId());
-                Assert.isTrue(seatUser != null, "404-找不到客服");
-                Assert.isTrue(seatUser.getUserType() == 1, "400-内容不合法 rcptId");
-
-                this.checkValid(seatUser, chatUser);
+                ChatUser seatUser;
+                //Assert.isTrue(msg.getRcptId() != null && msg.getRcptId() > 0, "400-缺少内容 rcptId");
+                if (msg.getRcptId() == null || msg.getRcptId() <= 0) {
+                    seatUser = chatUserService.getOne(Wrappers.<ChatUser>lambdaQuery()
+                            .eq(ChatUser::getTenantId, chatUser.getTenantId())
+                            .eq(ChatUser::getUserType, 1)
+                            .orderByAsc(ChatUser::getId).last("limit 1")
+                    );
+                    Assert.isTrue(seatUser != null, "404-找不到人工座席，请联系管理");
+                    msg.setRcptId(seatUser.getId());
+                } else {
+                    seatUser = chatUserService.getById(msg.getRcptId());
+                    Assert.isTrue(seatUser != null, "404-找不到人工座席，请联系管理");
+                    Assert.isTrue(seatUser.getUserType() == 1, "400-内容不合法 rcptId");
+                    this.checkValid(seatUser, chatUser);
+                }
             } else {
                 // 客人
                 ChatUser customerUser = chatUserService.getById(roomId); // 客人ID作为群ID
