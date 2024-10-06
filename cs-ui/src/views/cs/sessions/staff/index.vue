@@ -355,6 +355,7 @@ export default {
                 // console.log("取得聊天对手 => " + JSON.stringify(res.data))
                 if (res.data.length > 0) {
                   const user = res.data[0]
+                  user.lastMessageTime = lastMessageTime
                   that.users.push(user)
                   // 收到消息提醒
                   that.$message.info('收到一条新消息，来自【' + user.nickName + '】')
