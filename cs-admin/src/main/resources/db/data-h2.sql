@@ -57,5 +57,4 @@ INSERT INTO tb_chat_message(sender,receiver,message,create_time,room_id) VALUES 
 
 update sys_config set config_value='http://be.laolang-cs.com' where config_key='STATIC_DOMAIN';
 update sys_config set config_value='http://be.laolang-cs.com/upload' where config_key='STATIC_UPLOAD';
-
-
+INSERT INTO sys_config (config_type, tenant_id, config_name, config_key, config_value, remark, create_time, create_by, update_time, update_by) VALUES ('Y', 0, '来消息时提醒所有人工座席', 'TIP_ALL_CS', '0', '', NULL, '', NULL, '');

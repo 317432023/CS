@@ -200,6 +200,9 @@ jfrm:
     filter:
       cors: true # 开启全局跨域过滤器
     serial-write-timestamp: false # 日期是否序列化为时间戳
+  mbr-security:
+    paramSignRequired: false # 是否签名参数
+    headerTenantRequired: false # 是否需要多租户
   setting:
     securityStrategy: token
     tokenHeaderKey: Authorization

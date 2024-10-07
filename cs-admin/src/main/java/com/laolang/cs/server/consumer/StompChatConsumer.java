@@ -4,7 +4,6 @@ import cn.hutool.core.date.DateUtil;
 import com.cmpt.sys.comm.Constants;
 import com.frm.redis.ModeDict;
 import com.frm.redis.RedisTool;
-import com.frm.springmvc.SpringContextHolder;
 import com.laolang.cs.chatmessage.ChatMessage;
 import com.laolang.cs.chatmessage.ChatMessageRead;
 import com.laolang.cs.chatmessage.ChatMessageReadService;
@@ -14,6 +13,7 @@ import com.laolang.cs.server.authen.SubsysTool;
 import com.laolang.cs.server.protocol.Msg;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +38,7 @@ public class StompChatConsumer extends StompAbsConsumer implements Consumer<Msg>
     private ChatMessageReadService chatMessageReadService;
     private ChatUserService chatUserService;
     private SubsysTool subsysTool;
+    private RedisTool redisTool;
 
     @Override
     public void accept(Msg recvMsg) {
@@ -78,7 +79,6 @@ public class StompChatConsumer extends StompAbsConsumer implements Consumer<Msg>
         if ("image".equals(recvMsg.getMsgBody().get("type"))) {
             String imgUrl = (String) recvMsg.getMsgBody().get("value");
             if (!imgUrl.startsWith("http://") && !imgUrl.startsWith("https://")) {
-                RedisTool redisTool = SpringContextHolder.getBean("redisTool", RedisTool.class);
                 String staticDomain = redisTool.hget(Constants.SYS_CONFIG_KEY, "STATIC_DOMAIN", ModeDict.APP_GROUP, 1);
                 imgUrl = staticDomain + (imgUrl.startsWith("/") ? "" : "/") + imgUrl;
                 recvMsg.getMsgBody().put("value", imgUrl);
@@ -86,8 +86,13 @@ public class StompChatConsumer extends StompAbsConsumer implements Consumer<Msg>
         }
         broadcast(recvMsg.setMsgId(chatMessage.getId().toString()).setCreateTime(now));
 
+        /*是否人工座席*/
+        boolean bCsUser = !chatMessage.getRoomId().equals(chatMessage.getReceiver());
+        String tipAllCs = redisTool.hget(Constants.SYS_CONFIG_KEY, "TIP_ALL_CS", ModeDict.APP_GROUP, 1);
+        /*是否提醒所有人工座席*/
+        boolean bTipAllCs = StringUtils.isNotBlank(tipAllCs) && !"0".equals(tipAllCs);
         for (Integer receiver : rcptIdList) {
-            if (!receiver.equals(chatMessage.getReceiver())) {
+            if (bCsUser && !bTipAllCs && !receiver.equals(chatMessage.getReceiver())) {
                 // 忽略当前站点的其他人工坐席
                 continue;
             }
