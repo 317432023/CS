@@ -30,7 +30,7 @@ spring:
 
   sql:
     init:
-      mode: always
+      mode: NEVER # 若改成 ALWAYS 每次启动都执行以下sql进行初始化
       continue-on-error: false
       platform: mysql
       schema-locations:
