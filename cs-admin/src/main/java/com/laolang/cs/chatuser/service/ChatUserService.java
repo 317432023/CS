@@ -51,10 +51,12 @@ public class ChatUserService extends ServiceImpl<ChatUserMapper, ChatUser> imple
      * 取得聊天对手列表
      *
      * @param senderId 聊天用戶發送者ID
+     * @param limit 限制返回记录数
+     * @param searchText 模糊匹配昵称
      * @return
      */
     @Transactional(readOnly = true)
-    public List<ChatUser> queryRcptList(Integer senderId, Integer lastChatUserId, Integer limit) {
+    public List<ChatUser> queryRcptList(Integer senderId, Integer lastChatUserId, Integer limit, String searchText) {
         ChatUser senderChatUser = getById(senderId); // 消息发送者
         QueryWrapper<ChatUser> qw = new QueryWrapper<ChatUser>()
                 .select("id", "create_time", "tenant_id", "nick_name", "user_type", "avatar", "rel_id",
@@ -64,6 +66,7 @@ public class ChatUserService extends ServiceImpl<ChatUserMapper, ChatUser> imple
                 .eq("tenant_id", senderChatUser.getTenantId())
                 .eq("user_type", senderChatUser.getUserType() == 0 ? 1 : 0) // 若消息發送者是客人則取客服列表否則取客人列表
                 /*.gt("id", lastChatUserId).orderByAsc("id") // 分多次加载的条件 */
+                .like(StringUtils.isNotBlank(searchText), "nick_name", searchText!=null?searchText.trim(): null)
                 .orderByDesc("last_message_time") // 加载最近聊天用户的条件
                 .last("limit " + (limit == null || limit <= 0 ? 50 : limit));
 

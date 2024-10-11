@@ -7,12 +7,13 @@ export default {
    * @param rcptId
    * @param lastChatUserId
    * @param limit
+   * @param searchText 模糊匹配用户昵称（仅rcptId无效的情况下支持）
    */
-  getChatUsers(clientId, rcptId, lastChatUserId = 0, limit = 20) {
+  getChatUsers(clientId, rcptId, lastChatUserId = 0, limit = 50, searchText = '') {
     return request({
       url: `/api/mbr/chat_users`,
       method: 'get',
-      params: { rcptId, lastChatUserId, limit },
+      params: { rcptId, lastChatUserId, limit, searchText },
       headers: { 'clientId': clientId }
     })
   },

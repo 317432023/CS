@@ -2,7 +2,17 @@
   <div class="session-staff-container" :style="{ height: (scrollHeight + 15) + 'px' }">
     <el-row id="chatDialog" :gutter="20">
       <el-col id="userList" :span="6" :style="{ height: scrollHeight + 'px'}">
-        <div v-for="(user,index) in userList" :key="user.rcptId" :ref="'user'+user.rcptId" :style="{textAlign: 'center'}" @click="chatUserSelected(user)">
+        <el-autocomplete
+          v-model="queryName"
+          class="inline-input"
+          :fetch-suggestions="querySearch"
+          placeholder="请输入内容"
+          :trigger-on-focus="false"
+          @select="handleSelect"
+        >
+          <template v-slot="{item}"><el-avatar shape="circle" :size="32" fit="fill" :src="item.avatar" :class="{gray: !item.online}" /><span style="margin-top:0;display:inline-block; height:40px; line-height: 40px">{{ item.nickName }}</span></template>
+        </el-autocomplete>
+        <div v-for="user in userList" :key="user.rcptId" :ref="'user'+user.rcptId" :style="{textAlign: 'center'}" @click="chatUserSelected(user)">
           <br>
           <el-badge v-if="user.unreadMessageNum > 0" is-dot>
             <el-avatar shape="square" :size="64" fit="fill" :src="user.avatar" :class="{gray: !user.online}" />
@@ -20,7 +30,7 @@
             <span class="title">与 {{ chatToUser.nickName }} 聊天&nbsp;<el-button @click="handleLoadHis">加载历史</el-button></span>
           </el-header>
           <el-main id="chat-cnt" ref="mainscroll" @scroll="handleScroll">
-            <el-row v-for="(msg,index) in msgList" :key="msg.id" :ref="'msg_'+msg.id">
+            <el-row v-for="msg in msgList" :key="msg.id" :ref="'msg_'+msg.id">
               <el-col :span="4"><el-avatar v-if="msg.sender === msg.roomId" shape="square" :size="48" fit="fill" :src="getAvatar(msg.sender)" /><span v-else style="visibility:hidden">.</span></el-col>
               <el-col :span="16">
                 <div :style="{textAlign:msg.sender !== msg.roomId?'right':'left'}">
@@ -84,7 +94,8 @@ export default {
       scrollHeight: 100,
       msgList: [],
       baseUrl: process.env.VUE_APP_BASE_API,
-      uploadUrl: ''
+      uploadUrl: '',
+      queryName: ''
     }
   },
   computed: {
@@ -146,6 +157,51 @@ export default {
     this.$store.dispatch('websocket/WEBSOCKET_DISCONNECT') // 断开链接
   },
   methods: {
+    querySearch(queryString, cb) {
+      var ss = this.users
+      if (!queryString) {
+        return
+      }
+      var results = ss.filter(this.createFilter(queryString))
+      if (results.length) {
+        // 调用 callback 返回建议列表的数据
+        cb(results)
+        return
+      }
+      // 远程提取用户
+      // [{"rcptId":2887,"nickName":"小麦","unreadMessageNum":0,"online":false,"lastMessageTime":"2024-10-10 22:55:50","avatar":"http://s.bangch.cn*/upload/faces/47.jpg"}]
+      request.getChatUsers(this.clientId, 0, 0, 20, queryString).then(res => {
+        console.log('自动完成远程取数 => ' + JSON.stringify(res.data))
+        if (res.data.length > 0) {
+          // lastChatUserId = res.data[res.data.length - 1].rcptId
+          // for (const v of res.data) { userAry.push(v) }
+          results = res.data
+          cb(results)
+        }
+      })
+    },
+    createFilter(queryString) {
+      console.log(queryString)
+      return (user) => {
+        const ret = user.nickName.indexOf(queryString)
+        return ret > -1
+      }
+    },
+    handleSelect(item) {
+      console.log(JSON.stringify(item))
+      let foundUser = this.users.find(element => element.rcptId === item.rcptId)
+      console.log(JSON.stringify(foundUser))
+      if (!foundUser) {
+        foundUser = item
+        this.users.push(foundUser)
+        const that = this
+        setTimeout(function() {
+          that.chatUserSelected(foundUser)
+        }, 1500)
+      } else {
+        this.chatUserSelected(foundUser)
+      }
+    },
     handleScroll(event) {
       const target = event.target
       if (target.scrollTop === 0) {
@@ -230,7 +286,7 @@ export default {
           } else {
             // 取得聊天用户列表更新到 users 中
             const userAry = []
-            that.reduceChatUsers(userAry, that.clientId, 0, 20)
+            that.reduceChatUsers(userAry, that.clientId, 0, 50)
             that.users = userAry
           }
         } }).then(res => resolve(res)).catch(e => reject(e))
@@ -486,12 +542,21 @@ export default {
         #chat-cnt {overflow-y:auto;  border-top: 1px solid skyblue; border-bottom: 1px solid skyblue;}
         #chat-cnt .el-row{padding: 2px 0;}
         .gray {
-		  -webkit-filter: grayscale(100%);
-		  -webkit-filter: grayscale(1);/* Webkit */
-		  filter: grayscale(100%);
-		  filter: url("data:image/svg+xml;utf8,<svg%20xmlns='http://www.w3.org/2000/svg'><filter%20id='grayscale'><feColorMatrix%20type='matrix'%20values='0.3333%200.3333%200.3333%200%200%200.3333%200.3333%200.3333%200%200%200.3333%200.3333%200.3333%200%200%200%200%200%201%200'/></filter></svg>#grayscale");
-		  filter: gray;/* IE6-9 */
-		}
+          -webkit-filter: grayscale(100%);
+          -webkit-filter: grayscale(1);/* Webkit */
+          filter: grayscale(100%);
+          filter: url("data:image/svg+xml;utf8,<svg%20xmlns='http://www.w3.org/2000/svg'><filter%20id='grayscale'><feColorMatrix%20type='matrix'%20values='0.3333%200.3333%200.3333%200%200%200.3333%200.3333%200.3333%200%200%200.3333%200.3333%200.3333%200%200%200%200%200%201%200'/></filter></svg>#grayscale");
+          filter: gray;/* IE6-9 */
+        }
     }
-
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      display: flex;
+      align-items: center;/*垂直居中*/
+      justify-content: center;/*水平居中*/
+      background-color: #f0f0f0;
+    }
 </style>

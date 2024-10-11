@@ -93,7 +93,6 @@ public class ChatMessageController {
     /**
      * 取聊天用户名单(在线情况)
      *
-     * @return
      */
     @Operation(summary = "取聊天用户名单(在线情况)")
     @Parameter(name = "clientId", description = "客戶端ID", in = ParameterIn.HEADER, required = true, example = "1024")
@@ -106,12 +105,13 @@ public class ChatMessageController {
                                                         @RequestParam(required = false, defaultValue = "0") Integer rcptId,
                                                         @RequestParam(required = false, defaultValue = "false") Boolean igResPrefix,
                                                         @RequestParam(required = false, defaultValue = "0") Integer lastChatUserId,
-                                                        @RequestParam(required = false, defaultValue = "50") Integer limit
+                                                        @RequestParam(required = false, defaultValue = "50") Integer limit,
+                                                        /*当rcptId无效的情况下支持*/@RequestParam(required = false, defaultValue = "") String searchText
     ) {
         ChatUser senderChatUser = subsysTool.getChatUser(clientId); // 消息發送者
         List<ChatUser> rcptList;
         if (rcptId == null || rcptId <= 0) {
-            rcptList = chatUserService.queryRcptList(senderChatUser.getId(), lastChatUserId, limit);
+            rcptList = chatUserService.queryRcptList(senderChatUser.getId(), lastChatUserId, limit, searchText);
         } else {
             rcptList = new ArrayList<>();
             ChatUser user = chatUserService.queryRcpt(senderChatUser.getId(), rcptId);
