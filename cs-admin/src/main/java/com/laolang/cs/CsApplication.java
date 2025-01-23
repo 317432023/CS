@@ -1,6 +1,7 @@
 package com.laolang.cs;
 
 import com.soaringloong.jfrm.framework.mybatis.core.mapper.SpringBeanNameGenerator;
+import com.soaringloong.jfrm.framework.web.core.listener.ApplicationStartedEventListener;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
